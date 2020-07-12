@@ -1,6 +1,6 @@
 <idea-plugin>
-    <id>com.github.nthykier.ideadebpkg</id>
-    <name>IDEA-debpkg</name>
+    <id>com.github.nthykier.debpkg</id>
+    <name>Debian packaging support</name>
     <vendor>nthykier</vendor>
 
     <!-- Product and plugin compatibility requirements -->
@@ -10,6 +10,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.nthykier.ideadebpkg.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.nthykier.ideadebpkg.services.MyProjectService"/>
+        <!--fileType name="Deb822 File" implementationClass="com.github.nthykier.debpkg.deb822.Deb822Language" fieldName="INSTANCE"
+                  language="Deb822" extensions="simple" /-->
     </extensions>
 
     <projectListeners>

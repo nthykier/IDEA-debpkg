@@ -70,6 +70,10 @@ detekt {
     }
 }
 
+// Include the generated files in the source set
+sourceSets["main"].java.srcDir("src/main/gen")
+
+
 tasks {
     // Set the compatibility versions to 1.8
     withType<JavaCompile> {
