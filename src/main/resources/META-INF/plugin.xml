@@ -6,16 +6,32 @@
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <resource-bundle>messages.DebpkgBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.nthykier.ideadebpkg.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.nthykier.ideadebpkg.services.MyProjectService"/>
-        <!--fileType name="Deb822 File" implementationClass="com.github.nthykier.debpkg.deb822.Deb822Language" fieldName="INSTANCE"
-                  language="Deb822" extensions="simple" /-->
+        <!--applicationService serviceImplementation="com.github.nthykier.ideadebpkg.services.MyApplicationService"/>
+        <projectService serviceImplementation="com.github.nthykier.ideadebpkg.services.MyProjectService"/-->
+        <fileType name="Deb822 File (generic)" implementationClass="com.github.nthykier.debpkg.deb822.Deb822FileType" fieldName="INSTANCE"
+                  language="Deb822" extensions="simple" />
+        <lang.parserDefinition language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822ParserDefinition" />
+        <lang.syntaxHighlighterFactory language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighterFactory" />
+        <localInspection language="Deb822"
+                         groupPath="Deb822"
+                         shortName="DuplicateFieldNameInDeb822Paragraph"
+                         key="deb822.files.inspection.name.duplicate_field.display.name"
+                         groupKey="deb822.files.inspection.group.display.name"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="com.github.nthykier.debpkg.deb822.DebSrcControlInspection"
+        />
+        <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
+                   implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
+        <spellchecker.support language="Deb822" id="deb822SpellcheckingStrategy"
+                              implementationClass="com.github.nthykier.debpkg.deb822.Deb822SpellcheckingStrategy" />
     </extensions>
 
-    <projectListeners>
+    <!--projectListeners>
         <listener class="com.github.nthykier.ideadebpkg.listeners.MyProjectManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </projectListeners>
+    </projectListeners-->
 </idea-plugin>

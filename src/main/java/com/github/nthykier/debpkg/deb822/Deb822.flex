@@ -1,13 +1,14 @@
 // Copyright 2000-2020 JetBrains s.r.o. and other contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package org.intellij.sdk.language;
 
+import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import org.intellij.sdk.language.psi.SimpleTypes;
-import com.intellij.psi.TokenType;
+import com.intellij.psi.TokenType;import com.intellij.spellchecker.tokenizer.Tokenizer;
 
 %%
 
+%public
 %class Deb822Lexer
 %implements FlexLexer
 %unicode
@@ -16,30 +17,67 @@ import com.intellij.psi.TokenType;
 %eof{  return;
 %eof}
 
-CRLF=\R
-WHITE_SPACE=[\ \n\t\f]
-FIRST_VALUE_CHARACTER=[^ \n\f\\] | "\\"{CRLF} | "\\".
-VALUE_CHARACTER=[^\n\f\\] | "\\"{CRLF} | "\\".
-END_OF_LINE_COMMENT=("#"|"!")[^\r\n]*
+NEWLINE=\n
+SINGLE_SPACE=[ ]
+WHITE_SPACE=[\ \t\f]
+VALUE_CHARACTER=[^\n$]
+END_OF_LINE_COMMENT="#"[^\r\n]*
+SUBSTVAR=[$][{][^}\s]+[}]
 SEPARATOR=[:]
-KEY_CHARACTER=[^:=\ \n\t\f\\] | "\\ "
+/* All characters in range 0x21 to 0x39 (incl.) + 0x3b to 0x7e (incl.) are valid, except for the
+ * first character, where 0x23 (#) and 0x2D (-) are not permitted.
+ */
+FIRST_FIELD_CHARACTER=[\u0021\u0022\u0024-\u002c\u002e-\u0039\u003b-\u007e]
+FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 
-%state WAITING_VALUE
+%state WAITING_FOR_SEPATOR, PARSING_INITIAL_VALUE_AFTER_SEPARATOR PARSING_INITIAL_VALUE, MAYBE_CONT_VALUE, SEEN_INITIAL_VALUE, PARSING_CONT_VALUE
 
 %%
 
-<YYINITIAL> {END_OF_LINE_COMMENT}                           { yybegin(YYINITIAL); return SimpleTypes.COMMENT; }
+<YYINITIAL>{
+{END_OF_LINE_COMMENT}                           { yybegin(YYINITIAL); return Deb822Types.COMMENT; }
+^{FIRST_FIELD_CHARACTER}{FIELD_CHARACTER}*      { yybegin(WAITING_FOR_SEPATOR); return Deb822Types.FIELD_NAME; }
+{WHITE_SPACE}+                                  { return TokenType.WHITE_SPACE; }
+{NEWLINE}+                                      { return TokenType.WHITE_SPACE; }
+}
 
-<YYINITIAL> {KEY_CHARACTER}+                                { yybegin(YYINITIAL); return SimpleTypes.KEY; }
+<WAITING_FOR_SEPATOR>{
+{WHITE_SPACE}+                                   { return TokenType.WHITE_SPACE; }
 
-<YYINITIAL> {SEPARATOR}                                     { yybegin(WAITING_VALUE); return SimpleTypes.SEPARATOR; }
+{SEPARATOR}                                      { yybegin(PARSING_INITIAL_VALUE_AFTER_SEPARATOR); return Deb822Types.SEPARATOR; }
+}
 
-<WAITING_VALUE> {CRLF}({CRLF}|{WHITE_SPACE})+               { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+<PARSING_INITIAL_VALUE_AFTER_SEPARATOR>{
+{WHITE_SPACE}*                                                   { yybegin(PARSING_INITIAL_VALUE); return TokenType.WHITE_SPACE; }
+}
 
-<WAITING_VALUE> {WHITE_SPACE}+                              { yybegin(WAITING_VALUE); return TokenType.WHITE_SPACE; }
+<PARSING_INITIAL_VALUE>{
+{NEWLINE}                                                        { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
+{WHITE_SPACE}+$                                                  { return TokenType.WHITE_SPACE; }
+{SUBSTVAR}                                                       { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR; }
+[$]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
+[^$ \t\r\n]+                                                     { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
+}
 
-<WAITING_VALUE> {FIRST_VALUE_CHARACTER}{VALUE_CHARACTER}*   { yybegin(YYINITIAL); return SimpleTypes.VALUE; }
+<SEEN_INITIAL_VALUE>{
+{SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR; }
+[$]                                                              { return Deb822Types.VALUE; }
+[^$\r\n]+                                                        { return Deb822Types.VALUE; }
+{WHITE_SPACE}*{NEWLINE}                                          { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
+}
 
-({CRLF}|{WHITE_SPACE})+                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+<PARSING_CONT_VALUE>{
+{SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR; }
+[$]                                                              { return Deb822Types.VALUE; }
+[^$\r\n]+                                                        { return Deb822Types.VALUE; }
+{NEWLINE}                                                        { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
+}
 
-[^]                                                         { return TokenType.BAD_CHARACTER; }
+<MAYBE_CONT_VALUE>{
+{END_OF_LINE_COMMENT}{NEWLINE}                           { return Deb822Types.COMMENT; }
+^{SINGLE_SPACE}                                          { yybegin(PARSING_CONT_VALUE); return TokenType.WHITE_SPACE;}
+^{FIRST_FIELD_CHARACTER}{FIELD_CHARACTER}*               { yybegin(WAITING_FOR_SEPATOR); return Deb822Types.FIELD_NAME; }
+{NEWLINE}                                                { yybegin(YYINITIAL); return Deb822Types.PARAGRAPH_FINISH; }
+}
+
+[^]                                              { return TokenType.BAD_CHARACTER; }

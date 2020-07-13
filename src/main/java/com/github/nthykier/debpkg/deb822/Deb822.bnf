@@ -1,0 +1,33 @@
+// Copyright 2000-2020 JetBrains s.r.o. and other contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+{
+  parserClass="com.github.nthykier.debpkg.deb822.parser.Deb822Parser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Deb822"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.github.nthykier.debpkg.deb822.psi"
+  psiImplPackage="com.github.nthykier.debpkg.deb822.psi.impl"
+  psiImplUtilClass="com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil"
+
+  elementTypeHolderClass="com.github.nthykier.debpkg.deb822.psi.Deb822Types"
+  elementTypeClass="com.github.nthykier.debpkg.deb822.psi.Deb822ElementType"
+  tokenTypeClass="com.github.nthykier.debpkg.deb822.psi.Deb822TokenType"
+}
+
+deb822file ::= COMMENT* all_paragraphs COMMENT*
+
+all_paragraphs ::= paragraph (COMMENT* paragraph)*
+paragraph ::= field_value_pair (COMMENT* field_value_pair)* (PARAGRAPH_FINISH|<<eof>>)
+
+field_value_pair ::= field SEPARATOR value_parts {
+/*  extends="com.github.nthykier.debpkg.deb822.psi.impl.Deb822FieldValueElementImpl"
+  implements="com.github.nthykier.debpkg.deb822.psi.Deb822FieldValueElement"*/
+  recoverWhile=recover_property
+  methods=[getFieldName getFieldValue getName setName getNameIdentifier getPresentation]
+}
+
+field ::= FIELD_NAME
+value_parts ::= COMMENT* (VALUE|SUBSTVAR) (COMMENT|VALUE|SUBSTVAR)*
+
+private recover_property ::= !(FIELD_NAME|SEPARATOR|SUBSTVAR|VALUE|COMMENT|PARAGRAPH_FINISH)
