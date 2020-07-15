@@ -1,6 +1,7 @@
-package org.intellij.sdk.language;
+package com.github.nthykier.debpkg.deb822;
 
 import com.intellij.lexer.FlexAdapter;
+import org.intellij.sdk.language.Deb822Lexer;
 
 import java.io.Reader;
 

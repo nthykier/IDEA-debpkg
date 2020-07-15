@@ -13,7 +13,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.intellij.sdk.language.Deb822LexerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 public class Deb822ParserDefinition implements ParserDefinition {

@@ -1,12 +1,14 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Icon;
 
-public class Deb822FileType extends LanguageFileType {
+public class Deb822FileType extends LanguageFileType implements FileTypeIdentifiableByVirtualFile {
 
     public static final Deb822FileType INSTANCE = new Deb822FileType();
 
@@ -32,5 +34,10 @@ public class Deb822FileType extends LanguageFileType {
     @Override
     public @Nullable Icon getIcon() {
         return null;
+    }
+
+    @Override
+    public boolean isMyFileType(@NotNull VirtualFile file) {
+        return "control".equals(file.getName()) && "debian".equals(file.getParent().getName());
     }
 }

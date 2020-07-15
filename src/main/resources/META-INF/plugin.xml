@@ -9,10 +9,11 @@
     <resource-bundle>messages.DebpkgBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!-- Deb822 support -->
         <!--applicationService serviceImplementation="com.github.nthykier.ideadebpkg.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.nthykier.ideadebpkg.services.MyProjectService"/-->
         <fileType name="Deb822 File (generic)" implementationClass="com.github.nthykier.debpkg.deb822.Deb822FileType" fieldName="INSTANCE"
-                  language="Deb822" extensions="simple" />
+                  language="Deb822" extensions="deb822" />
         <lang.parserDefinition language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822ParserDefinition" />
         <lang.syntaxHighlighterFactory language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighterFactory" />
         <localInspection language="Deb822"
