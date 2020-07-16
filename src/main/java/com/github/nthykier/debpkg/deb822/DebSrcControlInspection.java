@@ -12,13 +12,9 @@ import java.util.Map;
 
 public class DebSrcControlInspection extends LocalInspectionTool {
 
-    private static final Logger LOG = Logger.getInstance("com.github.nthykier.debpkg.deb822.DebSrcControlInspection");
-
     @NotNull
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
         if (!(holder.getFile() instanceof Deb822File)) {
-            LOG.warn("Ignoring; wrong file type: " + holder.getFile().getClass().getCanonicalName());
-            LOG.warn("Path: " + holder.getFile().getVirtualFile().getPresentableUrl());
             return PsiElementVisitor.EMPTY_VISITOR;
         }
         return new Deb822Visitor() {
