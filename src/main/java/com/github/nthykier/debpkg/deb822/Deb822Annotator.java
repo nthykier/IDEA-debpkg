@@ -17,11 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class Deb822Annotator implements Annotator {
-    private static final Map<String, Set<String>> FIELD_NAMES_TO_KNOWN_KEYWORDS = new HashMap<>();
-    private static final Set<String> KEYWORDS_KNOWN_EXCLUSIVELY = new HashSet<>();
     private static final TokenSet VALUE_OR_SUBSTVAR = TokenSet.create(Deb822Types.VALUE, Deb822Types.SUBSTVAR);
-    private static final LocalQuickFix MULTI_ARCH_SAME_ARCH_ALL_FIXER = new MultiarchSameArchitectureAllQuickFix();
-    private static final LocalQuickFix[] MULTI_ARCH_SAME_ARCH_ALL_FIXER_AS_ARRAY = new LocalQuickFix[]{MULTI_ARCH_SAME_ARCH_ALL_FIXER};
+    private static final FieldValueReplacingLocalQuickFix MULTI_ARCH_SAME_ARCH_ALL_FIXER = new MultiarchSameArchitectureAllQuickFix();
+    private static final FieldValueReplacingLocalQuickFix PRIORITY_EXTRA_IS_OBSOLETE_FIXER = new PriorityExtraIsObsoleteQuickFix();
 
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
         if (element instanceof Deb822Paragraph) {
@@ -42,32 +40,37 @@ public class Deb822Annotator implements Annotator {
             if (arch.equals("all") && multivalue.equals("same")) {
                 Deb822FieldValuePair pair = field2pair.get("multi-arch");
                 assert pair != null;
-                Annotation anno = holder.createErrorAnnotation(pair, "deb822.files.annotator.fields.arch-all-multi-arch-same");
-                anno.setTextAttributes(Deb822SyntaxHighlighter.BAD_CHARACTER);
+                Annotation anno = holder.createErrorAnnotation(pair.getValueParts(),
+                        MULTI_ARCH_SAME_ARCH_ALL_FIXER.getAnnotationText());
                 anno.registerFix(MULTI_ARCH_SAME_ARCH_ALL_FIXER, null, null, new MultiarchSameArchitectureAllProblemDescriptor(pair.getValueParts()));
             }
         }
     }
 
     private void checkFieldValuePair(@NotNull Deb822FieldValuePair pair, @NotNull AnnotationHolder holder) {
-        String keyOrig = pair.getField().getText();
-        String key = keyOrig.toLowerCase();
-        Set<String> known_keywords_for_field = FIELD_NAMES_TO_KNOWN_KEYWORDS.get(key);
+        String fieldName = pair.getField().getText();
+        Deb822KnownField knownField = Deb822KnownFieldsAndValues.lookupDeb822Field(fieldName);
         Deb822ValueParts valueParts;
         String value;
         ASTNode node;
         ASTNode[] childNodes;
-        if (known_keywords_for_field == null) {
+
+        /* Ignore unknown fields or fields where we have no knowledge of the values (e.g. Description) */
+        if (knownField == null || !knownField.hasKnownValues()) {
             return;
         }
         valueParts = pair.getValueParts();
         value = valueParts.getText().trim();
         node = valueParts.getNode();
         childNodes = node.getChildren(VALUE_OR_SUBSTVAR);
-        if (known_keywords_for_field.contains(value)) {
+        if (knownField.getKnownKeywords().contains(value)) {
             Annotation anno = holder.createInfoAnnotation(pair.getValueParts(), null);
             anno.setTextAttributes(Deb822SyntaxHighlighter.VALUE_KEYWORD);
-        } else if (KEYWORDS_KNOWN_EXCLUSIVELY.contains(key) && (childNodes.length != 1 || childNodes[0].getElementType() == Deb822Types.VALUE)) {
+            if (knownField.getCanonicalFieldName().equals("Priority") && value.equals("extra")) {
+                Annotation weakAnno = holder.createWeakWarningAnnotation(valueParts, PRIORITY_EXTRA_IS_OBSOLETE_FIXER.getAnnotationText());
+                weakAnno.registerFix(PRIORITY_EXTRA_IS_OBSOLETE_FIXER, null, null, new PriorityExtraIsObsoleteProblemDescriptor(pair.getValueParts()));
+            }
+        } else if (knownField.areAllKeywordsKnown() && (childNodes.length != 1 || childNodes[0].getElementType() == Deb822Types.VALUE)) {
             Annotation anno = holder.createErrorAnnotation(pair.getValueParts(),
                     "deb822.files.annotator.fields.unknown.value"
             );
@@ -75,46 +78,76 @@ public class Deb822Annotator implements Annotator {
         }
     }
 
-    private static class MultiarchSameArchitectureAllProblemDescriptor extends ProblemDescriptorBase implements ProblemDescriptor {
-        public MultiarchSameArchitectureAllProblemDescriptor(@NotNull PsiElement element) {
-            super(element, element, Deb822Bundle.message("deb822.files.quickfix.fields.arch-all-multi-arch-same.description"),
-                    MULTI_ARCH_SAME_ARCH_ALL_FIXER_AS_ARRAY, ProblemHighlightType.ERROR, false,
-                    null, true, false);
-        }
-    }
+    private static abstract class FieldValueReplacingLocalQuickFix implements LocalQuickFix {
 
-    private static class MultiarchSameArchitectureAllQuickFix implements LocalQuickFix {
-
-        @Override
-        public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
-            return Deb822Bundle.message("deb822.files.quickfix.fields.arch-all-multi-arch-same.name");
-        }
+        protected abstract String getBaseName();
+        protected abstract String getCorrectionString();
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
             PsiElement valueParts = descriptor.getPsiElement();
-            Deb822FieldValuePair kvpair = Deb822ElementFactory.createFieldValuePairFromText(project, "Multi-Arch: foreign");
+            Deb822FieldValuePair kvpair = Deb822ElementFactory.createFieldValuePairFromText(project, getCorrectionString());
             valueParts.replace(kvpair.getValueParts());
         }
+
+        @Override
+        public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
+            return Deb822Bundle.message("deb822.files.quickfix.fields." + getBaseName() + ".name");
+        }
+
+        public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getAnnotationText() {
+            return Deb822Bundle.message("deb822.files.annotator.fields." + getBaseName());
+        }
+
     }
 
-    static void KEYWORDS_FOR_FIELD(String fieldName, boolean exclusive, String... keywords) {
-        String fieldLc = fieldName.toLowerCase().intern();
-        FIELD_NAMES_TO_KNOWN_KEYWORDS.put(fieldLc, new LinkedHashSet<>(Arrays.asList(keywords)));
-        if (exclusive) {
-            KEYWORDS_KNOWN_EXCLUSIVELY.add(fieldLc);
+    private static abstract class FieldValueReplacingProblemDescriptor extends ProblemDescriptorBase implements ProblemDescriptor {
+        public FieldValueReplacingProblemDescriptor(@NotNull FieldValueReplacingLocalQuickFix fixer, @NotNull PsiElement element,
+                                                    @NotNull ProblemHighlightType highlightType) {
+            super(element, element,
+                  Deb822Bundle.message("deb822.files.quickfix.fields."  + fixer.getBaseName() +".description"),
+                  new LocalQuickFix[]{fixer}, highlightType, false,
+                    null, true, false
+                  );
         }
     }
 
-    static {
-        /* Exclusive */
-        KEYWORDS_FOR_FIELD("Multi-Arch", true,"no", "foreign", "same", "allowed");
-        KEYWORDS_FOR_FIELD("Priority", true,"extra", "optional", "important", "required");
-        KEYWORDS_FOR_FIELD("X-DH-Build-For-Type", true, "host", "target");
-
-        /* Non-exclusive */
-        KEYWORDS_FOR_FIELD("Architecture", false,"all", "any");
-        KEYWORDS_FOR_FIELD("Rules-Requires-Root", false,"no", "binary-targets");
-        KEYWORDS_FOR_FIELD("Section", false,"libs", "oldlibs", "python", "perl", "devel");
+    private static class MultiarchSameArchitectureAllProblemDescriptor extends FieldValueReplacingProblemDescriptor {
+        public MultiarchSameArchitectureAllProblemDescriptor(@NotNull PsiElement element) {
+            super(MULTI_ARCH_SAME_ARCH_ALL_FIXER, element, ProblemHighlightType.ERROR);
+        }
     }
+
+    private static class MultiarchSameArchitectureAllQuickFix extends FieldValueReplacingLocalQuickFix {
+
+        @Override
+        protected String getBaseName() {
+            return "arch-all-multi-arch-same";
+        }
+
+        @Override
+        protected String getCorrectionString() {
+            return "Multi-Arch: foreign";
+        }
+    }
+
+    private static class PriorityExtraIsObsoleteProblemDescriptor extends FieldValueReplacingProblemDescriptor implements ProblemDescriptor {
+        public PriorityExtraIsObsoleteProblemDescriptor(@NotNull PsiElement element) {
+            super(PRIORITY_EXTRA_IS_OBSOLETE_FIXER, element, ProblemHighlightType.WEAK_WARNING);
+        }
+    }
+
+    private static class PriorityExtraIsObsoleteQuickFix extends FieldValueReplacingLocalQuickFix {
+
+        @Override
+        protected String getBaseName() {
+            return "priority-extra-is-obsolete";
+        }
+
+        @Override
+        protected String getCorrectionString() {
+            return "Priority: optional";
+        }
+    }
+
 }
