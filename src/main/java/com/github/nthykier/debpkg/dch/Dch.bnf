@@ -1,0 +1,53 @@
+// Copyright 2000-2020 JetBrains s.r.o. and other contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+{
+  parserClass="com.github.nthykier.debpkg.dch.parser.DchParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Dch"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.github.nthykier.debpkg.dch.psi"
+  psiImplPackage="com.github.nthykier.debpkg.dch.psi.impl"
+  psiImplUtilClass="com.github.nthykier.debpkg.dch.psi.impl.DchPsiImplUtil"
+
+  elementTypeHolderClass="com.github.nthykier.debpkg.dch.psi.DchTypes"
+  elementTypeClass="com.github.nthykier.debpkg.dch.psi.DchElementType"
+  tokenTypeClass="com.github.nthykier.debpkg.dch.psi.DchTokenType"
+
+}
+
+dchFile ::= changelog_entry+
+
+changelog_entry ::= version_line changelog_line+ signoff {
+//  recoverWhile=recover_property
+}
+
+version_line ::= SOURCE_NAME version DISTRIBUTION_NAME+ SEMI_COLON KEYVALUE_PAIR+ {
+  recoverWhile=recover_top_level
+}
+
+private version ::= PARANTHESES_OPEN VERSION PARANTHESES_CLOSE {
+  pin=1
+}
+
+changelog_line ::= (CHANGE_DETAILS|CHANGE_RESPONSIBLE) {
+  recoverWhile=recover_top_level
+}
+
+private recover_top_level ::= !(SOURCE_NAME|SIGNOFF_STARTER|CHANGE_DETAILS|CHANGE_RESPONSIBLE|DISTRIBUTION_NAME|SEMI_COLON|KEYVALUE_PAIR)
+
+signoff ::= SIGNOFF_STARTER MAINTAINER_NAME maintainer_email DOUBLE_SPACE SIGNOFF_DATE {
+ pin=2
+ recoverWhile=recover_signoff
+}
+
+private recover_signoff ::= !(SOURCE_NAME|SIGNOFF_STARTER|MAINTAINER_NAME|MAINTAINER_EMAIL|GREATER_THAN|LESS_THAN|CHANGE_DETAILS|CHANGE_RESPONSIBLE)
+
+private maintainer_email ::= LESS_THAN MAINTAINER_EMAIL GREATER_THAN {
+  pin=1
+  recoverWhile=recover_maintainer_email
+}
+
+private recover_maintainer_email ::= !(SOURCE_NAME|SIGNOFF_STARTER|GREATER_THAN|DOUBLE_SPACE|SIGNOFF_DATE)
+
+//private recover_property ::= !(SOURCE_NAME|PARANTHESES_OPEN|VERSION|PARANTHESES_CLOSE|DISTRIBUTION_NAME|SEMI_COLON|KEYVALUE_PAIR|DOUBLE_SPACE|CHANGE_DETAILS|SIGNOFF_DATE|SIGNOFF_STARTER|LESS_THAN|GREATER_THAN|MAINTAINER_NAME|MAINTAINER_EMAIL)

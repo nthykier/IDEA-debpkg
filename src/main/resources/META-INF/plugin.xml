@@ -34,5 +34,15 @@
 
         <completion.contributor language="Deb822"
                                 implementationClass="com.github.nthykier.debpkg.deb822.Deb822CodeCompletionContributor" />
+
+
+        <!-- Debian Changelog -->
+
+        <fileType name="Debian Changelog" implementationClass="com.github.nthykier.debpkg.dch.DchFileType" fieldName="INSTANCE"
+                  language="DebianChangelog" extensions="dch" />
+        <lang.parserDefinition language="DebianChangelog" implementationClass="com.github.nthykier.debpkg.dch.DchParserDefinition" />
+        <lang.syntaxHighlighterFactory language="DebianChangelog" implementationClass="com.github.nthykier.debpkg.dch.DchSyntaxHighlighterFactory" />
+        <spellchecker.support language="DebianChangelog" id="dchSpellcheckingStrategy"
+                              implementationClass="com.github.nthykier.debpkg.dch.DchSpellcheckingStrategy" />
     </extensions>
 </idea-plugin>
