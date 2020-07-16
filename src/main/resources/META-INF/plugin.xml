@@ -30,10 +30,8 @@
         <spellchecker.support language="Deb822" id="deb822SpellcheckingStrategy"
                               implementationClass="com.github.nthykier.debpkg.deb822.Deb822SpellcheckingStrategy" />
         <spellchecker.bundledDictionaryProvider implementation="com.github.nthykier.debpkg.deb822.Deb822BundledDictionaryProvider" />
-    </extensions>
 
-    <!--projectListeners>
-        <listener class="com.github.nthykier.ideadebpkg.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </projectListeners-->
+        <completion.contributor language="Deb822"
+                                implementationClass="com.github.nthykier.debpkg.deb822.Deb822CodeCompletionContributor" />
+    </extensions>
 </idea-plugin>
