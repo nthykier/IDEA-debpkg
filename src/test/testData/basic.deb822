@@ -1,0 +1,5 @@
+Source: foo
+
+Package: bar
+Architecture: any
+Multi-Arch! foreign
