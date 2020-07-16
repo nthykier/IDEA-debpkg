@@ -29,6 +29,7 @@
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
         <spellchecker.support language="Deb822" id="deb822SpellcheckingStrategy"
                               implementationClass="com.github.nthykier.debpkg.deb822.Deb822SpellcheckingStrategy" />
+        <spellchecker.bundledDictionaryProvider implementation="com.github.nthykier.debpkg.deb822.Deb822BundledDictionaryProvider" />
     </extensions>
 
     <!--projectListeners>
