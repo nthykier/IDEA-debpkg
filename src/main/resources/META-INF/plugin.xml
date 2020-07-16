@@ -10,11 +10,12 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Deb822 support -->
-        <!--applicationService serviceImplementation="com.github.nthykier.ideadebpkg.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.nthykier.ideadebpkg.services.MyProjectService"/-->
         <fileType name="Deb822 File (generic)" implementationClass="com.github.nthykier.debpkg.deb822.Deb822FileType" fieldName="INSTANCE"
                   language="Deb822" extensions="deb822" />
+        <fileType name="debian/control" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlFileType" fieldName="INSTANCE"
+                  language="DebianControl" extensions="" />
         <lang.parserDefinition language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822ParserDefinition" />
+        <lang.parserDefinition language="DebianControl" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlParserDefinition" />
         <lang.syntaxHighlighterFactory language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighterFactory" />
         <localInspection language="Deb822"
                          groupPath="Deb822"
