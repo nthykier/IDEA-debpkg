@@ -47,8 +47,26 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 {SEPARATOR}                                      { yybegin(PARSING_INITIAL_VALUE_AFTER_SEPARATOR); return Deb822Types.SEPARATOR; }
 }
 
+/* Same as PARSING_INITIAL_VALUE except we allow leading whitespace, which forces us into PARSING_INITIAL_VALUE
+ * Ideally, we would like to just consume 0 or more whitespace and then move to PARSING_INITIAL_VALUE.  However,
+ * that does not work in JFlex.
+ *
+ * To see where this is relevant, try:
+ * """
+ * Field1: value
+ * Field2:value-but-no-leading-space
+ * Field3: foo
+ *     Continuation line where leadning and trailing space is significant... >.>
+ * """
+ *
+ * Field2 is the variant that requires us to duplicate most of PARSING_INITIAL_VALUE in
+ * PARSING_INITIAL_VALUE_AFTER_SEPARATOR
+ */
 <PARSING_INITIAL_VALUE_AFTER_SEPARATOR>{
-{WHITE_SPACE}*                                                   { yybegin(PARSING_INITIAL_VALUE); return TokenType.WHITE_SPACE; }
+{WHITE_SPACE}+                                                   { yybegin(PARSING_INITIAL_VALUE); return TokenType.WHITE_SPACE; }
+{SUBSTVAR}                                                       { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR; }
+[$]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
+[^$ \t\r\n]+                                                     { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
 }
 
 <PARSING_INITIAL_VALUE>{
