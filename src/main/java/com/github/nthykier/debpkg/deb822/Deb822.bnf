@@ -24,10 +24,14 @@ field_value_pair ::= field SEPARATOR value_parts {
 /*  extends="com.github.nthykier.debpkg.deb822.psi.impl.Deb822FieldValueElementImpl"
   implements="com.github.nthykier.debpkg.deb822.psi.Deb822FieldValueElement"*/
   recoverWhile=recover_property
-  methods=[getFieldName getFieldValue getName setName getNameIdentifier getPresentation]
+  //methods=[getFieldName getFieldValue getName setName getNameIdentifier getPresentation]
 }
 
-field ::= FIELD_NAME
+field ::= FIELD_NAME {
+  /*extends="com.github.nthykier.debpkg.deb822.psi.impl.Deb822FieldElementImpl"
+  implements="com.github.nthykier.debpkg.deb822.psi.Deb822FieldElement"*/
+  methods=[getReference]
+}
 value_parts ::= COMMENT* (VALUE|SUBSTVAR) (COMMENT|VALUE|SUBSTVAR)*
 
 private recover_property ::= !(FIELD_NAME|SEPARATOR|SUBSTVAR|VALUE|COMMENT|PARAGRAPH_FINISH)
