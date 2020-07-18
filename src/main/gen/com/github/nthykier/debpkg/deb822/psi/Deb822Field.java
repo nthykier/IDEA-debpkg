@@ -4,7 +4,10 @@ package com.github.nthykier.debpkg.deb822.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 
 public interface Deb822Field extends PsiElement {
+
+  PsiReference getReference();
 
 }
