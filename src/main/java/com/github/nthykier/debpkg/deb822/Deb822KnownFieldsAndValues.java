@@ -6,10 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.github.nthykier.debpkg.deb822.Deb822YamlDataFileParserUtil.*;
 
 public class Deb822KnownFieldsAndValues {
 
@@ -103,7 +104,7 @@ public class Deb822KnownFieldsAndValues {
         }
     }
 
-    private static void loadKnownFieldDefinitions() throws IOException {
+    private static void loadKnownFieldDefinitions() {
         InputStream s = Deb822KnownFieldsAndValues.class.getResourceAsStream("DebianControl.data.yaml");
         Yaml y = new Yaml();
         Map<String, Object> data = y.load(s);
@@ -112,37 +113,6 @@ public class Deb822KnownFieldsAndValues {
             Deb822KnownField field = parseKnownFieldDefinition(fieldDefinition);
             checkedAddField(field.getCanonicalFieldName().toLowerCase().intern(), field);
         }
-    }
-
-    private static <T> List<T> getList(Map<String, Object> map, String fieldName) {
-        @SuppressWarnings("unchecked")
-        List<T> res = getTypedObject(map, fieldName, List.class, Collections.EMPTY_LIST);
-        return res;
-    }
-
-    private static String getRequiredString(Map<String, Object> map, String fieldName) {
-        String val = getOptionalString(map, fieldName, null);
-        if (val == null) {
-            throw new IllegalArgumentException("Missing required String parameter " + fieldName);
-        }
-        return val;
-    }
-
-
-    private static String getOptionalString(Map<String, Object> map, String fieldName, String defaultValue) {
-        return getTypedObject(map, fieldName, String.class, defaultValue);
-    }
-
-    private static <T> T getTypedObject(Map<String, Object> map, String fieldName, Class<T> clazz, T defaultValue) {
-        Object value = map.get(fieldName);
-        if (value == null) {
-            return defaultValue;
-        }
-        if (clazz.isAssignableFrom(value.getClass())) {
-            return clazz.cast(value);
-        }
-        throw new IllegalArgumentException(fieldName + " was defined and a " + value.getClass().getCanonicalName()
-                + " (expected a " + clazz.getCanonicalName() + ")");
     }
 
     private static Deb822KnownField parseKnownFieldDefinition(Map<String, Object> fieldDef) {
@@ -198,11 +168,7 @@ public class Deb822KnownFieldsAndValues {
                 "Conflicts", "Replaces", "Breaks"
                 );
 
-        try {
-            loadKnownFieldDefinitions();
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot initialize", e);
-        }
+        loadKnownFieldDefinitions();
     }
 }
 
