@@ -27,7 +27,13 @@ public class Deb822KnownFieldsAndValues {
     @NotNull
     public static List<String> getAllKnownFieldNames() {
         if (KNOWN_FIELD_NAMES.size() != KNOWN_FIELDS.size()) {
-            KNOWN_FIELD_NAMES = KNOWN_FIELDS.values().stream().map(Deb822KnownField::getCanonicalFieldName).sorted().collect(Collectors.toUnmodifiableList());
+            // When 1.10 can be assumed; use ".collect(Collectors.toUnmodifiableList())"
+            KNOWN_FIELD_NAMES = Collections.unmodifiableList(KNOWN_FIELDS.values()
+                    .stream()
+                    .map(Deb822KnownField::getCanonicalFieldName)
+                    .sorted(String::compareToIgnoreCase)
+                    .collect(Collectors.toList())
+            );
         }
         return KNOWN_FIELD_NAMES;
     }
