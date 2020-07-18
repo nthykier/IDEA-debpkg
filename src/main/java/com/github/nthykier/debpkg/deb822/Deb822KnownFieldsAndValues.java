@@ -42,13 +42,6 @@ public class Deb822KnownFieldsAndValues {
         return KNOWN_FIELD_NAMES;
     }
 
-    static void KEYWORDS_FOR_FIELD(String fieldName, boolean exclusive, String... keywords) {
-        String fieldLc = fieldName.toLowerCase().intern();
-        NavigableSet<String> allKnownKeywords = new TreeSet<>(Arrays.asList(keywords));
-        Deb822KnownField field = new Deb822KnownFieldImpl(fieldName, exclusive, allKnownKeywords, null);
-        checkedAddField(fieldLc, field);
-    }
-
     static void ADD_KNOWN_FIELDS(String ... fieldNames) {
         for (String fieldName : fieldNames) {
             String fieldLc = fieldName.toLowerCase().intern();
@@ -196,16 +189,6 @@ public class Deb822KnownFieldsAndValues {
     }
 
     static {
-        /* Non-exclusive */
-        KEYWORDS_FOR_FIELD("Section", false,
-                "admin", "cli-mono", "comm", "database", "debian-installer", "debug", "devel", "doc",
-                "editors", "education", "eletronics", "embedded", "fonts", "games", "gnome", "gnu-r", "gnustep",
-                "graphics", "hamradio", "haskell", "interpreters", "introspection", "java", "javascript", "kde",
-                "kernel", "libdevel", "libs", "lisp", "localization", "mail", "math", "metapackages", "misc",
-                "net", "news", "ocaml", "oldlibs", "otherosfs", "perl", "php", "python", "ruby", "rust", "science",
-                "shells", "sound", "tasks", "tex", "text", "utils", "vcs", "video", "virtual", "web", "x11",
-                "xfce", "zope");
-
         /* Fields with structured content we know but currently cannot validate at the moment */
         ADD_KNOWN_FIELDS("Vcs-Git", "Vcs-Svn", "Vcs-Browser");
         ADD_KNOWN_FIELDS(
