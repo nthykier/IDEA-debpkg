@@ -1,20 +1,20 @@
 package com.github.nthykier.debpkg.deb822;
 
+import com.github.nthykier.debpkg.deb822.psi.Deb822ElementFactory;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.ElementPatternCondition;
+import com.intellij.openapi.project.Project;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Deb822CodeCompletionContributor extends CompletionContributor {
@@ -42,13 +42,17 @@ public class Deb822CodeCompletionContributor extends CompletionContributor {
                         PsiElement fieldValue = parameters.getPosition();
                         String fieldName;
                         Deb822KnownField knownField;
+                        if (handleSubstvarCompletion(parameters, resultSet)) {
+                            /* User is going for a substitution variable */
+                            return;
+                        }
                         while (fieldValue != null && ! (fieldValue instanceof Deb822FieldValuePair)) {
                             fieldValue = fieldValue.getParent();
                         }
                         if (fieldValue == null) {
                             return;
                         }
-                        fieldName = ((Deb822FieldValuePair)fieldValue).getField().getText().trim().toLowerCase();
+                        fieldName = ((Deb822FieldValuePair)fieldValue).getField().getText().trim();
                         knownField = Deb822KnownFieldsAndValues.lookupDeb822Field(fieldName);
                         if (knownField == null || !knownField.hasKnownValues()) {
                             return;
@@ -58,4 +62,36 @@ public class Deb822CodeCompletionContributor extends CompletionContributor {
                 }
         );
     }
+
+    protected boolean handleSubstvarCompletion(CompletionParameters parameters, @NotNull CompletionResultSet resultSet) {
+        PsiElement origElement = parameters.getPosition();
+        PsiElement prevElement;
+        String value;
+        prevElement = origElement.getPrevSibling();
+        value = origElement.getText();
+        if (prevElement.getText().equals("$")) {
+            if (value.equals("") || value.startsWith("{") || value.startsWith("\n")) {
+                List<String> knownNames = Deb822KnownSubstvars.getAllKnownSubstvarNames();
+                /* TODO: Probably has issues with "bla blah ${foo} blah ${bar}" */
+                boolean removeTrailingBrace = value.contains("}");
+                for (String name : knownNames) {
+                    /*
+                     * Trim off leading ${ and possibly trailing } to avoid leaving duplicates.  These have been
+                     * observed when completing:
+                     *
+                     *   * "${<HERE>" -> "${<CHOSEN_VAR>}" (this lead to a "${${"-prefix).
+                     *   * "${shlibs:D<HERE>}trailing garbage" -> "${shlibs:Depends}trailing garbage" (this lead to a
+                     *     an extra trailing "}" before "trailing garbage").
+                     *
+                     * (etc.)
+                     */
+                    String partialName = removeTrailingBrace ? name.substring(2, name.length() - 1) : name.substring(2);
+                    resultSet.addElement(LookupElementBuilder.create(partialName).withPresentableText(name));
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

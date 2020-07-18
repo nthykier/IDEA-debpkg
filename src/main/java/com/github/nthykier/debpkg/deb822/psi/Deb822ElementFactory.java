@@ -16,4 +16,9 @@ public class Deb822ElementFactory {
         Deb822AllParagraphs allParagraphs = (Deb822AllParagraphs)createFile(project, text).getFirstChild();
         return allParagraphs.getParagraphList().get(0).getFieldValuePairList().get(0);
     }
+
+    public static Deb822Substvar createSubstvarsFromText(Project project, String text) {
+        Deb822FieldValuePair fieldValuePair = createFieldValuePairFromText(project, text);
+        return (Deb822Substvar)fieldValuePair.getValueParts().getSubstvarList().get(0);
+    }
 }

@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class Deb822Annotator implements Annotator {
-    private static final TokenSet VALUE_OR_SUBSTVAR = TokenSet.create(Deb822Types.VALUE, Deb822Types.SUBSTVAR);
+    private static final TokenSet VALUE_OR_SUBSTVAR = TokenSet.create(Deb822Types.VALUE, Deb822Types.SUBSTVAR_TOKEN);
     private static final FieldValueReplacingLocalQuickFix MULTI_ARCH_SAME_ARCH_ALL_FIXER = new MultiarchSameArchitectureAllQuickFix();
     private static final FieldValueReplacingLocalQuickFix PRIORITY_EXTRA_IS_OBSOLETE_FIXER = new PriorityExtraIsObsoleteQuickFix();
 

@@ -20,9 +20,8 @@ import com.intellij.psi.TokenType;import com.intellij.spellchecker.tokenizer.Tok
 NEWLINE=\n
 SINGLE_SPACE=[ ]
 WHITE_SPACE=[\ \t\f]
-VALUE_CHARACTER=[^\n$]
 END_OF_LINE_COMMENT="#"[^\r\n]*
-SUBSTVAR=[$][{][^}\s]+[}]
+SUBSTVAR=[$][{][a-zA-Z0-9][a-zA-Z0-9\-:]*[}]
 SEPARATOR=[:]
 /* All characters in range 0x21 to 0x39 (incl.) + 0x3b to 0x7e (incl.) are valid, except for the
  * first character, where 0x23 (#) and 0x2D (-) are not permitted.
@@ -64,7 +63,8 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
  */
 <PARSING_INITIAL_VALUE_AFTER_SEPARATOR>{
 {WHITE_SPACE}+                                                   { yybegin(PARSING_INITIAL_VALUE); return TokenType.WHITE_SPACE; }
-{SUBSTVAR}                                                       { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR; }
+{SUBSTVAR}                                                       { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
+[$][{][}]                                                        { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
 [$]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
 [^$ \t\r\n]+                                                     { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
 }
@@ -72,20 +72,23 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 <PARSING_INITIAL_VALUE>{
 {NEWLINE}                                                        { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
 {WHITE_SPACE}+$                                                  { return TokenType.WHITE_SPACE; }
-{SUBSTVAR}                                                       { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR; }
+{SUBSTVAR}                                                       { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
+[$][{][}]                                                        { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
 [$]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
 [^$ \t\r\n]+                                                     { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
 }
 
 <SEEN_INITIAL_VALUE>{
-{SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR; }
+{SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR_TOKEN; }
+[$][{][}]                                                        { return Deb822Types.SUBSTVAR_TOKEN; }
 [$]                                                              { return Deb822Types.VALUE; }
 [^$\r\n]+                                                        { return Deb822Types.VALUE; }
 {WHITE_SPACE}*{NEWLINE}                                          { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
 }
 
 <PARSING_CONT_VALUE>{
-{SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR; }
+{SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR_TOKEN; }
+[$][{][}]                                                        { return Deb822Types.SUBSTVAR_TOKEN; }
 [$]                                                              { return Deb822Types.VALUE; }
 [^$\r\n]+                                                        { return Deb822Types.VALUE; }
 {NEWLINE}                                                        { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }

@@ -45,7 +45,7 @@ public class Deb822LexerTest extends TestCase {
                 /* Field Architecture */
                 Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE,
                 /* Field Depends */
-                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.SUBSTVAR, Deb822Types.VALUE, Deb822Types.SUBSTVAR,
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.SUBSTVAR_TOKEN, Deb822Types.VALUE, Deb822Types.SUBSTVAR_TOKEN,
                 Deb822Types.COMMENT,
                 /* Field Description */
                 Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE, Deb822Types.VALUE,

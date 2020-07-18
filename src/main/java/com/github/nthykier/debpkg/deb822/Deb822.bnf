@@ -28,10 +28,12 @@ field_value_pair ::= field SEPARATOR value_parts {
 }
 
 field ::= FIELD_NAME {
-  /*extends="com.github.nthykier.debpkg.deb822.psi.impl.Deb822FieldElementImpl"
-  implements="com.github.nthykier.debpkg.deb822.psi.Deb822FieldElement"*/
   methods=[getReference]
 }
-value_parts ::= COMMENT* (VALUE|SUBSTVAR) (COMMENT|VALUE|SUBSTVAR)*
+value_parts ::= COMMENT* (VALUE|substvar) (COMMENT|VALUE|substvar)*
 
-private recover_property ::= !(FIELD_NAME|SEPARATOR|SUBSTVAR|VALUE|COMMENT|PARAGRAPH_FINISH)
+substvar ::= SUBSTVAR_TOKEN {
+  methods=[getReference]
+}
+
+private recover_property ::= !(FIELD_NAME|SEPARATOR|SUBSTVAR_TOKEN|VALUE|COMMENT|PARAGRAPH_FINISH)
