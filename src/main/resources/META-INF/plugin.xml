@@ -9,6 +9,7 @@
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
     <resource-bundle>messages.DebpkgBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
