@@ -1,0 +1,205 @@
+fields:
+  - canonicalName: Package
+    description: |
+      Declares the name of a binary package
+    valueType: SINGLE_TRIVIAL_VALUE
+    valueValidation: /^[a-z0-9][a-z0-0.+-]+$/
+
+  - canonicalName: Source
+    description: |
+      Declares the name of the source package
+    valueType: SINGLE_TRIVIAL_VALUE
+    # Only valid for DebianControl; in other variants, it may have an optional version number appended
+    # a la "foo (1.0-1)"
+    valueValidation: /^[a-z0-9][a-z0-0.+-]+$/
+
+  - canonicalName: Standards-Version
+    description: |
+      Declares the last semantic version of the Debian Policy this package as last checked against.
+      <em>Example</em>:
+      <pre>Standards-Version: 4.5.2</pre>
+      Note that the last version part (the <em>X</em> in 4.5.2.<em>X</em>) is typically omitted as it
+      is used solely for editioral changes to the policy (e.g. typo fixes).
+    valueType: SINGLE_TRIVIAL_VALUE
+    valueValidation: /^\d+[.]\d+[.]\d+(?:[.]\d+)$/
+
+  - canonicalName: Maintainer
+    description: |
+      The maintainer of the package.
+      <em>Example</em>:
+      <pre>Maintainer: Jane Contributor &lt;jane@janes.email-provider.org&gt;</pre>
+      Note: If a person is listed in the Maintainer field, they should <em>not</em> be listed in Uploader field.
+    valueType: SINGLE_TRIVIAL_VALUE
+
+  - canonicalName: Uploaders
+    description: |
+      Comma separated list of uploaders associcated with the package.
+      <em>Example</em>:
+      <pre>Uploaders:
+         John Doe &lt;john@doe.org&gt;,
+         Lisbeth Worker &lt;lis@worker.org&gt;,
+      </pre>
+      Note: If a person is listed in the Maintainer field, they should <em>not</em> be listed in Uploader field.
+    valueType: COMMA_SEPARATED_VALUE_LIST
+
+  - canonicalName: Testsuite
+    valueType: SPACE_SEPARATED_VALUE_LIST
+
+  - canonicalName: Homepage
+    valueType: FREE_TEXT_VALUE
+
+  - canonicalName: Multi-Arch
+    description: |
+      <b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
+         adviced to leave it at its default until you have a working basic package or lots of time to understand
+         this topic.</em>
+      <p>Declare the Multi-Arch interface of the package.</p>
+      <p>The Multi-Arch field is used to inform the installation system (APT and dpkg) about how it should handle
+      dependency relations involving this package and foreign architecture.</p>
+      <em>Example</em>:
+      <pre>Multi-Arch: foreign
+      </pre>
+      <p>The rules for Multi-Arch can be quite complicated, but in many cases the following simple rules of thumb
+      gets you a long way:
+      <ul>
+        <li>If the <a href="https://wiki.debian.org/MultiArch/Hints">Multi-Arch hinter</a> comes with a hint, then
+            it almost certainly correct.  You are recommended to check the hint for further details (some changes
+            can be complicated to do).  Note that the Multi-Arch hinter is only run for official Debian packages
+            and may not be applicable to your case.
+        </li>
+        <li>If you have an "Architecture: all" data-only package, then it often want to be "Multi-Arch: foreign".</li>
+        <li>If you have an architecture dependent package, where everything is installed in
+            <em>/usr/lib/&lt;DEB_HOST_MULTIARCH&gt;</em> (plus a bit of standard documentation in
+            <em>/usr/share/doc</em>), then you probably want "Multi-Arch: same".</li>
+        <li>If none of the above applies, then leave it at its default value unless you know what you are doing or
+            you are receiving advice from a Multi-Arch expert.</li>
+      </ul>
+      </p>
+      <p>There are 4 possible values for the Multi-Arch field, though not all values are applicable to all packages:
+      <ul>
+        <li><b>no</b> - The default. The package can be installed for at most one architecture at the time.  It can
+          <i>only</i> satisfy relations for the same architecture as itself. Note that "Architecture: all" packages
+          are considered as a part of the system's "primary" architecture (see output of
+          <pre>dpkg --print-architecture</pre>).
+          Note: Despite the "no", the package <em>can</em> be installed for a foreign architecture (e.g. you can
+          install a 32-bit version of a package on a 64-bit system).  However, packages depending on it must also
+          be installed for the foreign architecture.
+        </li>
+        <li><b>foreign</b> - The package can be installed for at most one architecture at the time.  However, it can
+            satisfy relations for packages regardless of their architecture.  This is often useful for packages
+            solely providingly data or binaries that have "Multi-Arch neutral interfaces". Sadly, describing
+            a "Multi-Arch neutral interface" is hard and often only done by Multi-Arch experns on a case-by-case
+            basis.  Some programs are have "Multi-Arch dependent interfaces" and are not safe to declare as
+            "Multi-Arch: foreign".
+            The name "foreign" refers to the fact that the package can satisfy relations for native <em>and foreign</em>
+            architectures at the same time.
+        </li>
+        <li><b>same</b> - The same version of the package can be co-installed for multiple architecture. However,
+            for this to work, the package <b>MUST</b> ship all files in architecture unique paths (usually
+            beneath <em>/usr/lib/&lt;DEB_HOST_MULTIARCH&gt;</em>) <em>OR</em> have bit-for-bit identical content
+            in files that are in non-architecture unique paths (e.g. <em>/usr/share/doc</em>).
+            The name "same" refers to the fact that the package can satisfy relations only for the "same"
+            architecture as itself.  However, in this case, it is co-installable with itself as noted above.
+            Note: This value <b>cannot</b> be used with "Architecture: all".
+        </li>
+        <li><b>allowed</b> - <em>Advanced value</em>.  The package is <b>NOT</b> co-installable with itself but
+            can satisfy Multi-Arch foreign and Multi-Arch same relations at the same.  This is useful for
+            implementations of scripting languages (e.g. Perl or Python).  Here the interpreter contextually need
+            to satisfy some relations as "Multi-Arch: foreign" and others as "Multi-Arch: same" (or "Multi-Arch: no").
+            Typically, native extentions or plugins will need a "Multi-Arch: same"-relation as they only work with
+            the interpreter compiled for the same machine architecture as themselves whereas scripts are usally less
+            picky and can rely on the "Multi-Arch: foreign" relation.  Packages wanting to rely on the
+            "Multi-Arch: foreign" interface must explicitly declare this adding a ":any" suffix to the package name
+            in the dependency relation (e.g. "Depends: python3:any").  However, the ":any" suffix cannot be used
+            unconditionally and should not be used unless you know you need it.
+        </li>
+      </ul>
+      </p>
+    valueType: SINGLE_KEYWORD
+    defaultValue: "no"
+    keywordList:
+      - "no"
+      - "foreign"
+      - "same"
+      - "allowed"
+
+  - canonicalName: Priority
+    valueType: SINGLE_KEYWORD
+    defaultValue: "optional"
+    keywordList:
+      - "required"
+      - "important"
+      - "standard"
+      - "optional"
+      - "extra"
+
+  - canonicalName: Rules-Requires-Root
+    valueType: SPACE_SEPARATED_VALUE_LIST
+    defaultValue: "binary-targets"
+    keywordList:
+      - "no"
+      - "binary-targets"
+      # Permit unknown values; we do not have a full list of architectures handy
+      - ...
+    unknownKeywordValidation: /^[a-z0-9][a-z0-0.+-]+/\S+$/
+
+  - canonicalName: Architecture
+    description: |
+      <p>Determines which architectures this package can be compiled for or if it is an architecture-independent
+         package.  The value is a space-separated list of dpkg architecture names or wildcards.
+      </p>
+      <em>Example</em>:
+      <pre>
+      Package: architecture-specific-package
+      Architecture: any
+      # ...
+
+      Package: data-only-package
+      Architecture: all
+      Multi-Arch: foreign
+      # ...
+
+      Package: linux-only-package
+      Architecture: linux-any
+      # ...
+      </pre>
+      <p>When in doubt, stick to the values <b>all</b> (for scripts, data or documentation, etc.) or <b>any</b>
+         (for anything that can be compiled).  For official Debian packages, it is often easier to attempt the
+         compilation for unsupported architectures than to maintain the list of machine architectures that work.
+      </p>
+    valueType: SPACE_SEPARATED_VALUE_LIST
+    keywordList:
+      - "all"
+      - "any"
+      # Permit unknown values; we do not have a full list of architectures handy
+      - ...
+
+  - canonicalName: X-DH-Build-For-Type
+    description: |
+      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed.</em>
+      <p>This field is used when building a cross-compiling C-compiler (or similar cases), some packages need
+        to be build for target (DEB_<b>TARGET</b>_ARCH) rather than the host (DEB_<b>HOST</b>_ARCH) architecture.
+      </p>
+      <br>
+      <em>Example</em>:
+      <pre>
+      Package: gcc
+      Architecture: any
+      # ...
+
+      Package: libgcc-s1
+      Architecture: any
+      # When building a cross-compiling gcc, then this library needs to be built for the target architecture
+      # as binaries compiled by gcc will link with this library.
+      X-DH-Build-For-Type: target
+      # ...
+      </pre>
+      <p>If you are in doubt, then you probably do <b>not</b> need this field.</p>
+    defaultValue: "host"
+    valueType: SINGLE_KEYWORD
+    keywordList:
+      - "host"
+      - "target"
+
+  - canonicalName: Description
+    valueType: FREE_TEXT_VALUE
