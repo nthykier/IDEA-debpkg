@@ -52,10 +52,9 @@ public class DchSyntaxHighlighter extends SyntaxHighlighterBase {
         addTokenMapEntry(DchTypes.GREATER_THAN, "DCH.EMAIL_SEPARATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
         addTokenMapEntry(DchTypes.LESS_THAN, "DCH.EMAIL_SEPARATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
         addTokenMapEntry(DchTypes.DISTRIBUTION_NAME, "DCH.DISTRIBUTION", DefaultLanguageHighlighterColors.LABEL);
-        addTokenMapEntry(DchTypes.CHANGE_DETAILS, "DCH.CHANGE_DETAILS", DefaultLanguageHighlighterColors.STRING);
-        addTokenMapEntry(DchTypes.CHANGE_RESPONSIBLE, "DCH.CHANGE_RESPONSIBLE", DefaultLanguageHighlighterColors.CLASS_NAME);
-        addTokenMapEntry(DchTypes.MAINTAINER_NAME, "DCH.MAINTAINER_NAME", DefaultLanguageHighlighterColors.CLASS_NAME);
-        addTokenMapEntry(DchTypes.MAINTAINER_EMAIL, "DCH.MAINTAINER_EMAIL", DefaultLanguageHighlighterColors.CLASS_NAME);
+        addTokenMapEntry(DchTypes.CHANGE_RESPONSIBLE, "DCH.CHANGE_RESPONSIBLE", DefaultLanguageHighlighterColors.CONSTANT);
+        addTokenMapEntry(DchTypes.MAINTAINER_NAME, "DCH.MAINTAINER_NAME", DefaultLanguageHighlighterColors.IDENTIFIER);
+        addTokenMapEntry(DchTypes.MAINTAINER_EMAIL, "DCH.MAINTAINER_EMAIL", DefaultLanguageHighlighterColors.IDENTIFIER);
 
         addTokenMapEntry(TokenType.BAD_CHARACTER, BAD_CHARACTER);
     }

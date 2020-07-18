@@ -50,8 +50,6 @@ public class Deb822SyntaxHighlighter extends SyntaxHighlighterBase {
         addTokenMapEntry(Deb822Types.SUBSTVAR, "DEB822.SUBSTVAR", DefaultLanguageHighlighterColors.LABEL);
         addTokenMapEntry(Deb822Types.COMMENT, "DEB822.COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
         addTokenMapEntry(Deb822Types.FIELD_NAME, "DEB822.FIELD", DefaultLanguageHighlighterColors.KEYWORD);
-        addTokenMapEntry(Deb822Types.FIELD_NAME, "DEB822.KEYWORD_VALUE", DefaultLanguageHighlighterColors.KEYWORD);
-        addTokenMapEntry(Deb822Types.VALUE, "DEB822.VALUE", DefaultLanguageHighlighterColors.STRING);
 
         addTokenMapEntry(TokenType.BAD_CHARACTER, BAD_CHARACTER);
     }
