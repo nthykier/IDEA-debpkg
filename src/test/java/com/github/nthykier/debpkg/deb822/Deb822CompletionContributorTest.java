@@ -11,9 +11,15 @@ public class Deb822CompletionContributorTest extends LightPlatformCodeInsightFix
 
         myFixture.type("Pa");
         LookupElement[] items = myFixture.completeBasic();
-        for (LookupElement element : items) {
-            System.out.println("Suggestion: " + element.getLookupString());
+        if (items != null) {
+            for (LookupElement element : items) {
+                System.out.println("Suggestion: " + element.getLookupString());
+            }
+        } else {
+            System.out.println("No matches");
         }
-        // fixme: test the completion items
+        /* It matches Package and Homepage; but Package is supposed to come first (and Homepage is irrelevant) */
+        assertTrue(items != null && items.length > 0);
+        assertEquals("Suggested field is Package", items[0].getLookupString(), "Package: ");
     }
 }
