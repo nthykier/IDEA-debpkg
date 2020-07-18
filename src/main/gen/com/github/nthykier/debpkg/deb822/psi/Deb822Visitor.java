@@ -23,6 +23,10 @@ public class Deb822Visitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitSubstvar(@NotNull Deb822Substvar o) {
+    visitPsiElement(o);
+  }
+
   public void visitValueParts(@NotNull Deb822ValueParts o) {
     visitPsiElement(o);
   }

@@ -201,7 +201,7 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !(FIELD_NAME|SEPARATOR|SUBSTVAR|VALUE|COMMENT|PARAGRAPH_FINISH)
+  // !(FIELD_NAME|SEPARATOR|SUBSTVAR_TOKEN|VALUE|COMMENT|PARAGRAPH_FINISH)
   static boolean recover_property(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recover_property")) return false;
     boolean r;
@@ -211,13 +211,13 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // FIELD_NAME|SEPARATOR|SUBSTVAR|VALUE|COMMENT|PARAGRAPH_FINISH
+  // FIELD_NAME|SEPARATOR|SUBSTVAR_TOKEN|VALUE|COMMENT|PARAGRAPH_FINISH
   private static boolean recover_property_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recover_property_0")) return false;
     boolean r;
     r = consumeToken(b, FIELD_NAME);
     if (!r) r = consumeToken(b, SEPARATOR);
-    if (!r) r = consumeToken(b, SUBSTVAR);
+    if (!r) r = consumeToken(b, SUBSTVAR_TOKEN);
     if (!r) r = consumeToken(b, VALUE);
     if (!r) r = consumeToken(b, COMMENT);
     if (!r) r = consumeToken(b, PARAGRAPH_FINISH);
@@ -225,7 +225,19 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // COMMENT* (VALUE|SUBSTVAR) (COMMENT|VALUE|SUBSTVAR)*
+  // SUBSTVAR_TOKEN
+  public static boolean substvar(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "substvar")) return false;
+    if (!nextTokenIs(b, SUBSTVAR_TOKEN)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, SUBSTVAR_TOKEN);
+    exit_section_(b, m, SUBSTVAR, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // COMMENT* (VALUE|substvar) (COMMENT|VALUE|substvar)*
   public static boolean value_parts(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "value_parts")) return false;
     boolean r;
@@ -248,16 +260,16 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // VALUE|SUBSTVAR
+  // VALUE|substvar
   private static boolean value_parts_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "value_parts_1")) return false;
     boolean r;
     r = consumeToken(b, VALUE);
-    if (!r) r = consumeToken(b, SUBSTVAR);
+    if (!r) r = substvar(b, l + 1);
     return r;
   }
 
-  // (COMMENT|VALUE|SUBSTVAR)*
+  // (COMMENT|VALUE|substvar)*
   private static boolean value_parts_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "value_parts_2")) return false;
     while (true) {
@@ -268,13 +280,13 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // COMMENT|VALUE|SUBSTVAR
+  // COMMENT|VALUE|substvar
   private static boolean value_parts_2_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "value_parts_2_0")) return false;
     boolean r;
     r = consumeToken(b, COMMENT);
     if (!r) r = consumeToken(b, VALUE);
-    if (!r) r = consumeToken(b, SUBSTVAR);
+    if (!r) r = substvar(b, l + 1);
     return r;
   }
 

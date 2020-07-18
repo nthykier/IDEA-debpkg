@@ -26,4 +26,10 @@ public class Deb822ValuePartsImpl extends ASTWrapperPsiElement implements Deb822
     else super.accept(visitor);
   }
 
+  @Override
+  @NotNull
+  public List<Deb822Substvar> getSubstvarList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822Substvar.class);
+  }
+
 }

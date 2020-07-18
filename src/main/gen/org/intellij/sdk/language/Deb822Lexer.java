@@ -43,26 +43,25 @@ public class Deb822Lexer implements FlexLexer {
 
   /** 
    * Translates characters to character classes
-   * Chosen bits are [7, 7, 7]
-   * Total runtime size is 1928 bytes
+   * Chosen bits are [9, 6, 6]
+   * Total runtime size is 1568 bytes
    */
   public static int ZZ_CMAP(int ch) {
-    return ZZ_CMAP_A[(ZZ_CMAP_Y[ZZ_CMAP_Z[ch>>14]|((ch>>7)&0x7f)]<<7)|(ch&0x7f)];
+    return ZZ_CMAP_A[(ZZ_CMAP_Y[ZZ_CMAP_Z[ch>>12]|((ch>>6)&0x3f)]<<6)|(ch&0x3f)];
   }
 
-  /* The ZZ_CMAP_Z table has 68 entries */
+  /* The ZZ_CMAP_Z table has 272 entries */
   static final char ZZ_CMAP_Z[] = zzUnpackCMap(
-    "\1\0\103\200");
+    "\1\0\1\100\1\200\u010d\100");
 
-  /* The ZZ_CMAP_Y table has 256 entries */
+  /* The ZZ_CMAP_Y table has 192 entries */
   static final char ZZ_CMAP_Y[] = zzUnpackCMap(
-    "\1\0\1\1\53\2\1\3\22\2\1\4\37\2\1\3\237\2");
+    "\1\0\1\1\1\2\175\3\1\4\77\3");
 
-  /* The ZZ_CMAP_A table has 640 entries */
+  /* The ZZ_CMAP_A table has 320 entries */
   static final char ZZ_CMAP_A[] = zzUnpackCMap(
-    "\11\0\1\3\1\1\1\15\1\16\1\6\22\0\1\2\2\13\1\5\1\4\10\13\1\14\14\13\1\12\100"+
-    "\13\1\7\1\13\1\11\1\13\6\0\1\15\32\0\1\10\337\0\1\10\177\0\13\10\35\0\2\15"+
-    "\5\0\1\10\57\0\1\10\40\0");
+    "\11\0\1\3\1\1\1\15\1\16\1\5\22\0\1\2\2\14\1\4\1\6\10\14\1\11\2\14\12\10\1"+
+    "\13\6\14\32\10\6\14\32\10\1\7\1\14\1\12\1\14\6\0\1\15\242\0\2\15\26\0");
 
   /** 
    * Translates DFA states to action switch labels.
@@ -73,7 +72,7 @@ public class Deb822Lexer implements FlexLexer {
     "\11\0\1\1\2\2\1\3\1\4\1\5\1\6\1\7"+
     "\1\6\1\7\1\10\1\1\1\6\1\11\1\1\1\12"+
     "\3\13\1\0\1\14\1\0\4\14\1\0\1\15\2\0"+
-    "\1\16\1\0\1\17\1\20";
+    "\1\16\1\17\1\0\1\20";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[43];
@@ -106,7 +105,7 @@ public class Deb822Lexer implements FlexLexer {
     "\0\341\0\360\0\377\0\207\0\u010e\0\u011d\0\207\0\u012c"+
     "\0\207\0\u013b\0\u014a\0\u0159\0\u0168\0\207\0\u010e\0\u0177"+
     "\0\u010e\0\322\0\u011d\0\u012c\0\207\0\u0186\0\u0195\0\207"+
-    "\0\u01a4\0\207\0\207";
+    "\0\207\0\u01a4\0\207";
 
   private static int [] zzUnpackRowMap() {
     int [] result = new int[43];
@@ -132,30 +131,27 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\12\1\13\2\14\1\12\1\15\10\12\1\14\1\12"+
-    "\1\13\2\14\1\16\1\15\1\12\1\16\1\12\1\16"+
-    "\1\12\1\16\2\12\1\14\2\12\2\14\6\12\1\17"+
-    "\3\12\1\14\1\20\1\12\2\21\1\22\1\20\1\12"+
-    "\7\20\1\23\1\20\1\24\2\25\1\22\1\20\1\12"+
-    "\7\20\1\26\1\12\1\27\3\12\1\30\12\12\1\27"+
-    "\1\31\1\12\1\16\1\30\1\12\1\16\1\12\1\16"+
-    "\1\12\1\16\3\12\1\32\1\24\2\33\1\34\1\32"+
-    "\1\12\7\32\1\33\1\32\1\24\2\32\1\34\1\32"+
-    "\1\12\10\32\20\0\1\13\17\0\2\14\12\0\1\14"+
-    "\1\15\1\0\4\15\1\0\10\15\4\0\2\16\1\0"+
-    "\1\16\1\0\1\16\1\0\2\16\2\0\1\20\4\0"+
-    "\1\20\1\0\10\20\2\0\2\21\12\0\1\21\7\0"+
-    "\1\35\7\0\1\20\1\0\2\21\1\0\1\20\1\0"+
-    "\7\20\1\23\1\0\1\36\2\37\2\0\1\40\6\0"+
-    "\1\36\1\41\1\20\1\36\2\37\1\0\1\20\1\40"+
-    "\6\20\1\42\1\43\1\44\1\45\4\44\1\0\10\44"+
-    "\1\32\1\0\2\32\1\0\1\32\1\0\11\32\1\24"+
-    "\2\33\1\0\1\32\1\0\7\32\1\33\7\0\1\46"+
-    "\7\0\1\47\3\0\2\47\1\0\1\47\2\0\3\47"+
-    "\3\0\1\50\15\0\1\51\3\0\2\51\1\0\1\51"+
-    "\2\0\3\51\2\0\1\47\3\0\2\47\1\0\1\47"+
-    "\1\0\1\52\3\47\2\0\1\51\3\0\2\51\1\0"+
-    "\1\51\1\0\1\53\3\51\2\0";
+    "\1\12\1\13\2\14\1\15\11\12\1\14\1\12\1\13"+
+    "\2\14\1\15\1\12\3\16\1\12\1\16\1\12\1\16"+
+    "\1\12\1\14\2\12\2\14\7\12\1\17\2\12\1\14"+
+    "\1\20\1\12\2\21\1\20\1\12\1\22\7\20\1\23"+
+    "\1\20\1\24\2\25\1\20\1\12\1\22\7\20\1\26"+
+    "\1\12\1\27\2\12\1\30\13\12\1\27\1\31\1\12"+
+    "\1\30\1\12\3\16\1\12\1\16\1\12\1\16\2\12"+
+    "\1\32\1\24\2\33\1\32\1\12\1\34\7\32\1\33"+
+    "\1\32\1\24\3\32\1\12\1\34\10\32\20\0\1\13"+
+    "\17\0\2\14\12\0\1\14\1\15\1\0\3\15\1\0"+
+    "\11\15\4\0\1\16\1\0\5\16\1\0\1\16\2\0"+
+    "\1\20\3\0\1\20\2\0\10\20\2\0\2\21\12\0"+
+    "\1\21\7\0\1\35\7\0\1\20\1\0\2\21\1\20"+
+    "\2\0\7\20\1\23\1\0\1\36\2\37\1\0\1\40"+
+    "\7\0\1\36\1\41\1\20\1\36\2\37\1\20\1\40"+
+    "\1\0\6\20\1\42\1\43\1\44\1\45\3\44\1\0"+
+    "\11\44\1\32\1\0\3\32\2\0\11\32\1\24\2\33"+
+    "\1\32\2\0\7\32\1\33\7\0\1\46\17\0\1\47"+
+    "\1\0\1\50\5\0\1\51\25\0\1\52\1\0\1\53"+
+    "\14\0\2\47\1\50\1\47\13\0\2\52\1\53\1\52"+
+    "\3\0";
 
   private static int [] zzUnpackTrans() {
     int [] result = new int[435];
@@ -198,7 +194,7 @@ public class Deb822Lexer implements FlexLexer {
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
     "\11\0\1\11\4\1\1\11\4\1\1\11\2\1\1\11"+
     "\1\1\1\11\3\1\1\0\1\11\1\0\4\1\1\0"+
-    "\1\11\2\0\1\11\1\0\2\11";
+    "\1\11\2\0\2\11\1\0\1\11";
 
   private static int [] zzUnpackAttribute() {
     int [] result = new int[43];
@@ -616,20 +612,20 @@ public class Deb822Lexer implements FlexLexer {
             // fall through
           case 29: break;
           case 14: 
+            { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN;
+            } 
+            // fall through
+          case 30: break;
+          case 15: 
             // lookahead expression with fixed lookahead length
             zzMarkedPos = Character.offsetByCodePoints
                 (zzBufferL/*, zzStartRead, zzEndRead - zzStartRead*/, zzMarkedPos, -2);
             { return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 30: break;
-          case 15: 
-            { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR;
-            } 
-            // fall through
           case 31: break;
           case 16: 
-            { return Deb822Types.SUBSTVAR;
+            { return Deb822Types.SUBSTVAR_TOKEN;
             } 
             // fall through
           case 32: break;

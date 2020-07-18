@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface Deb822ValueParts extends PsiElement {
 
+  @NotNull
+  List<Deb822Substvar> getSubstvarList();
+
 }

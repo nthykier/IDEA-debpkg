@@ -12,13 +12,14 @@ public interface Deb822Types {
   IElementType FIELD = new Deb822ElementType("FIELD");
   IElementType FIELD_VALUE_PAIR = new Deb822ElementType("FIELD_VALUE_PAIR");
   IElementType PARAGRAPH = new Deb822ElementType("PARAGRAPH");
+  IElementType SUBSTVAR = new Deb822ElementType("SUBSTVAR");
   IElementType VALUE_PARTS = new Deb822ElementType("VALUE_PARTS");
 
   IElementType COMMENT = new Deb822TokenType("COMMENT");
   IElementType FIELD_NAME = new Deb822TokenType("FIELD_NAME");
   IElementType PARAGRAPH_FINISH = new Deb822TokenType("PARAGRAPH_FINISH");
   IElementType SEPARATOR = new Deb822TokenType("SEPARATOR");
-  IElementType SUBSTVAR = new Deb822TokenType("SUBSTVAR");
+  IElementType SUBSTVAR_TOKEN = new Deb822TokenType("SUBSTVAR_TOKEN");
   IElementType VALUE = new Deb822TokenType("VALUE");
 
   class Factory {
@@ -35,6 +36,9 @@ public interface Deb822Types {
       }
       else if (type == PARAGRAPH) {
         return new Deb822ParagraphImpl(node);
+      }
+      else if (type == SUBSTVAR) {
+        return new Deb822SubstvarImpl(node);
       }
       else if (type == VALUE_PARTS) {
         return new Deb822ValuePartsImpl(node);
