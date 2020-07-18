@@ -42,6 +42,7 @@
                   language="DebianChangelog" extensions="dch" />
         <lang.parserDefinition language="DebianChangelog" implementationClass="com.github.nthykier.debpkg.dch.DchParserDefinition" />
         <lang.syntaxHighlighterFactory language="DebianChangelog" implementationClass="com.github.nthykier.debpkg.dch.DchSyntaxHighlighterFactory" />
+        <lang.commenter language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822Commenter"/>
         <spellchecker.support language="DebianChangelog" id="dchSpellcheckingStrategy"
                               implementationClass="com.github.nthykier.debpkg.dch.DchSpellcheckingStrategy" />
     </extensions>
