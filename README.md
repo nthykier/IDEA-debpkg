@@ -1,4 +1,4 @@
-# IDEA-debpkg
+# debpkg
 
 ![Build](https://github.com/nthykier/IDEA-debpkg/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
@@ -22,7 +22,7 @@ Support for common Debian packaging files (e.g. debian/control and debian/change
 
 - Using IDE built-in plugin system:
   
-  <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "IDEA-debpkg"</kbd> >
+  <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "debpkg"</kbd> >
   <kbd>Install Plugin</kbd>
   
 - Manually:
