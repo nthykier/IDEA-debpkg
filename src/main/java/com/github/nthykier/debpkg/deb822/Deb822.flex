@@ -64,9 +64,9 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 {WHITE_SPACE}+                                                   { yybegin(PARSING_INITIAL_VALUE); return TokenType.WHITE_SPACE; }
 {SUBSTVAR}                                                       { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
 [$][{][}]                                                        { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
-[$]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
+[$]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE_TOKEN; }
 [,]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA; }
-[^$, \t\r\n]+                                                    { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
+[^$, \t\r\n]+                                                    { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE_TOKEN; }
 }
 
 <PARSING_INITIAL_VALUE>{
@@ -74,18 +74,18 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 {WHITE_SPACE}+$                                                  { return TokenType.WHITE_SPACE; }
 {SUBSTVAR}                                                       { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
 [$][{][}]                                                        { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
-[$]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
+[$]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE_TOKEN; }
 [,]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA; }
-[^$, \t\r\n]+                                                    { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
+[^$, \t\r\n]+                                                    { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE_TOKEN; }
 }
 
 <SEEN_INITIAL_VALUE>{
 {NEWLINE}                                                        { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
 {SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR_TOKEN; }
 [$][{][}]                                                        { return Deb822Types.SUBSTVAR_TOKEN; }
-[$]                                                              { return Deb822Types.VALUE; }
+[$]                                                              { return Deb822Types.VALUE_TOKEN; }
 [,]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA; }
-[^$ ,\r\n]+                                                      { return Deb822Types.VALUE; }
+[^$ ,\r\n]+                                                      { return Deb822Types.VALUE_TOKEN; }
 {WHITE_SPACE}+                                                   { return TokenType.WHITE_SPACE; }
 }
 
@@ -93,9 +93,9 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 {NEWLINE}                                                        { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
 {SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR_TOKEN; }
 [$][{][}]                                                        { return Deb822Types.SUBSTVAR_TOKEN; }
-[$]                                                              { return Deb822Types.VALUE; }
+[$]                                                              { return Deb822Types.VALUE_TOKEN; }
 [,]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA; }
-[^ $,\r\n]+                                                      { return Deb822Types.VALUE; }
+[^ $,\r\n]+                                                      { return Deb822Types.VALUE_TOKEN; }
 {WHITE_SPACE}+                                                   { return TokenType.WHITE_SPACE; }
 }
 

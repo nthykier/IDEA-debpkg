@@ -33,10 +33,14 @@ field_value_pair ::= field SEPARATOR value_parts {
 field ::= FIELD_NAME {
   methods=[getReference]
 }
-value_parts ::= COMMENT* (VALUE|COMMA|substvar) (COMMENT|VALUE|COMMA|substvar)*
+value_parts ::= COMMENT* (value|COMMA|substvar) (COMMENT|value|COMMA|substvar)*
+
+value ::= VALUE_TOKEN {
+  methods=[getReference]
+}
 
 substvar ::= SUBSTVAR_TOKEN {
   methods=[getReference]
 }
 
-private recover_property ::= !(FIELD_NAME|SEPARATOR|SUBSTVAR_TOKEN|VALUE|COMMA|COMMENT|PARAGRAPH_FINISH)
+private recover_property ::= !(FIELD_NAME|SEPARATOR|SUBSTVAR_TOKEN|VALUE_TOKEN|COMMA|COMMENT|PARAGRAPH_FINISH)

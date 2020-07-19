@@ -35,7 +35,7 @@ public class Deb822CodeCompletionContributor extends CompletionContributor {
                     }
                 }
         );
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(Deb822Types.VALUE),
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(Deb822Types.VALUE_TOKEN),
                 new CompletionProvider<CompletionParameters>() {
                     public void addCompletions(@NotNull CompletionParameters parameters,
                                                @NotNull ProcessingContext context,
