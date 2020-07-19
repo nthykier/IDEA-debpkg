@@ -38,7 +38,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    implementation("org.yaml:snakeyaml:1.24")
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.10.0")
 }
 
