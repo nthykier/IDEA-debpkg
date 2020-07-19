@@ -89,17 +89,20 @@ public class Deb822Annotator implements Annotator {
         parts = fieldValueType.splitValue(valueParts);
 
         for (List<ASTNode> valueTokens : parts) {
-            validateFieldToken(knownField, valueParts, valueTokens, holder);
+            validateFieldToken(knownField, valueParts, valueTokens, holder, parts.size() == 1);
         }
     }
 
     private static void validateFieldToken(@NotNull Deb822KnownField field,
                                            @NotNull Deb822ValueParts valueParts,
                                            @NotNull List<ASTNode> valueTokens,
-                                           @NotNull AnnotationHolder holder) {
+                                           @NotNull AnnotationHolder holder,
+                                           boolean isSoleValue
+    ) {
         String value = null;
         ASTNode token = null;
         IElementType elementType = null;
+        Deb822KnownFieldKeyword knownFieldKeyword = null;
         if (valueTokens.size() == 0) {
             // FIXME: warn about duplicate separators at the concrete separator
             holder.createErrorAnnotation(valueParts,
@@ -113,10 +116,15 @@ public class Deb822Annotator implements Annotator {
             elementType = token.getElementType();
             if (elementType == Deb822Types.VALUE) {
                 value = token.getText();
+                knownFieldKeyword = field.getKeyword(value);
             }
-            if (value != null && field.getKnownKeywords().contains(value)) {
+            if (knownFieldKeyword != null) {
                 Annotation anno = holder.createInfoAnnotation(token, null);
                 anno.setTextAttributes(Deb822SyntaxHighlighter.VALUE_KEYWORD);
+                if (knownFieldKeyword.isExclusive() && !isSoleValue) {
+                    holder.createErrorAnnotation(token, Deb822Bundle.message("deb822.files.annotator.fields.value-is-exclusive",
+                            knownFieldKeyword.getValueName(), field.getCanonicalFieldName()));
+                }
                 if (field.getCanonicalFieldName().equals("Priority") && value.equals("extra")) {
                     Annotation weakAnno = holder.createWeakWarningAnnotation(valueParts, PRIORITY_EXTRA_IS_OBSOLETE_FIXER.getAnnotationText());
                     weakAnno.registerFix(PRIORITY_EXTRA_IS_OBSOLETE_FIXER, null, null, new PriorityExtraIsObsoleteProblemDescriptor(valueParts));

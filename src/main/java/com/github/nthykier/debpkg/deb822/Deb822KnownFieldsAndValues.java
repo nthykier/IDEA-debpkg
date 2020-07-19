@@ -1,6 +1,8 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
+import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldImpl;
+import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldKeywordImpl;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +49,7 @@ public class Deb822KnownFieldsAndValues {
         for (String fieldName : fieldNames) {
             String fieldLc = fieldName.toLowerCase().intern();
             Deb822KnownField field = new Deb822KnownFieldImpl(fieldName, valueType, false,
-                    Collections.emptyNavigableSet(), null, true);
+                    Collections.emptyMap(), null, true);
             checkedAddField(fieldLc, field);
         }
     }
@@ -55,67 +57,6 @@ public class Deb822KnownFieldsAndValues {
     private static void checkedAddField(String fieldNameLC, Deb822KnownField field) {
         Deb822KnownField existing = KNOWN_FIELDS.putIfAbsent(fieldNameLC, field);
         assert existing == null : "Field " + existing.getCanonicalFieldName() + " is declared twice";
-    }
-
-    public static class Deb822KnownFieldImpl implements Deb822KnownField {
-        private final String canonicalFieldName;
-        private final Deb822KnownFieldValueType fieldValueType;
-        private final boolean areAllKeywordsKnown;
-        private final boolean hasKnownValues;
-        private final NavigableSet<String> allKnownKeywords;
-        private final String docs;
-        private final boolean supportsSubstvars;
-
-        public Deb822KnownFieldImpl(@NotNull String canonicalFieldName, @NotNull Deb822KnownFieldValueType fieldValueType,
-                                    boolean areAllKeywordsKnown, @NotNull NavigableSet<String> allKnownKeywords,
-                                    String docs, boolean supportsSubstvars) {
-            this.canonicalFieldName = canonicalFieldName;
-            this.fieldValueType = fieldValueType;
-            this.areAllKeywordsKnown = areAllKeywordsKnown;
-            this.allKnownKeywords = Collections.unmodifiableNavigableSet(allKnownKeywords) ;
-            this.hasKnownValues = areAllKeywordsKnown || !this.allKnownKeywords.isEmpty();
-            this.docs = docs;
-            this.supportsSubstvars = supportsSubstvars;
-        }
-
-        @NotNull
-        @Override
-        public String getCanonicalFieldName() {
-            return canonicalFieldName;
-        }
-
-        @Override
-        public boolean areAllKeywordsKnown() {
-            return areAllKeywordsKnown;
-        }
-
-
-        @Override
-        public boolean hasKnownValues() {
-            return hasKnownValues;
-        }
-
-        @NotNull
-        @Override
-        public NavigableSet<String> getKnownKeywords() {
-            return allKnownKeywords;
-        }
-
-        @Nullable
-        @Override
-        public String getFieldDescription() {
-            return this.docs;
-        }
-
-        @Override
-        public boolean supportsSubstsvars() {
-            return this.supportsSubstvars;
-        }
-
-        @NotNull
-        public Deb822KnownFieldValueType getFieldValueType() {
-            return this.fieldValueType;
-        }
     }
 
     private static void loadKnownFieldDefinitions() {
@@ -134,8 +75,9 @@ public class Deb822KnownFieldsAndValues {
         Deb822KnownFieldValueType valueType = Deb822KnownFieldValueType.valueOf(
                 getOptionalString(fieldDef, "valueType", "FREE_TEXT_VALUE")
         );
-        List<String> keywordList = getList(fieldDef, "keywordList");
+        List<Object> keywordList = getList(fieldDef, "keywordList");
         String docs = getOptionalString(fieldDef, "description", null);
+        Map<String, Deb822KnownFieldKeyword> keywordMap;
         boolean allKeywordsKnown = false;
         boolean supportsSubstvars = getBool(fieldDef, "supportsSubstvars", true);
         switch (valueType) {
@@ -169,9 +111,35 @@ public class Deb822KnownFieldsAndValues {
                 allKeywordsKnown = false;
                 keywordList.remove(keywordList.size() - 1);
             }
+            keywordMap = new HashMap<>(keywordList.size());
+            for (Object keywordDef : keywordList) {
+                Deb822KnownFieldKeyword keyword = parseKeyword(keywordDef);
+                Deb822KnownFieldKeyword existing = keywordMap.putIfAbsent(keyword.getValueName(), keyword);
+                assert existing == null : "Duplicate keyword " + keyword.getValueName() + " for field " + canonicalName;
+            }
+        } else {
+            keywordMap = Collections.emptyMap();
         }
-        return new Deb822KnownFieldImpl(canonicalName, valueType, allKeywordsKnown, new TreeSet<>(keywordList), docs,
+        return new Deb822KnownFieldImpl(canonicalName, valueType, allKeywordsKnown, keywordMap, docs,
                 supportsSubstvars);
+    }
+
+    private static Deb822KnownFieldKeyword parseKeyword(Object keywordDefRaw) {
+        String docs = null;
+        String valueName;
+        boolean isExclusive = false;
+        if (keywordDefRaw instanceof String) {
+            valueName = (String)keywordDefRaw;
+        } else if (keywordDefRaw instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> keywordDef = (Map<String, Object>)keywordDefRaw;
+            valueName = getRequiredString(keywordDef, "value");
+            docs = getOptionalString(keywordDef, "description", null);
+            isExclusive = getBool(keywordDef, "isExclusive", false);
+        } else {
+            throw new IllegalArgumentException("Do not know how parse keyword: " + keywordDefRaw);
+        }
+        return new Deb822KnownFieldKeywordImpl(valueName, docs, isExclusive);
     }
 
     static {

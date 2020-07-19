@@ -163,8 +163,15 @@ fields:
     valueType: SPACE_SEPARATED_VALUE_LIST
     defaultValue: "binary-targets"
     keywordList:
-      - "no"
-      - "binary-targets"
+      - value: "no"
+        isExclusive: true
+        description: |
+          The build process will not require root or fakeroot during any step.  This enables dpkg-buildpackage and
+          debhelper to perform several optimizations during the build.
+      - value: "binary-targets"
+        isExclusive: true
+        description: |
+          The build process assumes that dpkg-buildpackage will run the relevant binary target with root or fakeroot.
       # Permit unknown values; we do not have a full list of architectures handy
       - ...
     unknownKeywordValidation: /^[a-z0-9][a-z0-0.+-]+/\S+$/
@@ -196,7 +203,8 @@ fields:
       </p>
     valueType: SPACE_SEPARATED_VALUE_LIST
     keywordList:
-      - "all"
+      - value: "all"
+        isExclusive: true
       - "any"
       # Permit unknown values; we do not have a full list of architectures handy
       - ...
