@@ -1,6 +1,7 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.deb822.psi.Deb822ElementFactory;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.intellij.codeInsight.completion.*;
@@ -64,12 +65,10 @@ public class Deb822CodeCompletionContributor extends CompletionContributor {
     }
 
     protected boolean handleSubstvarCompletion(CompletionParameters parameters, @NotNull CompletionResultSet resultSet) {
-        PsiElement origElement = parameters.getPosition();
-        PsiElement prevElement;
-        String value;
-        prevElement = origElement.getPrevSibling();
-        value = origElement.getText();
-        if (prevElement.getText().equals("$")) {
+        PsiElement element = parameters.getPosition();
+        PsiElement prevElement = element.getPrevSibling();
+        if (prevElement != null && prevElement.getText().equals("$")) {
+            String value = element.getText();
             if (value.equals("") || value.startsWith("{") || value.startsWith("\n")) {
                 List<String> knownNames = Deb822KnownSubstvars.getAllKnownSubstvarNames();
                 /* TODO: Probably has issues with "bla blah ${foo} blah ${bar}" */
