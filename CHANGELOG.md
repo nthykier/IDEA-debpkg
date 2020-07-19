@@ -3,6 +3,18 @@
 # debpkg Changelog
 
 ## [Unreleased]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [0.0.1]
 ### Initial version
 
 - Syntax highlighting of debian/changelog and *.dch files
