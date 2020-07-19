@@ -2,9 +2,6 @@
     <id>com.github.nthykier.debpkg</id>
     <name>Debian packaging support</name>
     <vendor>nthykier</vendor>
-    <description>
-        Support for common Debian packaging files (e.g. debian/control and debian/changelog).
-    </description>
 
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
