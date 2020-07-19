@@ -189,7 +189,6 @@ jobs:
         with:
           tag_name: v${{ needs.build.outputs.version }}
           release_name: v${{ needs.build.outputs.version }}
-          body: "Write something here"
           body: ${{ needs.build.outputs.changelog }}
           draft: true
 
