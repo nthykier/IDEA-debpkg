@@ -35,22 +35,22 @@ public class Deb822LexerTest extends TestCase {
         IElementType token;
         List<IElementType> expected = Arrays.asList(
                 /* Field Source */
-                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE,
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,
                 /* Field Section */
-                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE,
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,
                 Deb822Types.COMMENT,
                 Deb822Types.PARAGRAPH_FINISH,
                 /* Field Package */
-                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE,
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,
                 /* Field Architecture */
-                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE,
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,
                 /* Field Depends */
                 Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.SUBSTVAR_TOKEN, Deb822Types.COMMA, Deb822Types.SUBSTVAR_TOKEN,
                 Deb822Types.COMMENT,
                 /* Field Description */
-                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE, Deb822Types.VALUE,
-                /* cont */ Deb822Types.VALUE, Deb822Types.VALUE, Deb822Types.COMMENT, Deb822Types.VALUE,
-                /* cont */ Deb822Types.VALUE
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN,
+                /* cont */ Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN, Deb822Types.COMMENT, Deb822Types.VALUE_TOKEN,
+                /* cont */ Deb822Types.VALUE_TOKEN
 
                 /*No Deb822Types.PARAGRAPH_FINISH; there is an EOF instead */
         );
