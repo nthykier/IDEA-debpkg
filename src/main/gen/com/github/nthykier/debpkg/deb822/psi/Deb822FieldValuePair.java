@@ -10,7 +10,7 @@ public interface Deb822FieldValuePair extends PsiElement {
   @NotNull
   Deb822Field getField();
 
-  @NotNull
+  @Nullable
   Deb822ValueParts getValueParts();
 
 }

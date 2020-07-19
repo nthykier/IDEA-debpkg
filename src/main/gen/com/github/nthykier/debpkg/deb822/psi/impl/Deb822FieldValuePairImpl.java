@@ -33,9 +33,9 @@ public class Deb822FieldValuePairImpl extends ASTWrapperPsiElement implements De
   }
 
   @Override
-  @NotNull
+  @Nullable
   public Deb822ValueParts getValueParts() {
-    return findNotNullChildByClass(Deb822ValueParts.class);
+    return findChildByClass(Deb822ValueParts.class);
   }
 
 }

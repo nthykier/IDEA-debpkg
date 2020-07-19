@@ -133,13 +133,14 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
   // field SEPARATOR value_parts
   public static boolean field_value_pair(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "field_value_pair")) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, FIELD_VALUE_PAIR, "<field value pair>");
     r = field(b, l + 1);
     r = r && consumeToken(b, SEPARATOR);
+    p = r; // pin = 2
     r = r && value_parts(b, l + 1);
-    exit_section_(b, l, m, r, false, recover_property_parser_);
-    return r;
+    exit_section_(b, l, m, r, p, recover_property_parser_);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -241,7 +242,7 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
   public static boolean value_parts(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "value_parts")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, VALUE_PARTS, "<value parts>");
+    Marker m = enter_section_(b, l, _NONE_, VALUE_PARTS, "<Value or Substvars>");
     r = value_parts_0(b, l + 1);
     r = r && value_parts_1(b, l + 1);
     r = r && value_parts_2(b, l + 1);
