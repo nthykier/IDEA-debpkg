@@ -42,7 +42,6 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 
 <WAITING_FOR_SEPATOR>{
 {WHITE_SPACE}+                                   { return TokenType.WHITE_SPACE; }
-
 {SEPARATOR}                                      { yybegin(PARSING_INITIAL_VALUE_AFTER_SEPARATOR); return Deb822Types.SEPARATOR; }
 }
 
@@ -66,7 +65,8 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 {SUBSTVAR}                                                       { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
 [$][{][}]                                                        { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
 [$]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
-[^$ \t\r\n]+                                                     { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
+[,]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA; }
+[^$, \t\r\n]+                                                    { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
 }
 
 <PARSING_INITIAL_VALUE>{
@@ -75,23 +75,28 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 {SUBSTVAR}                                                       { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
 [$][{][}]                                                        { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
 [$]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
-[^$ \t\r\n]+                                                     { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
+[,]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA; }
+[^$, \t\r\n]+                                                    { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE; }
 }
 
 <SEEN_INITIAL_VALUE>{
+{NEWLINE}                                                        { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
 {SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR_TOKEN; }
 [$][{][}]                                                        { return Deb822Types.SUBSTVAR_TOKEN; }
 [$]                                                              { return Deb822Types.VALUE; }
-[^$\r\n]+                                                        { return Deb822Types.VALUE; }
-{WHITE_SPACE}*{NEWLINE}                                          { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
+[,]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA; }
+[^$ ,\r\n]+                                                      { return Deb822Types.VALUE; }
+{WHITE_SPACE}+                                                   { return TokenType.WHITE_SPACE; }
 }
 
 <PARSING_CONT_VALUE>{
+{NEWLINE}                                                        { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
 {SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR_TOKEN; }
 [$][{][}]                                                        { return Deb822Types.SUBSTVAR_TOKEN; }
 [$]                                                              { return Deb822Types.VALUE; }
-[^$\r\n]+                                                        { return Deb822Types.VALUE; }
-{NEWLINE}                                                        { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
+[,]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA; }
+[^ $,\r\n]+                                                      { return Deb822Types.VALUE; }
+{WHITE_SPACE}+                                                   { return TokenType.WHITE_SPACE; }
 }
 
 <MAYBE_CONT_VALUE>{

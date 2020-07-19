@@ -1,6 +1,7 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.intellij.codeInspection.*;
 import com.intellij.lang.ASTNode;
@@ -9,6 +10,8 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.TokenType;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class Deb822Annotator implements Annotator {
-    private static final TokenSet VALUE_OR_SUBSTVAR = TokenSet.create(Deb822Types.VALUE, Deb822Types.SUBSTVAR_TOKEN);
+    private static final TokenSet SPACE_OR_COMMA = TokenSet.create(TokenType.WHITE_SPACE, Deb822Types.COMMA);
     private static final FieldValueReplacingLocalQuickFix MULTI_ARCH_SAME_ARCH_ALL_FIXER = new MultiarchSameArchitectureAllQuickFix();
     private static final FieldValueReplacingLocalQuickFix PRIORITY_EXTRA_IS_OBSOLETE_FIXER = new PriorityExtraIsObsoleteQuickFix();
 
@@ -71,29 +74,82 @@ public class Deb822Annotator implements Annotator {
             /* Additional errors here are not useful */
             return;
         }
-        /* From here on, we are validating known values.  It is a prerequisite that we know any to do that */
-        if (!knownField.hasKnownValues()) {
-            return;
-        }
         this.validateFieldValue(knownField, valueParts, holder);
     }
 
     private void validateFieldValue(@NotNull Deb822KnownField knownField, @NotNull Deb822ValueParts valueParts,
                                     @NotNull AnnotationHolder holder) {
-        ASTNode[] childNodes = valueParts.getNode().getChildren(VALUE_OR_SUBSTVAR);
-        String value;
-        if (childNodes.length == 0) {
+
+        Deb822KnownFieldValueType fieldValueType = knownField.getFieldValueType();
+        List<List<ASTNode>> parts;
+
+        if (fieldValueType == Deb822KnownFieldValueType.FREE_TEXT_VALUE) {
             return;
         }
-        value = valueParts.getText().trim();
-        if (knownField.getKnownKeywords().contains(value)) {
-            Annotation anno = holder.createInfoAnnotation(valueParts, null);
-            anno.setTextAttributes(Deb822SyntaxHighlighter.VALUE_KEYWORD);
-            if (knownField.getCanonicalFieldName().equals("Priority") && value.equals("extra")) {
-                Annotation weakAnno = holder.createWeakWarningAnnotation(valueParts, PRIORITY_EXTRA_IS_OBSOLETE_FIXER.getAnnotationText());
-                weakAnno.registerFix(PRIORITY_EXTRA_IS_OBSOLETE_FIXER, null, null, new PriorityExtraIsObsoleteProblemDescriptor(valueParts));
+        parts = fieldValueType.splitValue(valueParts);
+
+        for (List<ASTNode> valueTokens : parts) {
+            validateFieldToken(knownField, valueParts, valueTokens, holder);
+        }
+    }
+
+    private static void validateFieldToken(@NotNull Deb822KnownField field,
+                                           @NotNull Deb822ValueParts valueParts,
+                                           @NotNull List<ASTNode> valueTokens,
+                                           @NotNull AnnotationHolder holder) {
+        String value = null;
+        ASTNode token = null;
+        IElementType elementType = null;
+        if (valueTokens.size() == 0) {
+            // FIXME: warn about duplicate separators at the concrete separator
+            holder.createErrorAnnotation(valueParts,
+                    Deb822Bundle.message("deb822.files.annotator.fields.empty.list.value")
+            );
+            /* not much else we can say here */
+            return;
+        }
+        if (valueTokens.size() == 1) {
+            token = valueTokens.get(0);
+            elementType = token.getElementType();
+            if (elementType == Deb822Types.VALUE) {
+                value = token.getText();
             }
-        } else if (knownField.areAllKeywordsKnown() && (childNodes.length != 1 || childNodes[0].getElementType() == Deb822Types.VALUE)) {
+            if (value != null && field.getKnownKeywords().contains(value)) {
+                Annotation anno = holder.createInfoAnnotation(token, null);
+                anno.setTextAttributes(Deb822SyntaxHighlighter.VALUE_KEYWORD);
+                if (field.getCanonicalFieldName().equals("Priority") && value.equals("extra")) {
+                    Annotation weakAnno = holder.createWeakWarningAnnotation(valueParts, PRIORITY_EXTRA_IS_OBSOLETE_FIXER.getAnnotationText());
+                    weakAnno.registerFix(PRIORITY_EXTRA_IS_OBSOLETE_FIXER, null, null, new PriorityExtraIsObsoleteProblemDescriptor(valueParts));
+                }
+                /* Validated; skip to next element */
+                return;
+            }
+        }
+        if (field.getFieldValueType() == Deb822KnownFieldValueType.SINGLE_KEYWORD
+                || field.getFieldValueType() == Deb822KnownFieldValueType.SINGLE_TRIVIAL_VALUE) {
+            int i = 0;
+            final int size = valueTokens.size();
+            boolean bad = false;
+            for (; i < size ; i++) {
+                ASTNode e = valueTokens.get(i);
+                if (!bad) {
+                    IElementType et = e.getElementType();
+                    if (SPACE_OR_COMMA.contains(et)) {
+                        /* not a single value then */
+                        bad = true;
+                    }
+                }
+                if (bad) {
+                    holder.createErrorAnnotation(e,
+                            Deb822Bundle.message("deb822.files.annotator.fields.field-is-single-value-field"));
+                }
+            }
+            if (bad) {
+                return;
+            }
+        }
+        /* Not a known keyword - forgive substvars through */
+        if (field.areAllKeywordsKnown() && !(Deb822Types.SUBSTVAR_TOKEN.equals(elementType))) {
             holder.createErrorAnnotation(valueParts,
                     Deb822Bundle.message("deb822.files.annotator.fields.unknown.value")
             );

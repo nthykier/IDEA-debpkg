@@ -32,7 +32,8 @@ fields:
       <em>Example</em>:
       <pre>Maintainer: Jane Contributor &lt;jane@janes.email-provider.org&gt;</pre>
       Note: If a person is listed in the Maintainer field, they should <em>not</em> be listed in Uploader field.
-    valueType: SINGLE_TRIVIAL_VALUE
+    # Technically wrong, but using SINGLE_TRIVIAL_VALUE trips another validation rule for a valid maintainer field
+    valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
 
   - canonicalName: Uploaders
