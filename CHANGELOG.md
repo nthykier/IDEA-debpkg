@@ -2,7 +2,7 @@
 
 # debpkg Changelog
 
-## v0.0.1
+## [v0.0.1]
 ### Initial version
 
 - Syntax highlighting of debian/changelog and *.dch files
