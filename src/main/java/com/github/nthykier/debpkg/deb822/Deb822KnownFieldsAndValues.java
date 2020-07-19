@@ -150,12 +150,13 @@ public class Deb822KnownFieldsAndValues {
 
     static {
         /* Fields with structured content we know but currently cannot validate at the moment */
-        ADD_KNOWN_FIELDS(Deb822KnownFieldValueType.FREE_TEXT_VALUE, "Vcs-Git", "Vcs-Svn", "Vcs-Browser");
+        ADD_KNOWN_FIELDS(Deb822KnownFieldValueType.FREE_TEXT_VALUE, "Vcs-Git", "Vcs-Svn", "Vcs-Browser",
+                "Vcs-Arch", "Vcs-Bzr", "Vcs-Cvs", "Vcs-Darcs", "Vcs-Hg", "Vcs-Mtn");
         ADD_KNOWN_FIELDS(Deb822KnownFieldValueType.COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK,
                 "Build-Depends", "Build-Depends-Indep", "Build-Depends-Arch",
                 "Build-Conflicts", "Build-Conflicts-Indep", "Build-Conflicts-Arch",
                 "Pre-Depends", "Depends", "Recommends", "Suggests", "Enhances",
-                "Conflicts", "Replaces", "Breaks"
+                "Conflicts", "Replaces", "Breaks", "Provides"
                 );
 
         loadKnownFieldDefinitions();
