@@ -13,14 +13,16 @@ public interface Deb822Types {
   IElementType FIELD_VALUE_PAIR = new Deb822ElementType("FIELD_VALUE_PAIR");
   IElementType PARAGRAPH = new Deb822ElementType("PARAGRAPH");
   IElementType SUBSTVAR = new Deb822ElementType("SUBSTVAR");
+  IElementType VALUE = new Deb822ElementType("VALUE");
   IElementType VALUE_PARTS = new Deb822ElementType("VALUE_PARTS");
 
+  IElementType COMMA = new Deb822TokenType("COMMA");
   IElementType COMMENT = new Deb822TokenType("COMMENT");
   IElementType FIELD_NAME = new Deb822TokenType("FIELD_NAME");
   IElementType PARAGRAPH_FINISH = new Deb822TokenType("PARAGRAPH_FINISH");
   IElementType SEPARATOR = new Deb822TokenType("SEPARATOR");
   IElementType SUBSTVAR_TOKEN = new Deb822TokenType("SUBSTVAR_TOKEN");
-  IElementType VALUE = new Deb822TokenType("VALUE");
+  IElementType VALUE_TOKEN = new Deb822TokenType("VALUE_TOKEN");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -39,6 +41,9 @@ public interface Deb822Types {
       }
       else if (type == SUBSTVAR) {
         return new Deb822SubstvarImpl(node);
+      }
+      else if (type == VALUE) {
+        return new Deb822ValueImpl(node);
       }
       else if (type == VALUE_PARTS) {
         return new Deb822ValuePartsImpl(node);

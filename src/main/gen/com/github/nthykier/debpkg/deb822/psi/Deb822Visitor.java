@@ -27,6 +27,10 @@ public class Deb822Visitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitValue(@NotNull Deb822Value o) {
+    visitPsiElement(o);
+  }
+
   public void visitValueParts(@NotNull Deb822ValueParts o) {
     visitPsiElement(o);
   }

@@ -10,15 +10,16 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.nthykier.debpkg.deb822.psi.Deb822Types.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.deb822.psi.*;
+import com.intellij.psi.PsiReference;
 
-public class Deb822ValuePartsImpl extends ASTWrapperPsiElement implements Deb822ValueParts {
+public class Deb822ValueImpl extends ASTWrapperPsiElement implements Deb822Value {
 
-  public Deb822ValuePartsImpl(@NotNull ASTNode node) {
+  public Deb822ValueImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull Deb822Visitor visitor) {
-    visitor.visitValueParts(this);
+    visitor.visitValue(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -27,15 +28,8 @@ public class Deb822ValuePartsImpl extends ASTWrapperPsiElement implements Deb822
   }
 
   @Override
-  @NotNull
-  public List<Deb822Substvar> getSubstvarList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822Substvar.class);
-  }
-
-  @Override
-  @NotNull
-  public List<Deb822Value> getValueList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822Value.class);
+  public PsiReference getReference() {
+    return Deb822PsiImplUtil.getReference(this);
   }
 
 }
