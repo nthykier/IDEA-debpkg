@@ -1,13 +1,10 @@
 package com.github.nthykier.debpkg.deb822;
 
-import com.github.nthykier.debpkg.deb822.psi.Deb822ElementFactory;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.project.Project;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
@@ -15,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Deb822CodeCompletionContributor extends CompletionContributor {
@@ -65,7 +61,7 @@ public class Deb822CodeCompletionContributor extends CompletionContributor {
     }
 
     protected boolean handleSubstvarCompletion(CompletionParameters parameters, @NotNull CompletionResultSet resultSet) {
-        PsiElement element = parameters.getPosition();
+        PsiElement element = parameters.getPosition().getParent();
         PsiElement prevElement = element.getPrevSibling();
         if (prevElement != null && prevElement.getText().equals("$")) {
             String value = element.getText();

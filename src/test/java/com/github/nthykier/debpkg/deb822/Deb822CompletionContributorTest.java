@@ -31,14 +31,18 @@ public class Deb822CompletionContributorTest extends LightPlatformCodeInsightFix
         myFixture.type("Pa");
         assertLookupElementContains("Package: ");
 
-        /*
         myFixture.configureByText("test.deb822", "Rules-Requires-Root: ");
         myFixture.type("${");
-        assertLookupElementContains("${}");
+        assertLookupElementContains("}");
 
-        myFixture.configureByText("test.deb822", "Rules-Requires-Root: ");
-        myFixture.type("${Arc");
-        assertAutocompletedSingleMatch();*/
+        myFixture.configureByText("test.deb822", "Depends: ");
+        myFixture.type("${shlib");
+        assertLookupElementContains("shlibs:Depends}");
+
+        myFixture.configureByText("test.deb822", "Pre-Depends: ");
+        myFixture.type("${shlibs:Pre-Dep");
+        assertAutocompletedSingleMatch();
+
     }
 
     private void printMatches(LookupElement[] items) {
