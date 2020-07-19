@@ -43,10 +43,10 @@ public class Deb822KnownFieldsAndValues {
         return KNOWN_FIELD_NAMES;
     }
 
-    static void ADD_KNOWN_FIELDS(String ... fieldNames) {
+    static void ADD_KNOWN_FIELDS(Deb822KnownFieldValueType valueType, String ... fieldNames) {
         for (String fieldName : fieldNames) {
             String fieldLc = fieldName.toLowerCase().intern();
-            Deb822KnownField field = new Deb822KnownFieldImpl(fieldName, false,
+            Deb822KnownField field = new Deb822KnownFieldImpl(fieldName, valueType, false,
                     Collections.emptyNavigableSet(), null, true);
             checkedAddField(fieldLc, field);
         }
@@ -59,16 +59,18 @@ public class Deb822KnownFieldsAndValues {
 
     public static class Deb822KnownFieldImpl implements Deb822KnownField {
         private final String canonicalFieldName;
+        private final Deb822KnownFieldValueType fieldValueType;
         private final boolean areAllKeywordsKnown;
         private final boolean hasKnownValues;
         private final NavigableSet<String> allKnownKeywords;
         private final String docs;
         private final boolean supportsSubstvars;
 
-        public Deb822KnownFieldImpl(@NotNull String canonicalFieldName, boolean areAllKeywordsKnown,
-                                    @NotNull NavigableSet<String> allKnownKeywords,
+        public Deb822KnownFieldImpl(@NotNull String canonicalFieldName, @NotNull Deb822KnownFieldValueType fieldValueType,
+                                    boolean areAllKeywordsKnown, @NotNull NavigableSet<String> allKnownKeywords,
                                     String docs, boolean supportsSubstvars) {
             this.canonicalFieldName = canonicalFieldName;
+            this.fieldValueType = fieldValueType;
             this.areAllKeywordsKnown = areAllKeywordsKnown;
             this.allKnownKeywords = Collections.unmodifiableNavigableSet(allKnownKeywords) ;
             this.hasKnownValues = areAllKeywordsKnown || !this.allKnownKeywords.isEmpty();
@@ -108,6 +110,11 @@ public class Deb822KnownFieldsAndValues {
         @Override
         public boolean supportsSubstsvars() {
             return this.supportsSubstvars;
+        }
+
+        @NotNull
+        public Deb822KnownFieldValueType getFieldValueType() {
+            return this.fieldValueType;
         }
     }
 
@@ -163,14 +170,14 @@ public class Deb822KnownFieldsAndValues {
                 keywordList.remove(keywordList.size() - 1);
             }
         }
-        return new Deb822KnownFieldImpl(canonicalName, allKeywordsKnown, new TreeSet<>(keywordList), docs,
+        return new Deb822KnownFieldImpl(canonicalName, valueType, allKeywordsKnown, new TreeSet<>(keywordList), docs,
                 supportsSubstvars);
     }
 
     static {
         /* Fields with structured content we know but currently cannot validate at the moment */
-        ADD_KNOWN_FIELDS("Vcs-Git", "Vcs-Svn", "Vcs-Browser");
-        ADD_KNOWN_FIELDS(
+        ADD_KNOWN_FIELDS(Deb822KnownFieldValueType.FREE_TEXT_VALUE, "Vcs-Git", "Vcs-Svn", "Vcs-Browser");
+        ADD_KNOWN_FIELDS(Deb822KnownFieldValueType.COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK,
                 "Build-Depends", "Build-Depends-Indep", "Build-Depends-Arch",
                 "Build-Conflicts", "Build-Conflicts-Indep", "Build-Conflicts-Arch",
                 "Pre-Depends", "Depends", "Recommends", "Suggests", "Enhances",

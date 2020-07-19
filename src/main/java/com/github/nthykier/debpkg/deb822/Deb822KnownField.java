@@ -1,5 +1,6 @@
 package com.github.nthykier.debpkg.deb822;
 
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,4 +19,7 @@ public interface Deb822KnownField {
     @Nullable String getFieldDescription();
 
     boolean supportsSubstsvars();
+
+    @NotNull
+    Deb822KnownFieldValueType getFieldValueType();
 }
