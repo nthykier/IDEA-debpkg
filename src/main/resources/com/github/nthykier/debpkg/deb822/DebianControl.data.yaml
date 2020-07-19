@@ -15,6 +15,50 @@ fields:
     valueValidation: /^[a-z0-9][a-z0-0.+-]+$/
     supportsSubstvars: false
 
+  - canonicalName: Package-Type
+    description: |
+      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em>
+
+      <p>Determines the type of package.  </p>
+    valueType: SINGLE_KEYWORD
+    warnIfDefault: true
+    defaultValue: "deb"
+    deprecatedAliases: ["X-Package-Type", "XC-Package-Type"]
+    keywordList:
+      - value: "deb"
+        description: |
+          The package will be built as a regular deb.
+      - value: "udeb"
+        description: |
+          The package will be built as a micro-deb (also known as a udeb).  These are solely used by the debian-installer.
+
+  - canonicalName: Essential
+    valueType: SINGLE_KEYWORD
+    description: |
+      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em>
+
+      <p>Whether packages the package should be considered Essential as defined by Debian Policy.</p>
+
+      <p>Essential packages are subject to several distinct but very important rules:
+      <ul>
+        <li>Essential packages are considered essential for the system to work.  The packaging system (APT and dpkg) will refuse to uninstall it without some very insisting force options and warnings.</li>
+        <li>Other packages are not required to declare explicit dependencies on essential packages as a side-effect of the above except as to ensure a certain version of the essential package is installed first.</li>
+        <li>Once installed, essential packages function must at all time no matter where dpkg is in its installation or upgrade process.</li>
+      </ul>
+      </p>
+    warnIfDefault: true
+    defaultValue: "no"
+    keywordList:
+      - value: "yes"
+        description: |
+          The package is essential and uninstalling it will completely and utterly break the system beyond repair.
+      - value: "no"
+        description: |
+          The package is a regular package.  This is the default and recommeded.
+
+          Note that declaring a package to be "Essential: no" is the same as not having the field except the less
+          wastes fewer bytes on everyones harddisk.
+
   - canonicalName: Standards-Version
     description: |
       Declares the last semantic version of the Debian Policy this package as last checked against.
@@ -212,7 +256,7 @@ fields:
 
   - canonicalName: X-DH-Build-For-Type
     description: |
-      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed.</em>
+      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em>
       <p>This field is used when building a cross-compiling C-compiler (or similar cases), some packages need
         to be build for target (DEB_<b>TARGET</b>_ARCH) rather than the host (DEB_<b>HOST</b>_ARCH) architecture.
       </p>

@@ -49,7 +49,7 @@ public class Deb822KnownFieldsAndValues {
         for (String fieldName : fieldNames) {
             String fieldLc = fieldName.toLowerCase().intern();
             Deb822KnownField field = new Deb822KnownFieldImpl(fieldName, valueType, false,
-                    Collections.emptyMap(), null, true);
+                    Collections.emptyMap(), null, true, null, false);
             checkedAddField(fieldLc, field);
         }
     }
@@ -77,9 +77,11 @@ public class Deb822KnownFieldsAndValues {
         );
         List<Object> keywordList = getList(fieldDef, "keywordList");
         String docs = getOptionalString(fieldDef, "description", null);
+        String defaultValue = getOptionalString(fieldDef, "defaultValue", null);
         Map<String, Deb822KnownFieldKeyword> keywordMap;
         boolean allKeywordsKnown = false;
         boolean supportsSubstvars = getBool(fieldDef, "supportsSubstvars", true);
+        boolean warnIfDefault = getBool(fieldDef, "warnIfDefault", false);
         switch (valueType) {
             case SINGLE_TRIVIAL_VALUE:
                 if (!keywordList.isEmpty()) {
@@ -101,6 +103,10 @@ public class Deb822KnownFieldsAndValues {
                 if (!keywordList.isEmpty()) {
                     throw new IllegalArgumentException("Field " + canonicalName + " has keywords but is a FREE_TEXT_VALUE");
                 }
+                if (defaultValue != null || warnIfDefault) {
+                    throw new IllegalArgumentException("Field " + canonicalName + " is an FREE_TEXT_VALUE but has a defined"
+                            + " defaultValue or warnIfDefault.");
+                }
                 break;
             default:
                 throw new AssertionError("Unsupported but declared valueType: " + valueType);
@@ -121,7 +127,7 @@ public class Deb822KnownFieldsAndValues {
             keywordMap = Collections.emptyMap();
         }
         return new Deb822KnownFieldImpl(canonicalName, valueType, allKeywordsKnown, keywordMap, docs,
-                supportsSubstvars);
+                supportsSubstvars, defaultValue, warnIfDefault);
     }
 
     private static Deb822KnownFieldKeyword parseKeyword(Object keywordDefRaw) {

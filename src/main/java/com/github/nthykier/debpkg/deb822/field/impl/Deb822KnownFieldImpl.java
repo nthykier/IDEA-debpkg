@@ -18,10 +18,12 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
     private final Map<String, Deb822KnownFieldKeyword> allKnownKeywords;
     private final String docs;
     private final boolean supportsSubstvars;
+    private final String defaultValue;
+    private final boolean warnIfDefault;
 
     public Deb822KnownFieldImpl(@NotNull String canonicalFieldName, @NotNull Deb822KnownFieldValueType fieldValueType,
                                 boolean areAllKeywordsKnown, @NotNull Map<String, Deb822KnownFieldKeyword> allKnownKeywords,
-                                String docs, boolean supportsSubstvars) {
+                                String docs, boolean supportsSubstvars, String defaultValue, boolean warnIfDefault) {
         this.canonicalFieldName = canonicalFieldName;
         this.fieldValueType = fieldValueType;
         this.areAllKeywordsKnown = areAllKeywordsKnown;
@@ -29,6 +31,8 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
         this.hasKnownValues = areAllKeywordsKnown || !this.allKnownKeywords.isEmpty();
         this.docs = docs;
         this.supportsSubstvars = supportsSubstvars;
+        this.defaultValue = defaultValue;
+        this.warnIfDefault = warnIfDefault;
     }
 
     @NotNull
@@ -73,5 +77,15 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
     @NotNull
     public Deb822KnownFieldValueType getFieldValueType() {
         return this.fieldValueType;
+    }
+
+    @Override
+    public @Nullable String getDefaultValue() {
+        return this.defaultValue;
+    }
+
+    @Override
+    public boolean warnIfSetToDefault() {
+        return this.warnIfDefault;
     }
 }

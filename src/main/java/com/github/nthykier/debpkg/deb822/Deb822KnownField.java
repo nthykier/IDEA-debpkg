@@ -36,4 +36,19 @@ public interface Deb822KnownField {
 
     @NotNull
     Deb822KnownFieldValueType getFieldValueType();
+
+    /**
+     * The default value of this field if known.
+     *
+     * @return The default value for this field (if known) or null (if not known)
+     */
+    @Nullable
+    String getDefaultValue();
+
+    /**
+     * Whether it is customary to omit the field if set to the default value.
+     *
+     * @return true if the field should be omitted when set to the default.
+     */
+    boolean warnIfSetToDefault();
 }
