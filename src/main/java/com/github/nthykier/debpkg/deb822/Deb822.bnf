@@ -13,6 +13,8 @@
   elementTypeHolderClass="com.github.nthykier.debpkg.deb822.psi.Deb822Types"
   elementTypeClass="com.github.nthykier.debpkg.deb822.psi.Deb822ElementType"
   tokenTypeClass="com.github.nthykier.debpkg.deb822.psi.Deb822TokenType"
+
+  name("value_parts")="Value or Substvars"
 }
 
 deb822file ::= COMMENT* all_paragraphs COMMENT*
@@ -21,6 +23,7 @@ all_paragraphs ::= paragraph (COMMENT* paragraph)*
 paragraph ::= field_value_pair (COMMENT* field_value_pair)* (PARAGRAPH_FINISH|<<eof>>)
 
 field_value_pair ::= field SEPARATOR value_parts {
+  pin=2
 /*  extends="com.github.nthykier.debpkg.deb822.psi.impl.Deb822FieldValueElementImpl"
   implements="com.github.nthykier.debpkg.deb822.psi.Deb822FieldValueElement"*/
   recoverWhile=recover_property
