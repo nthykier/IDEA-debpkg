@@ -4,6 +4,7 @@ fields:
       Declares the name of a binary package
     valueType: SINGLE_TRIVIAL_VALUE
     valueValidation: /^[a-z0-9][a-z0-0.+-]+$/
+    supportsSubstvars: false
 
   - canonicalName: Source
     description: |
@@ -12,6 +13,7 @@ fields:
     # Only valid for DebianControl; in other variants, it may have an optional version number appended
     # a la "foo (1.0-1)"
     valueValidation: /^[a-z0-9][a-z0-0.+-]+$/
+    supportsSubstvars: false
 
   - canonicalName: Standards-Version
     description: |
@@ -22,6 +24,7 @@ fields:
       is used solely for editioral changes to the policy (e.g. typo fixes).
     valueType: SINGLE_TRIVIAL_VALUE
     valueValidation: /^\d+[.]\d+[.]\d+(?:[.]\d+)$/
+    supportsSubstvars: false
 
   - canonicalName: Maintainer
     description: |
@@ -30,6 +33,7 @@ fields:
       <pre>Maintainer: Jane Contributor &lt;jane@janes.email-provider.org&gt;</pre>
       Note: If a person is listed in the Maintainer field, they should <em>not</em> be listed in Uploader field.
     valueType: SINGLE_TRIVIAL_VALUE
+    supportsSubstvars: false
 
   - canonicalName: Uploaders
     description: |
@@ -41,6 +45,7 @@ fields:
       </pre>
       Note: If a person is listed in the Maintainer field, they should <em>not</em> be listed in Uploader field.
     valueType: COMMA_SEPARATED_VALUE_LIST
+    supportsSubstvars: false
 
   - canonicalName: Section
     description: |
@@ -63,6 +68,7 @@ fields:
 
   - canonicalName: Testsuite
     valueType: SPACE_SEPARATED_VALUE_LIST
+    supportsSubstvars: false
 
   - canonicalName: Homepage
     valueType: FREE_TEXT_VALUE
@@ -161,6 +167,7 @@ fields:
       # Permit unknown values; we do not have a full list of architectures handy
       - ...
     unknownKeywordValidation: /^[a-z0-9][a-z0-0.+-]+/\S+$/
+    supportsSubstvars: false
 
   - canonicalName: Architecture
     description: |
@@ -192,6 +199,7 @@ fields:
       - "any"
       # Permit unknown values; we do not have a full list of architectures handy
       - ...
+    supportsSubstvars: false
 
   - canonicalName: X-DH-Build-For-Type
     description: |
@@ -219,6 +227,7 @@ fields:
     keywordList:
       - "host"
       - "target"
+    supportsSubstvars: false
 
   - canonicalName: Description
     valueType: FREE_TEXT_VALUE

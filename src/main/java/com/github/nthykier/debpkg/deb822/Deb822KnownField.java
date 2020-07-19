@@ -16,4 +16,6 @@ public interface Deb822KnownField {
     @NotNull NavigableSet<String> getKnownKeywords();
 
     @Nullable String getFieldDescription();
+
+    boolean supportsSubstsvars();
 }

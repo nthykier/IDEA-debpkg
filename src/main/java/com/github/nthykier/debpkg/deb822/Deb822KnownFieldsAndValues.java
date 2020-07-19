@@ -47,7 +47,7 @@ public class Deb822KnownFieldsAndValues {
         for (String fieldName : fieldNames) {
             String fieldLc = fieldName.toLowerCase().intern();
             Deb822KnownField field = new Deb822KnownFieldImpl(fieldName, false,
-                    Collections.emptyNavigableSet(), null);
+                    Collections.emptyNavigableSet(), null, true);
             checkedAddField(fieldLc, field);
         }
     }
@@ -63,15 +63,17 @@ public class Deb822KnownFieldsAndValues {
         private final boolean hasKnownValues;
         private final NavigableSet<String> allKnownKeywords;
         private final String docs;
+        private final boolean supportsSubstvars;
 
         public Deb822KnownFieldImpl(@NotNull String canonicalFieldName, boolean areAllKeywordsKnown,
                                     @NotNull NavigableSet<String> allKnownKeywords,
-                                    String docs) {
+                                    String docs, boolean supportsSubstvars) {
             this.canonicalFieldName = canonicalFieldName;
             this.areAllKeywordsKnown = areAllKeywordsKnown;
             this.allKnownKeywords = Collections.unmodifiableNavigableSet(allKnownKeywords) ;
             this.hasKnownValues = areAllKeywordsKnown || !this.allKnownKeywords.isEmpty();
             this.docs = docs;
+            this.supportsSubstvars = supportsSubstvars;
         }
 
         @NotNull
@@ -102,6 +104,11 @@ public class Deb822KnownFieldsAndValues {
         public String getFieldDescription() {
             return this.docs;
         }
+
+        @Override
+        public boolean supportsSubstsvars() {
+            return this.supportsSubstvars;
+        }
     }
 
     private static void loadKnownFieldDefinitions() {
@@ -123,6 +130,7 @@ public class Deb822KnownFieldsAndValues {
         List<String> keywordList = getList(fieldDef, "keywordList");
         String docs = getOptionalString(fieldDef, "description", null);
         boolean allKeywordsKnown = false;
+        boolean supportsSubstvars = getBool(fieldDef, "supportsSubstvars", true);
         switch (valueType) {
             case SINGLE_TRIVIAL_VALUE:
                 if (!keywordList.isEmpty()) {
@@ -155,7 +163,8 @@ public class Deb822KnownFieldsAndValues {
                 keywordList.remove(keywordList.size() - 1);
             }
         }
-        return new Deb822KnownFieldImpl(canonicalName, allKeywordsKnown, new TreeSet<>(keywordList), docs);
+        return new Deb822KnownFieldImpl(canonicalName, allKeywordsKnown, new TreeSet<>(keywordList), docs,
+                supportsSubstvars);
     }
 
     static {

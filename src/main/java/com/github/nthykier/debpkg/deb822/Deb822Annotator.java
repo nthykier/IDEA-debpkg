@@ -7,7 +7,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
@@ -51,30 +50,53 @@ public class Deb822Annotator implements Annotator {
         String fieldName = pair.getField().getText();
         Deb822KnownField knownField = Deb822KnownFieldsAndValues.lookupDeb822Field(fieldName);
         Deb822ValueParts valueParts;
-        String value;
-        ASTNode node;
-        ASTNode[] childNodes;
+        List<Deb822Substvar> substvars;
 
         /* Ignore unknown fields or fields where we have no knowledge of the values (e.g. Description) */
-        if (knownField == null || !knownField.hasKnownValues()) {
+        if (knownField == null) {
             return;
         }
         valueParts = pair.getValueParts();
+        if (valueParts == null) {
+            /* The parser will flag this as an error already */
+            return;
+        }
+        substvars = valueParts.getSubstvarList();
+        if (!knownField.supportsSubstsvars() && !substvars.isEmpty()) {
+            for (Deb822Substvar substvar : substvars) {
+                holder.createErrorAnnotation(substvar,
+                        Deb822Bundle.message("deb822.files.annotator.fields.substvars.not.supported")
+                );
+            }
+            /* Additional errors here are not useful */
+            return;
+        }
+        /* From here on, we are validating known values.  It is a prerequisite that we know any to do that */
+        if (!knownField.hasKnownValues()) {
+            return;
+        }
+        this.validateFieldValue(knownField, valueParts, holder);
+    }
+
+    private void validateFieldValue(@NotNull Deb822KnownField knownField, @NotNull Deb822ValueParts valueParts,
+                                    @NotNull AnnotationHolder holder) {
+        ASTNode[] childNodes = valueParts.getNode().getChildren(VALUE_OR_SUBSTVAR);
+        String value;
+        if (childNodes.length == 0) {
+            return;
+        }
         value = valueParts.getText().trim();
-        node = valueParts.getNode();
-        childNodes = node.getChildren(VALUE_OR_SUBSTVAR);
         if (knownField.getKnownKeywords().contains(value)) {
-            Annotation anno = holder.createInfoAnnotation(pair.getValueParts(), null);
+            Annotation anno = holder.createInfoAnnotation(valueParts, null);
             anno.setTextAttributes(Deb822SyntaxHighlighter.VALUE_KEYWORD);
             if (knownField.getCanonicalFieldName().equals("Priority") && value.equals("extra")) {
                 Annotation weakAnno = holder.createWeakWarningAnnotation(valueParts, PRIORITY_EXTRA_IS_OBSOLETE_FIXER.getAnnotationText());
-                weakAnno.registerFix(PRIORITY_EXTRA_IS_OBSOLETE_FIXER, null, null, new PriorityExtraIsObsoleteProblemDescriptor(pair.getValueParts()));
+                weakAnno.registerFix(PRIORITY_EXTRA_IS_OBSOLETE_FIXER, null, null, new PriorityExtraIsObsoleteProblemDescriptor(valueParts));
             }
         } else if (knownField.areAllKeywordsKnown() && (childNodes.length != 1 || childNodes[0].getElementType() == Deb822Types.VALUE)) {
-            Annotation anno = holder.createErrorAnnotation(pair.getValueParts(),
-                    "deb822.files.annotator.fields.unknown.value"
+            holder.createErrorAnnotation(valueParts,
+                    Deb822Bundle.message("deb822.files.annotator.fields.unknown.value")
             );
-            anno.setTextAttributes(Deb822SyntaxHighlighter.BAD_CHARACTER);
         }
     }
 
@@ -87,7 +109,8 @@ public class Deb822Annotator implements Annotator {
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
             PsiElement valueParts = descriptor.getPsiElement();
             Deb822FieldValuePair kvpair = Deb822ElementFactory.createFieldValuePairFromText(project, getCorrectionString());
-            valueParts.replace(kvpair.getValueParts());
+            valueParts.replace(Objects.requireNonNull(kvpair.getValueParts(), "Bug in "
+                    + this.getClass().getCanonicalName() + " - Replacement is null"));
         }
 
         @Override

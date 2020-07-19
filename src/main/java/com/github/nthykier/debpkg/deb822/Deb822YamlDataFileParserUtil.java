@@ -1,5 +1,7 @@
 package com.github.nthykier.debpkg.deb822;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +22,15 @@ public class Deb822YamlDataFileParserUtil {
         return val;
     }
 
-
     static String getOptionalString(Map<String, Object> map, String fieldName, String defaultValue) {
         return getTypedObject(map, fieldName, String.class, defaultValue);
     }
 
+    static boolean getBool(Map<String, Object> map, String fieldName, boolean defaultValue) {
+        return getTypedObject(map, fieldName, Boolean.class, defaultValue ? Boolean.TRUE : Boolean.FALSE);
+    }
+
+    @Contract("_, _, _, !null -> !null")
     static <T> T getTypedObject(Map<String, Object> map, String fieldName, Class<T> clazz, T defaultValue) {
         Object value = map.get(fieldName);
         if (value == null) {
