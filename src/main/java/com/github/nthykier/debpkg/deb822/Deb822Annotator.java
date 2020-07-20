@@ -30,7 +30,7 @@ public class Deb822Annotator implements Annotator {
             Map<String, String> field2values = new HashMap<>();
             Map<String, Deb822FieldValuePair> field2pair = new HashMap<>();
             String arch, multivalue;
-            for (Deb822FieldValuePair pair : paragraph.getFieldValuePairList()) {
+            for (Deb822FieldValuePair pair : paragraph.getFieldMap().values()) {
                 String keyOrig = pair.getField().getText();
                 String keyLc = keyOrig.toLowerCase();
                 Deb822ValueParts parts = pair.getValueParts();

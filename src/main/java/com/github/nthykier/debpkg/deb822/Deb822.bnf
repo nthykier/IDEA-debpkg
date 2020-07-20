@@ -20,7 +20,11 @@
 deb822file ::= COMMENT* all_paragraphs COMMENT*
 
 all_paragraphs ::= paragraph (COMMENT* paragraph)*
-paragraph ::= field_value_pair (COMMENT* field_value_pair)* (PARAGRAPH_FINISH|<<eof>>)
+paragraph ::= field_value_pair (COMMENT* field_value_pair)* (PARAGRAPH_FINISH|<<eof>>) {
+  extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822Paragraph"
+  implements="com.github.nthykier.debpkg.deb822.psi.Deb822ParagraphSupport"
+}
+
 
 field_value_pair ::= field SEPARATOR value_parts {
   pin=2

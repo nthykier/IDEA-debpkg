@@ -21,6 +21,9 @@ public class DebSrcControlInspection extends LocalInspectionTool {
             public void visitParagraph(@NotNull Deb822Paragraph deb822Paragraph) {
                 Map<String, Deb822FieldValuePair> seen = new HashMap<>();
                 super.visitParagraph(deb822Paragraph);
+                /* We use getFieldValuePairList here because we want to see duplicates and getFieldMap cannot help with
+                 *  that
+                 */
                 for (Deb822FieldValuePair pair : deb822Paragraph.getFieldValuePairList()) {
                     String fieldName = pair.getField().getText();
                     Deb822FieldValuePair existingValue = seen.get(fieldName);
