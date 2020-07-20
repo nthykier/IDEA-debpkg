@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [0.0.2]
+### Added
 - Add new icons instead of using the default icon from the template.
 - Check for misplaced "Package" and "Source" fields.
 
