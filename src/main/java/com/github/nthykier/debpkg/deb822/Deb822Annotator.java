@@ -33,7 +33,8 @@ public class Deb822Annotator implements Annotator {
             for (Deb822FieldValuePair pair : paragraph.getFieldValuePairList()) {
                 String keyOrig = pair.getField().getText();
                 String keyLc = keyOrig.toLowerCase();
-                String value = pair.getValueParts().getText().trim();
+                Deb822ValueParts parts = pair.getValueParts();
+                String value = parts != null ? pair.getValueParts().getText().trim() : "";
                 checkFieldValuePair(pair, holder);
                 field2values.putIfAbsent(keyLc, value);
                 field2pair.putIfAbsent(keyLc, pair);
@@ -42,7 +43,8 @@ public class Deb822Annotator implements Annotator {
             multivalue = field2values.getOrDefault("multi-arch", "no");
             if (arch.equals("all") && multivalue.equals("same")) {
                 Deb822FieldValuePair pair = field2pair.get("multi-arch");
-                assert pair != null;
+                /* pair and pair.getValueParts() cannot be null if we are here; help IntelliJ realise that */
+                assert pair != null && pair.getValueParts() != null;
                 Annotation anno = holder.createErrorAnnotation(pair.getValueParts(),
                         MULTI_ARCH_SAME_ARCH_ALL_FIXER.getAnnotationText());
                 anno.registerFix(MULTI_ARCH_SAME_ARCH_ALL_FIXER, null, null, new MultiarchSameArchitectureAllProblemDescriptor(pair.getValueParts()));
