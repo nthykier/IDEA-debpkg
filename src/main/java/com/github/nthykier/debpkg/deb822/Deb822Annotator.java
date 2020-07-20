@@ -17,37 +17,84 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Deb822Annotator implements Annotator {
     private static final TokenSet SPACE_OR_COMMA = TokenSet.create(TokenType.WHITE_SPACE, Deb822Types.COMMA);
     private static final FieldValueReplacingLocalQuickFix MULTI_ARCH_SAME_ARCH_ALL_FIXER = new MultiarchSameArchitectureAllQuickFix();
     private static final FieldValueReplacingLocalQuickFix PRIORITY_EXTRA_IS_OBSOLETE_FIXER = new PriorityExtraIsObsoleteQuickFix();
-    private static final FieldDeletingQuickFix DELETE_FIELD_WITH_DEFAULT_VALUE_FIXER = new DeleteFieldWithDefaultValueQuickFix();
 
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
-        if (element instanceof Deb822Paragraph) {
-            Deb822Paragraph paragraph = (Deb822Paragraph)element;
-            Map<String, String> field2values = new HashMap<>();
-            Map<String, Deb822FieldValuePair> field2pair = new HashMap<>();
-            String arch, multivalue;
-            for (Deb822FieldValuePair pair : paragraph.getFieldMap().values()) {
-                String keyOrig = pair.getField().getText();
-                String keyLc = keyOrig.toLowerCase();
-                Deb822ValueParts parts = pair.getValueParts();
-                String value = parts != null ? pair.getValueParts().getText().trim() : "";
-                checkFieldValuePair(pair, holder);
-                field2values.putIfAbsent(keyLc, value);
-                field2pair.putIfAbsent(keyLc, pair);
-            }
-            arch = field2values.getOrDefault("architecture", "any");
-            multivalue = field2values.getOrDefault("multi-arch", "no");
-            if (arch.equals("all") && multivalue.equals("same")) {
-                Deb822FieldValuePair pair = field2pair.get("multi-arch");
-                /* pair and pair.getValueParts() cannot be null if we are here; help IntelliJ realise that */
-                assert pair != null && pair.getValueParts() != null;
-                Annotation anno = holder.createErrorAnnotation(pair.getValueParts(),
-                        MULTI_ARCH_SAME_ARCH_ALL_FIXER.getAnnotationText());
-                anno.registerFix(MULTI_ARCH_SAME_ARCH_ALL_FIXER, null, null, new MultiarchSameArchitectureAllProblemDescriptor(pair.getValueParts()));
+        if (element instanceof Deb822AllParagraphs)  {
+            checkAllParagraphs(holder, (Deb822AllParagraphs)element);
+        } else if (element instanceof Deb822Paragraph) {
+            checkParagraph(holder, (Deb822Paragraph)element);
+        }
+    }
+
+    private void checkParagraph(@NotNull AnnotationHolder holder, @NotNull Deb822Paragraph paragraph) {
+        Map<String, String> field2values = new HashMap<>();
+        Map<String, Deb822FieldValuePair> field2pair = new HashMap<>();
+        String arch, multivalue;
+        for (Deb822FieldValuePair pair : paragraph.getFieldMap().values()) {
+            String keyOrig = pair.getField().getText();
+            String keyLc = keyOrig.toLowerCase();
+            Deb822ValueParts parts = pair.getValueParts();
+            String value = parts != null ? pair.getValueParts().getText().trim() : "";
+            checkFieldValuePair(pair, holder);
+            field2values.putIfAbsent(keyLc, value);
+            field2pair.putIfAbsent(keyLc, pair);
+        }
+        arch = field2values.getOrDefault("architecture", "any");
+        multivalue = field2values.getOrDefault("multi-arch", "no");
+        if (arch.equals("all") && multivalue.equals("same")) {
+            Deb822FieldValuePair pair = field2pair.get("multi-arch");
+            /* pair and pair.getValueParts() cannot be null if we are here; help IntelliJ realise that */
+            assert pair != null && pair.getValueParts() != null;
+            Annotation anno = holder.createErrorAnnotation(pair.getValueParts(),
+                    MULTI_ARCH_SAME_ARCH_ALL_FIXER.getAnnotationText());
+            anno.registerFix(MULTI_ARCH_SAME_ARCH_ALL_FIXER, null, null, new MultiarchSameArchitectureAllProblemDescriptor(pair.getValueParts()));
+        }
+    }
+
+    private void checkAllParagraphs(@NotNull AnnotationHolder holder, @NotNull Deb822AllParagraphs element) {
+        boolean first = true;
+        for (Deb822Paragraph paragraph : element.getParagraphList()) {
+            Deb822FieldValuePair source = paragraph.getFieldValuePair("Source");
+            Deb822FieldValuePair pkg = paragraph.getFieldValuePair("Package");
+            if (first) {
+                /*
+                if (source == null) {
+                    holder.createErrorAnnotation(paragraph,
+                            Deb822Bundle.message(message));
+                }*/
+                if (pkg != null) {
+                    createAnnotationWithQuickFix(holder::createErrorAnnotation,
+                            FieldDeletingQuickFix::new,
+                            "field-does-not-belong-in-paragraph",
+                            pkg,
+                            ProblemHighlightType.ERROR,
+                            "Package", "Source"
+                    );
+
+                }
+                first = false;
+            } else {
+                if (source != null) {
+                    createAnnotationWithQuickFix(holder::createErrorAnnotation,
+                            FieldDeletingQuickFix::new,
+                            "field-does-not-belong-in-paragraph",
+                            source,
+                            ProblemHighlightType.ERROR,
+                            "Source", "Package"
+                    );
+                }/*
+                if (pkg == null) {
+                    holder.createErrorAnnotation(paragraph,
+                            Deb822Bundle.message(message));
+                }*/
             }
         }
     }
@@ -99,10 +146,13 @@ public class Deb822Annotator implements Annotator {
         if (knownField.warnIfSetToDefault()) {
             String value = valueParts.getText().trim();
             if (value.equals(knownField.getDefaultValue())) {
-                Annotation anno = holder.createWarningAnnotation(valueParts.getParent(),
-                        DELETE_FIELD_WITH_DEFAULT_VALUE_FIXER.getAnnotationText(pair, knownField.getCanonicalFieldName()));
-
-                anno.registerFix(DELETE_FIELD_WITH_DEFAULT_VALUE_FIXER, null, null, new DeleteFieldWithDefaultValueProblemDescriptor(pair));
+                createAnnotationWithQuickFix(holder::createWarningAnnotation,
+                        FieldDeletingQuickFix::new,
+                        "field-is-unnecessary-when-value-is-default",
+                        pair,
+                        ProblemHighlightType.WARNING,
+                        value, knownField.getCanonicalFieldName()
+                );
             }
         }
     }
@@ -251,9 +301,28 @@ public class Deb822Annotator implements Annotator {
         }
     }
 
-    private static abstract class FieldDeletingQuickFix implements LocalQuickFix {
+    private static abstract class Deb822TypeSafeLocalQuickFix<T extends PsiElement> implements LocalQuickFix {
+        private final String baseName;
 
-        protected abstract String getBaseName();
+        protected Deb822TypeSafeLocalQuickFix(String baseName) {
+           this.baseName = baseName;
+        }
+
+        protected String getBaseName() {
+            return this.baseName;
+        }
+
+        @Override
+        public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
+            return Deb822Bundle.message("deb822.files.quickfix.fields." + getBaseName() + ".name");
+        }
+    }
+
+    private static class FieldDeletingQuickFix extends Deb822TypeSafeLocalQuickFix<Deb822FieldValuePair> {
+
+        FieldDeletingQuickFix(String baseName) {
+            super(baseName);
+        }
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
@@ -261,42 +330,41 @@ public class Deb822Annotator implements Annotator {
             valueParts.delete();
         }
 
-        @Override
-        public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
-            return Deb822Bundle.message("deb822.files.quickfix.fields." + getBaseName() + ".name");
-        }
-
-        public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getAnnotationText(Object...params) {
-            return Deb822Bundle.message("deb822.files.annotator.fields." + getBaseName(), params);
-        }
 
     }
 
-
-    private static abstract class FieldDeletingProblemDescriptor extends ProblemDescriptorBase implements ProblemDescriptor {
-        public FieldDeletingProblemDescriptor(@NotNull FieldDeletingQuickFix fixer, @NotNull PsiElement element,
-                                                    @NotNull ProblemHighlightType highlightType) {
+    private static class Deb822ProblemDescriptor<T extends PsiElement> extends ProblemDescriptorBase implements ProblemDescriptor {
+        public Deb822ProblemDescriptor(@NotNull LocalQuickFix fixer,
+                                       @NotNull String baseName,
+                                       @NotNull T element,
+                                       @NotNull ProblemHighlightType highlightType) {
             super(element, element,
-                    Deb822Bundle.message("deb822.files.quickfix.fields."  + fixer.getBaseName() +".description"),
+                    Deb822Bundle.message("deb822.files.quickfix.fields."  + baseName +".description"),
                     new LocalQuickFix[]{fixer}, highlightType, false,
                     null, true, false
             );
         }
     }
 
-    private static class DeleteFieldWithDefaultValueQuickFix extends FieldDeletingQuickFix {
-
-        @Override
-        protected String getBaseName() {
-            return "field-is-unnecessary-when-value-is-default";
-        }
-
+    @NotNull
+    private static <T extends PsiElement> Annotation createAnnotationWithQuickFix(
+            @NotNull BiFunction<T, String, Annotation> annotationCreator,
+            @NotNull Function<String, Deb822TypeSafeLocalQuickFix<T>> quickfixer,
+            @NotNull String baseName,
+            @NotNull T elementToFix,
+            @NotNull ProblemHighlightType highlightType,
+            Object ... params
+    ) {
+        Annotation anno = annotationCreator.apply(elementToFix, getAnnostationText(baseName, params));
+        LocalQuickFix quickFix = quickfixer.apply(baseName);
+        ProblemDescriptor problemDescriptor = new Deb822ProblemDescriptor<>(quickFix, baseName, elementToFix, highlightType);
+        anno.registerFix(quickFix, null, null, problemDescriptor);
+        return anno;
     }
 
-    private static class DeleteFieldWithDefaultValueProblemDescriptor extends FieldDeletingProblemDescriptor implements ProblemDescriptor {
-        public DeleteFieldWithDefaultValueProblemDescriptor(@NotNull PsiElement element) {
-            super(DELETE_FIELD_WITH_DEFAULT_VALUE_FIXER, element, ProblemHighlightType.WARNING);
-        }
+    @NotNull
+    @Nls(capitalization = Nls.Capitalization.Sentence)
+    private static String getAnnostationText(@NotNull String baseName, Object ... params) {
+        return Deb822Bundle.message("deb822.files.annotator.fields." + baseName, params);
     }
-
 }
