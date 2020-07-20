@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.nthykier.debpkg.deb822.psi.Deb822Types.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.deb822.psi.*;
 
-public class Deb822ParagraphImpl extends ASTWrapperPsiElement implements Deb822Paragraph {
+public class Deb822ParagraphImpl extends AbstractDeb822Paragraph implements Deb822Paragraph {
 
   public Deb822ParagraphImpl(@NotNull ASTNode node) {
     super(node);

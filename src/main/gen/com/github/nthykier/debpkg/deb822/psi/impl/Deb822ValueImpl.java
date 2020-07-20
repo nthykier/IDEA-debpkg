@@ -28,6 +28,7 @@ public class Deb822ValueImpl extends ASTWrapperPsiElement implements Deb822Value
   }
 
   @Override
+  @Nullable
   public PsiReference getReference() {
     return Deb822PsiImplUtil.getReference(this);
   }
