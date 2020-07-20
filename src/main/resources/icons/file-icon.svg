@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+
+  <style>
+    /* The red color in the Debian logo */
+    .debred { fill: #ce0058 }
+  </style>
+
+  <g font-size="11">
+    <text class="debred" x="4" y="12">D</text>
+  </g>
+
+</svg>

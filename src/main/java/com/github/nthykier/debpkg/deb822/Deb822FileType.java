@@ -6,6 +6,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Icon;
 
+import static com.github.nthykier.debpkg.DebpkgIcons.FILE_ICON;
+
 public class Deb822FileType extends LanguageFileType {
 
     public static final Deb822FileType INSTANCE = new Deb822FileType();
@@ -31,7 +33,7 @@ public class Deb822FileType extends LanguageFileType {
 
     @Override
     public @Nullable Icon getIcon() {
-        return null;
+        return FILE_ICON;
     }
 
 }

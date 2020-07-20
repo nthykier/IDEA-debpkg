@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
+import static com.github.nthykier.debpkg.DebpkgIcons.FILE_ICON;
+
 public class DchFileType extends LanguageFileType implements FileTypeIdentifiableByVirtualFile {
 
     public static final DchFileType INSTANCE = new DchFileType();
@@ -33,7 +35,7 @@ public class DchFileType extends LanguageFileType implements FileTypeIdentifiabl
 
     @Override
     public @Nullable Icon getIcon() {
-        return null;
+        return FILE_ICON;
     }
 
     @Override

@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
+import static com.github.nthykier.debpkg.DebpkgIcons.FILE_ICON;
+
 public class Deb822DialectDebianControlFileType extends LanguageFileType implements FileTypeIdentifiableByVirtualFile {
 
     public static final Deb822DialectDebianControlFileType INSTANCE = new Deb822DialectDebianControlFileType();
@@ -33,7 +35,7 @@ public class Deb822DialectDebianControlFileType extends LanguageFileType impleme
 
     @Override
     public @Nullable Icon getIcon() {
-        return null;
+        return FILE_ICON;
     }
 
     @Override
