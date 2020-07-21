@@ -1,10 +1,6 @@
 package com.github.nthykier.debpkg.deb822.psi.impl;
 
-import com.github.nthykier.debpkg.deb822.Deb822KnownField;
-import com.github.nthykier.debpkg.deb822.Deb822KnownFieldKeyword;
-import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvar;
-import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvars;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Substvar;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

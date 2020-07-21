@@ -1,5 +1,6 @@
 package com.github.nthykier.debpkg.deb822;
 
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.intellij.codeInsight.completion.*;

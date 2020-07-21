@@ -1,7 +1,6 @@
 package com.github.nthykier.debpkg.deb822.psi.impl;
 
-import com.github.nthykier.debpkg.deb822.Deb822KnownField;
-import com.github.nthykier.debpkg.deb822.Deb822KnownFieldsAndValues;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
 import org.jetbrains.annotations.Nullable;
 

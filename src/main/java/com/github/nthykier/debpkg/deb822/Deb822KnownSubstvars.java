@@ -1,6 +1,6 @@
 package com.github.nthykier.debpkg.deb822;
 
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

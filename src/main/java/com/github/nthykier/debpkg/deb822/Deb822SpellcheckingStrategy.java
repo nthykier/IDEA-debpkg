@@ -1,12 +1,11 @@
 package com.github.nthykier.debpkg.deb822;
 
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
 import com.intellij.psi.PsiElement;
-import com.intellij.spellchecker.inspections.PlainTextSplitter;
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy;
 import com.intellij.spellchecker.tokenizer.Tokenizer;
-import com.intellij.spellchecker.tokenizer.TokenizerBase;
 
 import java.util.Arrays;
 import java.util.HashSet;

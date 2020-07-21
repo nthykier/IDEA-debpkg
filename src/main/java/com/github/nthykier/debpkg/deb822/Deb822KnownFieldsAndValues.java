@@ -1,5 +1,7 @@
 package com.github.nthykier.debpkg.deb822;
 
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldKeywordImpl;

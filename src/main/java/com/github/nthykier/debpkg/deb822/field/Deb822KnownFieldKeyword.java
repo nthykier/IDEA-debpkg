@@ -1,10 +1,7 @@
-package com.github.nthykier.debpkg.deb822;
+package com.github.nthykier.debpkg.deb822.field;
 
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.NavigableSet;
 
 public interface Deb822KnownFieldKeyword {
 
