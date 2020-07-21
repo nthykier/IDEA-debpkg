@@ -39,7 +39,7 @@ public class Deb822SpellcheckingStrategy extends SpellcheckingStrategy {
                     if (knownField.hasKnownValues() && knownField.areAllKeywordsKnown()) {
                         return EMPTY_TOKENIZER;
                     }
-                    name = field.getText();
+                    name = field.getFieldName();
                     if (SKIP_SPELL_CHECK.contains(name.toLowerCase())) {
                         return EMPTY_TOKENIZER;
                     }

@@ -29,7 +29,7 @@ public abstract class AbstractDeb822Paragraph extends ASTWrapperPsiElement imple
     if (this.fieldMap == null) {
       Map<String, Deb822FieldValuePair> map = new HashMap<>();
       for (Deb822FieldValuePair valuePair : this.getFieldValuePairList()) {
-        String fieldName = valuePair.getField().getText().trim().toLowerCase();
+        String fieldName = valuePair.getField().getFieldName().toLowerCase();
         /* if there are duplicate fields (which is not permitted but can happen), we pick the first */
         map.putIfAbsent(fieldName, valuePair);
       }

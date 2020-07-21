@@ -1,21 +1,21 @@
 package com.github.nthykier.debpkg.deb822.psi.impl;
 
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
+import com.github.nthykier.debpkg.deb822.psi.Deb822FieldBase;
 import org.jetbrains.annotations.Nullable;
 
-public class Deb822FieldFakePsiElement extends Deb822FakePsiElementBase<Deb822Field> {
+public class Deb822FieldFakePsiElement extends Deb822FakePsiElementBase<Deb822FieldBase> {
 
     private final Deb822KnownField knownField;
 
-    public Deb822FieldFakePsiElement(Deb822Field element, @Nullable Deb822KnownField knownField) {
+    public Deb822FieldFakePsiElement(Deb822FieldBase element, @Nullable Deb822KnownField knownField) {
         super(element);
         this.knownField = knownField;
     }
 
     @Override
     public String getName() {
-        String name = this.element.getText();
+        String name = this.element.getFieldName();
         if (knownField != null) {
             return knownField.getCanonicalFieldName();
         }
@@ -31,7 +31,7 @@ public class Deb822FieldFakePsiElement extends Deb822FakePsiElementBase<Deb822Fi
             }
             return docs;
         } else {
-            return this.element.getText() + " (no documentation available)";
+            return this.element.getFieldName() + " (no documentation available)";
         }
     }
 }

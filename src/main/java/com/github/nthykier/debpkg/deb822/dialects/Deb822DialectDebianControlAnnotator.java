@@ -45,7 +45,7 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         String arch, multivalue;
         KnownFieldTable knownFieldTable = getKnownFieldTable();
         for (Deb822FieldValuePair pair : paragraph.getFieldMap().values()) {
-            String keyOrig = pair.getField().getText();
+            String keyOrig = pair.getField().getFieldName();
             String keyLc = keyOrig.toLowerCase();
             Deb822ValueParts parts = pair.getValueParts();
             String value = parts != null ? pair.getValueParts().getText().trim() : "";
@@ -112,7 +112,7 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
     private void checkFieldValuePair(@NotNull KnownFieldTable knownFieldTable,
                                      @NotNull Deb822FieldValuePair pair,
                                      @NotNull AnnotationHolder holder) {
-        String fieldName = pair.getField().getText();
+        String fieldName = pair.getField().getFieldName();
         Deb822KnownField knownField = knownFieldTable.getField(fieldName);
         Deb822ValueParts valueParts;
         List<Deb822Substvar> substvars;

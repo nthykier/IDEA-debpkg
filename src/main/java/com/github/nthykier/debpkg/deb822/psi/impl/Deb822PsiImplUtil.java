@@ -15,12 +15,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class Deb822PsiImplUtil {
 
-    public static PsiReference getReference(@NotNull Deb822Field field) {
-        String fieldName = field.getText();
-        Deb822KnownField knownField = Deb822KnownFieldsAndValues.lookupDeb822Field(fieldName);
-        return new Deb822FieldPsiReference(field, TextRange.from(0, field.getTextLength()), knownField);
-    }
-
     public static PsiReference getReference(@NotNull Deb822Substvar substvar) {
         String substvarName = substvar.getText();
         Deb822KnownSubstvar knownSubstvar = Deb822KnownSubstvars.lookupSubstvar(substvarName);

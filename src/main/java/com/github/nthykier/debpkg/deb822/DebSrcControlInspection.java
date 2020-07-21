@@ -25,7 +25,7 @@ public class DebSrcControlInspection extends LocalInspectionTool {
                  *  that
                  */
                 for (Deb822FieldValuePair pair : deb822Paragraph.getFieldValuePairList()) {
-                    String fieldName = pair.getField().getText();
+                    String fieldName = pair.getField().getFieldName();
                     Deb822FieldValuePair existingValue = seen.get(fieldName);
                     seen.putIfAbsent(fieldName, pair);
                     if (existingValue != null) {

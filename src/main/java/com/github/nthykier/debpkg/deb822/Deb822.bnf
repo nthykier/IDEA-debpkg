@@ -35,7 +35,8 @@ field_value_pair ::= field SEPARATOR value_parts {
 }
 
 field ::= FIELD_NAME {
-  methods=[getReference]
+  extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822Field"
+  implements="com.github.nthykier.debpkg.deb822.psi.Deb822FieldBase"
 }
 value_parts ::= COMMENT* (value|COMMA|substvar) (COMMENT|value|COMMA|substvar)*
 

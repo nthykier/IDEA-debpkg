@@ -88,4 +88,8 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
     public boolean warnIfSetToDefault() {
         return this.warnIfDefault;
     }
+
+    public String toString() {
+        return "Deb822KnownField." + this.getCanonicalFieldName();
+    }
 }

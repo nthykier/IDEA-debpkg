@@ -12,7 +12,7 @@ public class Deb822Visitor extends PsiElementVisitor {
   }
 
   public void visitField(@NotNull Deb822Field o) {
-    visitPsiElement(o);
+    visitFieldBase(o);
   }
 
   public void visitFieldValuePair(@NotNull Deb822FieldValuePair o) {
@@ -32,6 +32,10 @@ public class Deb822Visitor extends PsiElementVisitor {
   }
 
   public void visitValueParts(@NotNull Deb822ValueParts o) {
+    visitPsiElement(o);
+  }
+
+  public void visitFieldBase(@NotNull Deb822FieldBase o) {
     visitPsiElement(o);
   }
 
