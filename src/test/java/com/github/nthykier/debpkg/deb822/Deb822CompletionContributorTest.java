@@ -2,11 +2,9 @@ package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlFileType;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixture4TestCase;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -1,10 +1,7 @@
 package com.github.nthykier.debpkg.deb822.field;
 
-import com.github.nthykier.debpkg.deb822.psi.Deb822ElementType;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 

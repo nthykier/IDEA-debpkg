@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class KnownFieldTableImpl implements KnownFieldTable {
     private final Language language;
     private final Map<String, Deb822KnownField> knownFieldMap;
-    private List<String> knownFieldNames;
+    private final List<String> knownFieldNames;
 
     public KnownFieldTableImpl(@NotNull Language language, @NotNull Map<String, Deb822KnownField> knownFieldMap) {
         this.language = language;

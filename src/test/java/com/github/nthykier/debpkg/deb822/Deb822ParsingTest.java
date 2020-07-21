@@ -1,7 +1,5 @@
 package com.github.nthykier.debpkg.deb822;
 
-import com.intellij.testFramework.ParsingTestCase;
-
 public class Deb822ParsingTest /*extends ParsingTestCase*/ {
 /*
     public Deb822ParsingTest() {

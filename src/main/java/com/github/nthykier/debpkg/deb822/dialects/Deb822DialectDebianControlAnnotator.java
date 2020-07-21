@@ -20,7 +20,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -176,7 +175,7 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
                                            boolean isSoleValue
     ) {
         String value = null;
-        ASTNode token = null;
+        ASTNode token;
         IElementType elementType = null;
         Deb822KnownFieldKeyword knownFieldKeyword = null;
         if (valueTokens.size() == 0) {

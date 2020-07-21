@@ -1,7 +1,6 @@
 package com.github.nthykier.debpkg.dch;
 
 import com.github.nthykier.debpkg.dch.psi.DchTypes;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import junit.framework.TestCase;

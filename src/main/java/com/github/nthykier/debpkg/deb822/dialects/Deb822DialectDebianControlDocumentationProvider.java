@@ -9,7 +9,7 @@ public class Deb822DialectDebianControlDocumentationProvider extends AbstractDoc
     @Override
     public @Nullable String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
         if (element instanceof Deb822FakePsiElementBase) {
-            return ((Deb822FakePsiElementBase)element).getDocumentation();
+            return ((Deb822FakePsiElementBase<?>)element).getDocumentation();
         }
         return null;
     }

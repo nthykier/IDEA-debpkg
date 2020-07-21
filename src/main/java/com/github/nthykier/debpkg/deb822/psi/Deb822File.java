@@ -12,10 +12,6 @@ public class Deb822File extends PsiFileBase {
 
     private final FileType fileType;
 
-    public Deb822File(@NotNull FileViewProvider viewProvider) {
-        this(viewProvider, Deb822Language.INSTANCE, Deb822FileType.INSTANCE);
-    }
-
     public Deb822File(@NotNull FileViewProvider viewProvider, Language language, FileType fileType) {
         super(viewProvider, language);
         this.fileType = fileType;

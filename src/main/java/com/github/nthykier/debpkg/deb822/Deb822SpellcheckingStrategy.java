@@ -7,6 +7,7 @@ import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
 import com.intellij.psi.PsiElement;
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy;
 import com.intellij.spellchecker.tokenizer.Tokenizer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,7 +21,8 @@ public class Deb822SpellcheckingStrategy extends SpellcheckingStrategy {
             "testsuite", "maintainer", "uploaders", "source"
             ));
 
-    public Tokenizer getTokenizer(PsiElement element) {
+    @NotNull
+    public Tokenizer<?> getTokenizer(PsiElement element) {
         if (element instanceof Deb822ValueParts) {
             PsiElement parent = element.getParent();
             while (parent != null && !(parent instanceof Deb822FieldValuePair)) {

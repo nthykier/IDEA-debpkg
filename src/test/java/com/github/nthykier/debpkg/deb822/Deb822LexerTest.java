@@ -5,10 +5,8 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import junit.framework.TestCase;
 import org.intellij.sdk.language.Deb822Lexer;
-import org.junit.Assert;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

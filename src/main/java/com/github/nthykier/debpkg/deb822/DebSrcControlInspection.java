@@ -3,7 +3,6 @@ package com.github.nthykier.debpkg.deb822;
 import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.intellij.codeInspection.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
