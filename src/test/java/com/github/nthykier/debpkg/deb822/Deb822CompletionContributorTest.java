@@ -1,5 +1,6 @@
 package com.github.nthykier.debpkg.deb822;
 
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlFileType;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixture4TestCase;
@@ -13,33 +14,33 @@ import java.util.stream.Collectors;
 public class Deb822CompletionContributorTest extends LightPlatformCodeInsightFixture4TestCase {
     @Test
     public void completionItems() {
-        myFixture.configureByText("test.deb822", "");
+        myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "");
 
         myFixture.type("Sec");
         assertAutocompletedSingleMatch();
-        myFixture.configureByText("test.deb822", "Rules-Requires-Root: ");
+        myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "Rules-Requires-Root: ");
         myFixture.type("bin");
         assertAutocompletedSingleMatch();
 
 
-        myFixture.configureByText("test.deb822", "Rules-Requires-Root: ");
+        myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "Rules-Requires-Root: ");
         myFixture.type("");
         assertLookupElementContains("no");
 
 
-        myFixture.configureByText("test.deb822", "");
+        myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "");
         myFixture.type("Pa");
         assertLookupElementContains("Package: ");
 
-        myFixture.configureByText("test.deb822", "Rules-Requires-Root: ");
+        myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "Rules-Requires-Root: ");
         myFixture.type("${");
         assertLookupElementContains("}");
 
-        myFixture.configureByText("test.deb822", "Depends: ");
+        myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "Depends: ");
         myFixture.type("${shlib");
         assertLookupElementContains("shlibs:Depends}");
 
-        myFixture.configureByText("test.deb822", "Pre-Depends: ");
+        myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "Pre-Depends: ");
         myFixture.type("${shlibs:Pre-Dep");
         assertAutocompletedSingleMatch();
 

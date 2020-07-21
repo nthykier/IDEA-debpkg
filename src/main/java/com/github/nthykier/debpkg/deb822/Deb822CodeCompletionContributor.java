@@ -1,6 +1,8 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
+import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.intellij.codeInsight.completion.*;
@@ -12,6 +14,7 @@ import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +26,9 @@ public class Deb822CodeCompletionContributor extends CompletionContributor {
                     public void addCompletions(@NotNull CompletionParameters parameters,
                                                @NotNull ProcessingContext context,
                                                @NotNull CompletionResultSet resultSet) {
-                        List<String> knownValues = Deb822KnownFieldsAndValues.getAllKnownFieldNames();
+                        PsiElement fieldValue = parameters.getPosition();
+                        KnownFieldTable knownFieldTable = Deb822KnownFieldsAndValues.getKnownFieldsFor(fieldValue.getContainingFile().getLanguage());
+                        Collection<String> knownValues = knownFieldTable.getAllFieldNames();
                         List<LookupElement> completions = new ArrayList<>(knownValues.size());
                         for (String name : knownValues) {
                             completions.add(LookupElementBuilder.create(name + ": "));
@@ -38,7 +43,7 @@ public class Deb822CodeCompletionContributor extends CompletionContributor {
                                                @NotNull ProcessingContext context,
                                                @NotNull CompletionResultSet resultSet) {
                         PsiElement fieldValue = parameters.getPosition();
-                        String fieldName;
+                        Deb822Field field;
                         Deb822KnownField knownField;
                         if (handleSubstvarCompletion(parameters, resultSet)) {
                             /* User is going for a substitution variable */
@@ -50,8 +55,8 @@ public class Deb822CodeCompletionContributor extends CompletionContributor {
                         if (fieldValue == null) {
                             return;
                         }
-                        fieldName = ((Deb822FieldValuePair)fieldValue).getField().getText().trim();
-                        knownField = Deb822KnownFieldsAndValues.lookupDeb822Field(fieldName);
+                        field = ((Deb822FieldValuePair)fieldValue).getField();
+                        knownField = field.getDeb822KnownField();
                         if (knownField == null || !knownField.hasKnownValues()) {
                             return;
                         }

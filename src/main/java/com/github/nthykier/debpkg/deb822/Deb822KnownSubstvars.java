@@ -1,6 +1,8 @@
 package com.github.nthykier.debpkg.deb822;
 
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
+import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,14 +88,16 @@ public class Deb822KnownSubstvars {
         Yaml y = new Yaml();
         Map<String, Object> data = y.load(s);
         List<Map<String, Object>> fieldDefinitions = getList(data, "substvars");
+        KnownFieldTable knownFieldTable = Deb822KnownFieldsAndValues.getKnownFieldsFor(Deb822DialectDebianControlLanguage.INSTANCE);
         for (Map<String, Object> fieldDefinition : fieldDefinitions) {
-            for (Deb822KnownSubstvar field : parseKnownSubstvarDefinition(fieldDefinition)) {
+            for (Deb822KnownSubstvar field : parseKnownSubstvarDefinition(fieldDefinition, knownFieldTable)) {
                 checkedAddSubstvar(field);
             }
         }
     }
 
-    private static Iterable<Deb822KnownSubstvar> parseKnownSubstvarDefinition(Map<String, Object> fieldDef) {
+    private static Iterable<Deb822KnownSubstvar> parseKnownSubstvarDefinition(@NotNull Map<String, Object> fieldDef,
+                                                                              @NotNull KnownFieldTable knownFieldTable) {
         String name = getOptionalString(fieldDef, "name", null);
         String docs = getOptionalString(fieldDef, "description", null);
         String predefinedValue = getOptionalString(fieldDef, "value", null);
@@ -112,7 +116,7 @@ public class Deb822KnownSubstvars {
                         + " (Each substvar should have a unique value, so the value make no sense)");
             }
             for (String fieldName : fieldNames) {
-                Deb822KnownField field = Deb822KnownFieldsAndValues.lookupDeb822Field(fieldName);
+                Deb822KnownField field = knownFieldTable.getField(fieldName);
                 String generatedName;
                 if (field == null || !field.getCanonicalFieldName().equals(fieldName)) {
                     if (field == null) {

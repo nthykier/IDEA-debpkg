@@ -1,50 +1,47 @@
 package com.github.nthykier.debpkg.deb822;
 
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
+import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldKeywordImpl;
-import org.jetbrains.annotations.Contract;
+import com.github.nthykier.debpkg.deb822.field.impl.KnownFieldTableImpl;
+import com.intellij.lang.Language;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.github.nthykier.debpkg.deb822.Deb822YamlDataFileParserUtil.*;
 
 public class Deb822KnownFieldsAndValues {
 
+    private static final Map<Language, KnownFieldTable> LANGUAGE2KNOWN_FIELDS = new HashMap<>();
     private static final Map<String, Deb822KnownField> KNOWN_FIELDS = new HashMap<>();
-    private static List<String> KNOWN_FIELD_NAMES = Collections.emptyList();
 
     private Deb822KnownFieldsAndValues() {}
 
-    @Nullable
-    public static Deb822KnownField lookupDeb822Field(@NotNull String fieldName) {
-        return lookupDeb822Field(fieldName, null);
-    }
-
-    @Contract("_, !null -> !null")
-    public static Deb822KnownField lookupDeb822Field(@NotNull String fieldName, @Nullable Deb822KnownField fallback) {
-        return KNOWN_FIELDS.getOrDefault(fieldName.toLowerCase(), fallback);
-    }
-
     @NotNull
-    public static List<String> getAllKnownFieldNames() {
-        if (KNOWN_FIELD_NAMES.size() != KNOWN_FIELDS.size()) {
-            // When 1.10 can be assumed; use ".collect(Collectors.toUnmodifiableList())"
-            KNOWN_FIELD_NAMES = Collections.unmodifiableList(KNOWN_FIELDS.values()
-                    .stream()
-                    .map(Deb822KnownField::getCanonicalFieldName)
-                    .sorted(String::compareToIgnoreCase)
-                    .collect(Collectors.toList())
-            );
+    public static KnownFieldTable getKnownFieldsFor(Language language) {
+        synchronized (LANGUAGE2KNOWN_FIELDS) {
+            KnownFieldTable knownFieldTable = LANGUAGE2KNOWN_FIELDS.get(language);
+            if (knownFieldTable != null) {
+                return knownFieldTable;
+            }
+            if (language == Deb822DialectDebianControlLanguage.INSTANCE) {
+                knownFieldTable = new KnownFieldTableImpl(language, KNOWN_FIELDS);
+            } else if (language.isKindOf(Deb822Language.INSTANCE)) {
+                knownFieldTable = new KnownFieldTableImpl(language, Collections.emptyMap());
+            }
+            if (knownFieldTable != null) {
+                LANGUAGE2KNOWN_FIELDS.put(language, knownFieldTable);
+                return knownFieldTable;
+            }
         }
-        return KNOWN_FIELD_NAMES;
+        throw new IllegalArgumentException("Language must be a variant of Deb822Language");
     }
 
     static void ADD_KNOWN_FIELDS(Deb822KnownFieldValueType valueType, String ... fieldNames) {

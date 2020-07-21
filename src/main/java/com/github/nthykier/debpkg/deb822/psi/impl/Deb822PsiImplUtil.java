@@ -34,7 +34,7 @@ public class Deb822PsiImplUtil {
         }
         if (parent != null) {
             Deb822Field field = ((Deb822FieldValuePair)parent).getField();
-            Deb822KnownField knownField = Deb822KnownFieldsAndValues.lookupDeb822Field(field.getText());
+            Deb822KnownField knownField = field.getDeb822KnownField();
             Deb822KnownFieldKeyword keyword;
             if (knownField == null) {
                 return null;

@@ -6,6 +6,7 @@ import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
 import com.github.nthykier.debpkg.deb822.Deb822KnownFieldsAndValues;
 import com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighter;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
+import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.intellij.codeInspection.*;
 import com.intellij.lang.ASTNode;
@@ -19,6 +20,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -41,12 +43,13 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         Map<String, String> field2values = new HashMap<>();
         Map<String, Deb822FieldValuePair> field2pair = new HashMap<>();
         String arch, multivalue;
+        KnownFieldTable knownFieldTable = getKnownFieldTable();
         for (Deb822FieldValuePair pair : paragraph.getFieldMap().values()) {
             String keyOrig = pair.getField().getText();
             String keyLc = keyOrig.toLowerCase();
             Deb822ValueParts parts = pair.getValueParts();
             String value = parts != null ? pair.getValueParts().getText().trim() : "";
-            checkFieldValuePair(pair, holder);
+            checkFieldValuePair(knownFieldTable, pair, holder);
             field2values.putIfAbsent(keyLc, value);
             field2pair.putIfAbsent(keyLc, pair);
         }
@@ -102,9 +105,15 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         }
     }
 
-    private void checkFieldValuePair(@NotNull Deb822FieldValuePair pair, @NotNull AnnotationHolder holder) {
+    protected KnownFieldTable getKnownFieldTable() {
+        return Deb822KnownFieldsAndValues.getKnownFieldsFor(Deb822DialectDebianControlLanguage.INSTANCE);
+    }
+
+    private void checkFieldValuePair(@NotNull KnownFieldTable knownFieldTable,
+                                     @NotNull Deb822FieldValuePair pair,
+                                     @NotNull AnnotationHolder holder) {
         String fieldName = pair.getField().getText();
-        Deb822KnownField knownField = Deb822KnownFieldsAndValues.lookupDeb822Field(fieldName);
+        Deb822KnownField knownField = knownFieldTable.getField(fieldName);
         Deb822ValueParts valueParts;
         List<Deb822Substvar> substvars;
 

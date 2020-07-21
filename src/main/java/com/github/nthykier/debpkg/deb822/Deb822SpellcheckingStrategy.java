@@ -1,6 +1,7 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
 import com.intellij.psi.PsiElement;
@@ -26,17 +27,19 @@ public class Deb822SpellcheckingStrategy extends SpellcheckingStrategy {
                 parent = parent.getParent();
             }
             if (parent != null) {
-                String name = ((Deb822FieldValuePair)parent).getField().getText();
-                if (name != null) {
-                    Deb822KnownField knownField = Deb822KnownFieldsAndValues.lookupDeb822Field(name);
+                Deb822Field field = ((Deb822FieldValuePair)parent).getField();
+                Deb822KnownField knownField = field.getDeb822KnownField();
+                if (knownField != null) {
+                    String name;
                     /*
                      * In such a case, it seems awkward to have a spell-check highlight the value when the user cannot
                      * change the actual value (as it is mandated else where and "correcting" the spelling will cause
                      * a hard error).
                      */
-                    if (knownField != null && knownField.hasKnownValues() && knownField.areAllKeywordsKnown()) {
+                    if (knownField.hasKnownValues() && knownField.areAllKeywordsKnown()) {
                         return EMPTY_TOKENIZER;
                     }
+                    name = field.getText();
                     if (SKIP_SPELL_CHECK.contains(name.toLowerCase())) {
                         return EMPTY_TOKENIZER;
                     }
