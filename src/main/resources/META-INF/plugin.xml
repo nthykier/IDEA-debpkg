@@ -18,6 +18,9 @@
         <lang.parserDefinition language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822ParserDefinition" />
         <lang.parserDefinition language="DebianControl" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlParserDefinition" />
         <lang.syntaxHighlighterFactory language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighterFactory" />
+        <lang.commenter language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822Commenter"/>
+        <lang.documentationProvider language="DebianControl"
+                                    implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlDocumentationProvider" />
         <localInspection language="Deb822"
                          groupPath="Deb822"
                          shortName="DuplicateFieldNameInDeb822Paragraph"
@@ -43,9 +46,6 @@
                   language="DebianChangelog" extensions="dch" />
         <lang.parserDefinition language="DebianChangelog" implementationClass="com.github.nthykier.debpkg.dch.DchParserDefinition" />
         <lang.syntaxHighlighterFactory language="DebianChangelog" implementationClass="com.github.nthykier.debpkg.dch.DchSyntaxHighlighterFactory" />
-        <lang.commenter language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822Commenter"/>
-        <lang.documentationProvider language="DebianControl"
-                                    implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlDocumentationProvider" />
         <spellchecker.support language="DebianChangelog" id="dchSpellcheckingStrategy"
                               implementationClass="com.github.nthykier.debpkg.dch.DchSpellcheckingStrategy" />
     </extensions>
