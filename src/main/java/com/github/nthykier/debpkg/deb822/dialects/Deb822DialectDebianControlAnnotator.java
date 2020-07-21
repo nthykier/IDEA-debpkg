@@ -1,6 +1,10 @@
-package com.github.nthykier.debpkg.deb822;
+package com.github.nthykier.debpkg.deb822.dialects;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
+import com.github.nthykier.debpkg.deb822.Deb822KnownField;
+import com.github.nthykier.debpkg.deb822.Deb822KnownFieldKeyword;
+import com.github.nthykier.debpkg.deb822.Deb822KnownFieldsAndValues;
+import com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighter;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.intellij.codeInspection.*;
@@ -21,7 +25,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Deb822Annotator implements Annotator {
+public class Deb822DialectDebianControlAnnotator implements Annotator {
     private static final TokenSet SPACE_OR_COMMA = TokenSet.create(TokenType.WHITE_SPACE, Deb822Types.COMMA);
     private static final FieldValueReplacingLocalQuickFix MULTI_ARCH_SAME_ARCH_ALL_FIXER = new MultiarchSameArchitectureAllQuickFix();
     private static final FieldValueReplacingLocalQuickFix PRIORITY_EXTRA_IS_OBSOLETE_FIXER = new PriorityExtraIsObsoleteQuickFix();

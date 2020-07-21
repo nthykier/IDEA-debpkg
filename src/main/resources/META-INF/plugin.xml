@@ -28,7 +28,7 @@
                          implementationClass="com.github.nthykier.debpkg.deb822.DebSrcControlInspection"
         />
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
-                   implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
+                   implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlAnnotator" />
         <spellchecker.support language="Deb822" id="deb822SpellcheckingStrategy"
                               implementationClass="com.github.nthykier.debpkg.deb822.Deb822SpellcheckingStrategy" />
         <!--spellchecker.bundledDictionaryProvider implementation="com.github.nthykier.debpkg.deb822.Deb822BundledDictionaryProvider" /-->
