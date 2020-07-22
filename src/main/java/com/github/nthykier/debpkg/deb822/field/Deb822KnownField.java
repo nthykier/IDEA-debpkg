@@ -52,11 +52,23 @@ public interface Deb822KnownField {
     boolean warnIfSetToDefault();
 
     /**
-     * Which paragraph types may this field appear in
+     * Which paragraph types may this field appear in.
      *
      * @return A set of the paragraph types where this field is permitted.  If there are
      *   no restrictions, the set {@link KnownFields#ANY_PARAGRAPH_TYPES} can be used.
+     * @see #isSupportedInParagraphType(String)
      */
     @NotNull
     Set<String> getSupportedParagraphTypes();
+
+    /**
+     * Check if the field may appear in a given paragraph type.
+     *
+     * @param paragraphType The type of paragraph
+     * @return true if the field supports being in the paragraph (or in {@link KnownFields#ANY_PARAGRAPH} paragraph)
+     */
+    default boolean isSupportedInParagraphType(String paragraphType) {
+        Set<String> supportedTypes = getSupportedParagraphTypes();
+        return supportedTypes.contains(paragraphType) || supportedTypes.contains(KnownFields.ANY_PARAGRAPH);
+    }
 }

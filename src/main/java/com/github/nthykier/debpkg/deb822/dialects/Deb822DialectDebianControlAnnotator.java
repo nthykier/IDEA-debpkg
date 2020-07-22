@@ -76,14 +76,12 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         Deb822KnownField knownField = knownFieldTable.getField(fieldName);
         Deb822ValueParts valueParts;
         List<Deb822Substvar> substvars;
-        Set<String> supportedParagraphTypes;
 
         /* Ignore unknown fields or fields where we have no knowledge of the values (e.g. Description) */
         if (knownField == null) {
             return;
         }
-        supportedParagraphTypes = knownField.getSupportedParagraphTypes();
-        if (!supportedParagraphTypes.contains(paragraphType) && !supportedParagraphTypes.contains(KnownFields.ANY_PARAGRAPH)) {
+        if (!knownField.isSupportedInParagraphType(paragraphType)) {
             createAnnotationWithQuickFix(holder::createErrorAnnotation,
                     FieldDeletingQuickFix::new,
                     "field-does-not-belong-in-paragraph",
