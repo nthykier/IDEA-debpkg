@@ -87,6 +87,349 @@ fields:
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
 
+
+  - canonicalName: Vcs-Browser
+    onlyInParagraphType: "Source"
+    description: |
+      URL to the Version control system repo used for the packaging. The URL should be useable with a browser without requiring any login.
+
+      This should be used together with one of the other <b>Vcs-*</b> fields.
+    # Technically wrong, but existing validation rules are not sufficient.
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+  - canonicalName: Vcs-Git
+    onlyInParagraphType: "Source"
+    description: |
+      URL to the git repo used for the packaging. The URL should be useable with "git clone" without requiring any login.
+
+      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+    # Technically wrong, but existing validation rules are not sufficient.
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+  - canonicalName: Vcs-Svn
+    onlyInParagraphType: "Source"
+    description: |
+      URL to the Subversion (SVN) repo used for the packaging. The URL should be useable with "svn checkout" without requiring any login.
+
+      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+    # Technically wrong, but existing validation rules are not sufficient.
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+
+  - canonicalName: Vcs-Arch
+    onlyInParagraphType: "Source"
+    description: |
+      URL to the Arch VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+
+      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+    # Technically wrong, but existing validation rules are not sufficient.
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+  - canonicalName: Vcs-Bzr
+    onlyInParagraphType: "Source"
+    description: |
+      URL to the Bzr VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+
+      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+    # Technically wrong, but existing validation rules are not sufficient.
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+  - canonicalName: Vcs-Cvs
+    onlyInParagraphType: "Source"
+    description: |
+      URL to the Cvs VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+
+      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+    # Technically wrong, but existing validation rules are not sufficient.
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+  - canonicalName: Vcs-Darcs
+    onlyInParagraphType: "Source"
+    description: |
+      URL to the Darcs VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+
+      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+    # Technically wrong, but existing validation rules are not sufficient.
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+  - canonicalName: Vcs-Hg
+    onlyInParagraphType: "Source"
+    description: |
+      URL to the Mercurial (hg) VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+
+      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+    # Technically wrong, but existing validation rules are not sufficient.
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+  - canonicalName: Vcs-Mtn
+    onlyInParagraphType: "Source"
+    description: |
+      URL to the Monotone (Mtn) VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+
+      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+    # Technically wrong, but existing validation rules are not sufficient.
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+  - canonicalName: "Build-Depends"
+    onlyInParagraphType: "Source"
+    description: |
+      The build-dependency for this source package.  Needed for any target including <b>clean</b>.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: false
+
+  - canonicalName: "Build-Depends-Arch"
+    onlyInParagraphType: "Source"
+    description: |
+      The build-dependency for this source package but only when running <b>build-arch</b> and <b>binary-arch</b> targets.
+
+      This with <pre>dpkg-buildpackage -B</pre>.
+
+      Note that these dependencies are <em>not</em> available during <b>clean</b>.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: false
+
+  - canonicalName: "Build-Depends-Indep"
+    onlyInParagraphType: "Source"
+    description: |
+      The build-dependency for this source package but only when running <b>build-indep</b> and <b>binary-indep</b> targets.
+
+      This with <pre>dpkg-buildpackage -A</pre>.
+
+      Note that these dependencies are <em>not</em> available during <b>clean</b>.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: false
+
+  - canonicalName: "Build-Conflicts"
+    onlyInParagraphType: "Source"
+    description: |
+      Packages that must not be installed during the build.  This applies to any target including <b>clean</b>.
+
+      Where possible, it is often better to configure the build so that it does not react to the package being
+      present in the first place.  Usually this is a question of using a <b>--without-foo</b> or <b>--disable-foo</b>
+      or such to the build configuration.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: false
+
+  - canonicalName: "Build-Conflicts-Arch"
+    onlyInParagraphType: "Source"
+    description: |
+      Packages that must not be installed when running <b>build-arch</b> and <b>binary-arch</b> targets.
+
+      Where possible, it is often better to configure the build so that it does not react to the package being
+      present in the first place.  Usually this is a question of using a <b>--without-foo</b> or <b>--disable-foo</b>
+      or such to the build configuration.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: false
+
+
+  - canonicalName: "Build-Conflicts-Indep"
+    onlyInParagraphType: "Source"
+    description: |
+      Packages that must not be installed when running <b>build-indep</b> and <b>binary-indep</b> targets.
+
+      Where possible, it is often better to configure the build so that it does not react to the package being
+      present in the first place.  Usually this is a question of using a <b>--without-foo</b> or <b>--disable-foo</b>
+      or such to the build configuration.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: false
+
+  - canonicalName: "Pre-Depends"
+    onlyInParagraphType: "Package"
+    description: |
+      <b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
+      probably not looking for this field (except to set a <b>${misc:Pre-Depends}</b> relation.  Incorrect use
+      of this field can cause issues - among other causing issues during upgrades that users cannot work around
+      without passing --force-* options to dpkg.
+      </em>
+
+      This field is like <b>Depends</b>, except that is also forces dpkg to complete installation of the packages
+      named before even startning the installation of the package which declares the pre-dependency.
+
+      <em>Example:</em>
+      <pre>Pre-Depends: ${misc:Pre-Depends}</pre>
+
+      Note this is a very strong dependency and not all packages support being a pre-dependency because it puts
+      additional requirements on the package being depended on.  Use of <b>${misc:Pre-Depends}</b> is pre-approved
+      and recommended.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: true
+
+  - canonicalName: "Depends"
+    onlyInParagraphType: "Package"
+    description: |
+      Lists the packages that must be installed (<em>configured</em>) and before this package is installed
+      (<em>configured</em>).
+
+      <em>Example:</em>
+      <pre>Package: foo
+      Architecture: any
+      Depends: ${misc:Depends},
+               ${shlibs:Depends},
+               libfoo1 (= ${binary:Version}),
+               foo-data (= ${source:Version}),
+      </pre>
+
+      This field declaares an absolute dependency.  A package will not be configured unless all of the packages
+      listed in its <b>Depends</b> field have been correctly configured (unless there is a circular dependency).
+
+      This field should be used if the depended-on package is required for the dpeending papkage to provide a
+      <em>significant amount of functionality</em> or when it is used in the <b>postinst</b> or <b>prerm</b>
+      scripts.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: true
+
+
+  - canonicalName: "Recommends"
+    onlyInParagraphType: "Package"
+    description: |
+      Lists the packages that <em>should</em> be installed when this package is installed in all but <em>unusual
+      installations</em>.
+
+      <em>Example:</em>
+      <pre>Recommends: foo-optional</pre>
+
+      By default, APT will attempt to install recommends unless they cannot be installed or the user has configured
+      APT skip recommends.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: true
+
+
+  - canonicalName: "Suggests"
+    onlyInParagraphType: "Package"
+    description: |
+      Lists the packages that may make this package more useful but not installing them is perfectly reasonable as
+      well.  Suggests can also be useful for add-ons that only make sense in particular corner cases like supporting
+      a non-standard file format.
+
+      <em>Example:</em>
+      <pre>Suggests: bar</pre>
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: true
+
+  - canonicalName: "Enhances"
+    onlyInParagraphType: "Package"
+    description: |
+      This field is similar to Suggests but works in the opposite direction.  It is used to declare that a package
+      can enhance the functionality of the package.
+
+      <em>Example:</em>
+      <pre>Enhances: bar</pre>
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: true
+
+  - canonicalName: "Provides"
+    onlyInParagraphType: "Package"
+    description: |
+      Declare this package also provide one or more other packages.  This means that this package can substitute
+      for the provided package in some relations.
+
+      <em>Example:</em>
+      <pre>Package: foo
+      ...
+
+      Package: foo-plus
+      Provides: foo (= ${source:Upstream-Version})
+      </pre>
+
+
+      If the provides relation is versioned, it must use a "strictly equals" version.  If it does not a version,
+      then it <em>cannot</em> be used to satisfy a dependency with a version restriction.  Consider the following
+      example:
+
+      <em>Archive scenario:</em>  (This is <em>not</em> valid debian/control paragraphs, despite the resemblence)
+      <pre>
+      Package foo
+      Depends: bar (&gt;= 1.0)
+
+      Package: bar
+      Version: 0.9
+
+      Package: bar-plus
+      Provides: bar (= 1.0)
+
+      Package: bar-clone
+      Provides: bar
+      </pre>
+
+      In this archive scenario, the <b>bar-plus</b> package will satisfy the dependency of <b>foo</b> as the only one.
+      The <b>bar</b> package fails because the version is only <em>0.9</em> and <b>bar-clone</b> because the provides
+      is unversioned but the dependency clause is versioned.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: true
+
+  - canonicalName: "Conflicts"
+    onlyInParagraphType: "Package"
+    description: |
+      <b>Confusion warning</b> <em>You may be looking for Breaks instead of Conflicts</em>.
+
+      This package cannot be installed together with the packages listed in the Conflicts field.  This
+      is a "bigger hammer" than <b>Breaks</b> and is used sparingly.  Notably, if you want to do a versioned
+      <b>Conflicts</b> then you <em>almost certainly</em> want <b>Breaks</b> instead.
+
+      <em>Example:</em>
+      <pre>Conflicts: bar</pre>
+
+      Please check the description of the <b>Breaks</b> field for when you would use <b>Breaks</b> vs. <b>Conflicts</b>.
+
+      Note if a package conflicts with itself (indirectly or via <b>Provides</b>), then it is using a special rule
+      for Conflicts.  See section 7.6.2 "Replacing whole packages, forcing their removal" in the Debian Policy Manual.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: true
+
+  - canonicalName: "Breaks"
+    onlyInParagraphType: "Package"
+    description: |
+      This package cannot be installed together with the packages listed in the Breaks field.
+
+      This is often use to declare versioned issues such as "This package does not work with foo if it is version 1.0 or less".
+      In comparsion, <b>Conflicts</b> is generally used to declare that "This package does not work at all as long as foo is installed".
+
+      <em>Example:</em>
+      <pre>Breaks: bar (<= 1.0~)</pre>
+
+      <em>Breaks vs. Conflicts:</em>
+      <table>
+        <tr><th>Case</th><th></th<th>What to do</th></tr>
+        <tr><td>I moved files from <b>foo</b> to <b>bar</b> in version X</td><td>-&gt;</td><td>Add <b>Breaks: foo (&lt;&lt; X~)</b> + <b>Replaces: foo (&lt;&lt; X~)</b> to <b>bar</b></td></tr>
+        <tr><td>Upgrading bar while <b>foo</b> is version X or less causes problems <b>foo</b> or <b>bar</b> to break</td><td>-&gt;</td><td>Add <b>Breaks: foo (&lt;&lt; X~)</b> to <b>bar</b></td></tr>
+        <tr><td>The <b>foo</b and <b>bar</b> packages provide the same functionality (interface) but different implementations and there can be at most one of them.</td><td>-&gt;</td></td>See section 7.6.2 "Replacing whole packages, forcing their removal" in the Debian Policy Manual.</td></tr>
+        <tr><td>The <b>foo</b and <b>bar</b> packages are unrelated but happen to provide the same binrary.</td><td>-&gt;</td><td>Attempt to resolve the name conflict by renaming either (or both) sides.</td>/<tr>
+      </table>
+
+      Note the use of <em>~</em> in version numbers are generally used to ensure this works correctly in case of a backports (in the Debian archive), where the package is rebuilt with the "~bpo" suffix in its version.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: true
+
+  - canonicalName: "Replaces"
+    onlyInParagraphType: "Package"
+    description: |
+      This package either replaces another package or overwrites files that used to be provided by another package.
+
+      <em>Attention: The <b>Replaces</b> field is <b>always</b> used with either <b>Breaks</b> or <b>Conflicts</b></em>.
+
+      <em>Example:</em>
+      <pre>
+      Package: foo
+      ...
+
+      # The foo package was split to move data files into foo-data in version 1.2-3
+      Package: foo-data
+      Replaces: foo (<< 1.2-3~)
+      Breaks: foo (<< 1.2-3~)
+
+      Please check the description of the <b>Breaks</b> field for when you would use <b>Breaks</b> vs. <b>Conflicts</b>.  It also covers common uses of <b>Replaces</b>.
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    supportsSubstvars: true
+
   - canonicalName: Uploaders
     onlyInParagraphType: "Source"
     description: |

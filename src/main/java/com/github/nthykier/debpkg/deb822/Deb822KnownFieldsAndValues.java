@@ -42,16 +42,6 @@ public class Deb822KnownFieldsAndValues {
         throw new IllegalArgumentException("Language must be a variant of Deb822Language");
     }
 
-    static void ADD_KNOWN_FIELDS(Deb822KnownFieldValueType valueType, String ... fieldNames) {
-        for (String fieldName : fieldNames) {
-            String fieldLc = fieldName.toLowerCase().intern();
-            Deb822KnownField field = new Deb822KnownFieldImpl(fieldName, valueType, false,
-                    Collections.emptyMap(), null, true, null, false,
-                    ANY_PARAGRAPH_TYPES);
-            checkedAddField(fieldLc, field);
-        }
-    }
-
     private static void checkedAddField(String fieldNameLC, Deb822KnownField field) {
         Deb822KnownField existing = KNOWN_FIELDS.putIfAbsent(fieldNameLC, field);
         assert existing == null : "Field " + existing.getCanonicalFieldName() + " is declared twice";
@@ -112,6 +102,7 @@ public class Deb822KnownFieldsAndValues {
                             + " (should it have been a SINGLE_VALUE instead?)");
                 }
                 break;
+            case COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK:
             case COMMA_SEPARATED_VALUE_LIST:
             case SPACE_SEPARATED_VALUE_LIST:
                 /* OK with or without keywords */
@@ -166,16 +157,6 @@ public class Deb822KnownFieldsAndValues {
     }
 
     static {
-        /* Fields with structured content we know but currently cannot validate at the moment */
-        ADD_KNOWN_FIELDS(Deb822KnownFieldValueType.FREE_TEXT_VALUE, "Vcs-Git", "Vcs-Svn", "Vcs-Browser",
-                "Vcs-Arch", "Vcs-Bzr", "Vcs-Cvs", "Vcs-Darcs", "Vcs-Hg", "Vcs-Mtn");
-        ADD_KNOWN_FIELDS(Deb822KnownFieldValueType.COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK,
-                "Build-Depends", "Build-Depends-Indep", "Build-Depends-Arch",
-                "Build-Conflicts", "Build-Conflicts-Indep", "Build-Conflicts-Arch",
-                "Pre-Depends", "Depends", "Recommends", "Suggests", "Enhances",
-                "Conflicts", "Replaces", "Breaks", "Provides"
-                );
-
         loadKnownFieldDefinitions();
     }
 }
