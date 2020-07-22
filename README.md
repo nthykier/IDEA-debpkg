@@ -37,7 +37,7 @@ Plus the features listed for Generic deb822 files.
 
  * Basic syntax highlighting.
  * Basic semantic validation (i.e. no duplicate fields)
- * Support for adding / removing comments via the <kbd>Code</kbd> > <kdb>Comment with Line Comment</kdb> feature.
+ * Support for adding / removing comments via the <kbd>Code</kbd> > <kbd>Comment with Line Comment</kbd> feature.
 
 ## Getting started
 
