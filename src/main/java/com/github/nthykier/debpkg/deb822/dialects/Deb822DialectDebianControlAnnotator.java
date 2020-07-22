@@ -1,12 +1,9 @@
 package com.github.nthykier.debpkg.deb822.dialects;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
+import com.github.nthykier.debpkg.deb822.field.*;
 import com.github.nthykier.debpkg.deb822.Deb822KnownFieldsAndValues;
 import com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighter;
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
-import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.intellij.codeInspection.*;
 import com.intellij.lang.ASTNode;
@@ -31,9 +28,7 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
     private static final FieldValueReplacingLocalQuickFix PRIORITY_EXTRA_IS_OBSOLETE_FIXER = new PriorityExtraIsObsoleteQuickFix();
 
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
-        if (element instanceof Deb822AllParagraphs)  {
-            checkAllParagraphs(holder, (Deb822AllParagraphs)element);
-        } else if (element instanceof Deb822Paragraph) {
+        if (element instanceof Deb822Paragraph) {
             checkParagraph(holder, (Deb822Paragraph)element);
         }
     }
@@ -43,12 +38,13 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         Map<String, Deb822FieldValuePair> field2pair = new HashMap<>();
         String arch, multivalue;
         KnownFieldTable knownFieldTable = getKnownFieldTable();
+        String paragraphType = paragraph.isFirstParagraph() ? "Source" : "Package";
         for (Deb822FieldValuePair pair : paragraph.getFieldMap().values()) {
             String keyOrig = pair.getField().getFieldName();
             String keyLc = keyOrig.toLowerCase();
             Deb822ValueParts parts = pair.getValueParts();
             String value = parts != null ? pair.getValueParts().getText().trim() : "";
-            checkFieldValuePair(knownFieldTable, pair, holder);
+            checkFieldValuePair(knownFieldTable, pair, holder, paragraphType);
             field2values.putIfAbsent(keyLc, value);
             field2pair.putIfAbsent(keyLc, pair);
         }
@@ -64,67 +60,40 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         }
     }
 
-    private void checkAllParagraphs(@NotNull AnnotationHolder holder, @NotNull Deb822AllParagraphs element) {
-        boolean first = true;
-        for (Deb822Paragraph paragraph : element.getParagraphList()) {
-            Deb822FieldValuePair source = paragraph.getFieldValuePair("Source");
-            Deb822FieldValuePair pkg = paragraph.getFieldValuePair("Package");
-            if (first) {
-                /*
-                if (source == null) {
-                    holder.createErrorAnnotation(paragraph,
-                            Deb822Bundle.message(message));
-                }*/
-                if (pkg != null) {
-                    createAnnotationWithQuickFix(holder::createErrorAnnotation,
-                            FieldDeletingQuickFix::new,
-                            "field-does-not-belong-in-paragraph",
-                            pkg,
-                            ProblemHighlightType.ERROR,
-                            "Package", "Source"
-                    );
-
-                }
-                first = false;
-            } else {
-                if (source != null) {
-                    createAnnotationWithQuickFix(holder::createErrorAnnotation,
-                            FieldDeletingQuickFix::new,
-                            "field-does-not-belong-in-paragraph",
-                            source,
-                            ProblemHighlightType.ERROR,
-                            "Source", "Package"
-                    );
-                }/*
-                if (pkg == null) {
-                    holder.createErrorAnnotation(paragraph,
-                            Deb822Bundle.message(message));
-                }*/
-            }
-        }
-    }
-
     protected KnownFieldTable getKnownFieldTable() {
         return Deb822KnownFieldsAndValues.getKnownFieldsFor(Deb822DialectDebianControlLanguage.INSTANCE);
     }
 
     private void checkFieldValuePair(@NotNull KnownFieldTable knownFieldTable,
                                      @NotNull Deb822FieldValuePair pair,
-                                     @NotNull AnnotationHolder holder) {
+                                     @NotNull AnnotationHolder holder,
+                                     @NotNull String paragraphType) {
         String fieldName = pair.getField().getFieldName();
         Deb822KnownField knownField = knownFieldTable.getField(fieldName);
         Deb822ValueParts valueParts;
         List<Deb822Substvar> substvars;
+        Set<String> supportedParagraphTypes;
 
         /* Ignore unknown fields or fields where we have no knowledge of the values (e.g. Description) */
         if (knownField == null) {
             return;
+        }
+        supportedParagraphTypes = knownField.getSupportedParagraphTypes();
+        if (!supportedParagraphTypes.contains(paragraphType) && !supportedParagraphTypes.contains(KnownFields.ANY_PARAGRAPH)) {
+            createAnnotationWithQuickFix(holder::createErrorAnnotation,
+                    FieldDeletingQuickFix::new,
+                    "field-does-not-belong-in-paragraph",
+                    pair,
+                    ProblemHighlightType.ERROR,
+                    knownField.getCanonicalFieldName(), paragraphType
+            );
         }
         valueParts = pair.getValueParts();
         if (valueParts == null) {
             /* The parser will flag this as an error already */
             return;
         }
+
         substvars = valueParts.getSubstvarList();
         if (!knownField.supportsSubstsvars() && !substvars.isEmpty()) {
             for (Deb822Substvar substvar : substvars) {

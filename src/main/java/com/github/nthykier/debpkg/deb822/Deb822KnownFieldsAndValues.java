@@ -1,10 +1,7 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
-import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
+import com.github.nthykier.debpkg.deb822.field.*;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldKeywordImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.KnownFieldTableImpl;
@@ -16,6 +13,7 @@ import java.io.InputStream;
 import java.util.*;
 
 import static com.github.nthykier.debpkg.deb822.Deb822YamlDataFileParserUtil.*;
+import static com.github.nthykier.debpkg.deb822.field.KnownFields.ANY_PARAGRAPH_TYPES;
 
 public class Deb822KnownFieldsAndValues {
 
@@ -48,7 +46,8 @@ public class Deb822KnownFieldsAndValues {
         for (String fieldName : fieldNames) {
             String fieldLc = fieldName.toLowerCase().intern();
             Deb822KnownField field = new Deb822KnownFieldImpl(fieldName, valueType, false,
-                    Collections.emptyMap(), null, true, null, false);
+                    Collections.emptyMap(), null, true, null, false,
+                    ANY_PARAGRAPH_TYPES);
             checkedAddField(fieldLc, field);
         }
     }
@@ -69,6 +68,21 @@ public class Deb822KnownFieldsAndValues {
         }
     }
 
+    private static Set<String> parseSupportedParagraphTypes(List<String> valuesAsList) {
+        Set<String> values;
+        if (valuesAsList.isEmpty()) {
+            return ANY_PARAGRAPH_TYPES;
+        }
+        values = new HashSet<>(valuesAsList);
+        if (values.contains(KnownFields.ANY_PARAGRAPH)) {
+            if (values.size() == 1) {
+                return ANY_PARAGRAPH_TYPES;
+            }
+            throw new IllegalArgumentException("The value ANY must appear on its own in onlyInParagraphType");
+        }
+        return Collections.unmodifiableSet(values);
+    }
+
     private static Deb822KnownField parseKnownFieldDefinition(Map<String, Object> fieldDef) {
         String canonicalName = getRequiredString(fieldDef, "canonicalName");
         Deb822KnownFieldValueType valueType = Deb822KnownFieldValueType.valueOf(
@@ -81,6 +95,10 @@ public class Deb822KnownFieldsAndValues {
         boolean allKeywordsKnown = false;
         boolean supportsSubstvars = getBool(fieldDef, "supportsSubstvars", true);
         boolean warnIfDefault = getBool(fieldDef, "warnIfDefault", false);
+        Set<String> supportedParagraphTypes = parseStringOrListAsList(fieldDef,
+                "onlyInParagraphType",
+                Deb822KnownFieldsAndValues::parseSupportedParagraphTypes,
+                ANY_PARAGRAPH_TYPES);
         switch (valueType) {
             case SINGLE_TRIVIAL_VALUE:
                 if (!keywordList.isEmpty()) {
@@ -126,7 +144,7 @@ public class Deb822KnownFieldsAndValues {
             keywordMap = Collections.emptyMap();
         }
         return new Deb822KnownFieldImpl(canonicalName, valueType, allKeywordsKnown, keywordMap, docs,
-                supportsSubstvars, defaultValue, warnIfDefault);
+                supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes);
     }
 
     private static Deb822KnownFieldKeyword parseKeyword(Object keywordDefRaw) {

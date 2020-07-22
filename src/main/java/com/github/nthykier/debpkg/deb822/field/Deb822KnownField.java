@@ -50,4 +50,13 @@ public interface Deb822KnownField {
      * @return true if the field should be omitted when set to the default.
      */
     boolean warnIfSetToDefault();
+
+    /**
+     * Which paragraph types may this field appear in
+     *
+     * @return A set of the paragraph types where this field is permitted.  If there are
+     *   no restrictions, the set {@link KnownFields#ANY_PARAGRAPH_TYPES} can be used.
+     */
+    @NotNull
+    Set<String> getSupportedParagraphTypes();
 }

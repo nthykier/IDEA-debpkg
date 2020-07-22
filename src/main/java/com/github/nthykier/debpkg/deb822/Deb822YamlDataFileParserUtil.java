@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Contract;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class Deb822YamlDataFileParserUtil {
 
@@ -12,6 +13,34 @@ public class Deb822YamlDataFileParserUtil {
         @SuppressWarnings("unchecked")
         List<T> res = getTypedObject(map, fieldName, List.class, Collections.EMPTY_LIST);
         return res;
+    }
+
+    @Contract("_, _, !null -> !null")
+    static List<String> getStringOrListAsList(Map<String, Object> map, String fieldName, List<String> defaultValue) {
+        List<String> res;
+        Object value = map.get(fieldName);
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof List) {
+            @SuppressWarnings("unchecked")
+            List<String> resCast = (List<String>)value;
+            res = resCast;
+        } else if (value instanceof String) {
+            res = Collections.singletonList((String)value);
+        } else {
+            throw new IllegalArgumentException(fieldName + " was defined and a " + value.getClass().getCanonicalName()
+                    + " (expected a String or a List<String>)");
+        }
+        return res;
+    }
+
+    static <T> T parseStringOrListAsList(Map<String, Object> map, String fieldName, Function<List<String>, T> mapper, T defaultValue) {
+        List<String> listValue = getStringOrListAsList(map, fieldName, null);
+        if (listValue == null) {
+            return defaultValue;
+        }
+        return mapper.apply(listValue);
     }
 
     static String getRequiredString(Map<String, Object> map, String fieldName) {

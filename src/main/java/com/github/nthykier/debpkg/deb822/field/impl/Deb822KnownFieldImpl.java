@@ -3,6 +3,7 @@ package com.github.nthykier.debpkg.deb822.field.impl;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
+import com.github.nthykier.debpkg.deb822.field.KnownFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,10 +21,13 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
     private final boolean supportsSubstvars;
     private final String defaultValue;
     private final boolean warnIfDefault;
+    private final Set<String> supportedParagraphTypes;
 
     public Deb822KnownFieldImpl(@NotNull String canonicalFieldName, @NotNull Deb822KnownFieldValueType fieldValueType,
                                 boolean areAllKeywordsKnown, @NotNull Map<String, Deb822KnownFieldKeyword> allKnownKeywords,
-                                String docs, boolean supportsSubstvars, String defaultValue, boolean warnIfDefault) {
+                                String docs, boolean supportsSubstvars, String defaultValue, boolean warnIfDefault,
+                                @NotNull Set<String> supportedParagraphTypes
+    ) {
         this.canonicalFieldName = canonicalFieldName;
         this.fieldValueType = fieldValueType;
         this.areAllKeywordsKnown = areAllKeywordsKnown;
@@ -33,6 +37,7 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
         this.supportsSubstvars = supportsSubstvars;
         this.defaultValue = defaultValue;
         this.warnIfDefault = warnIfDefault;
+        this.supportedParagraphTypes = supportedParagraphTypes.isEmpty() ? KnownFields.ANY_PARAGRAPH_TYPES : Collections.unmodifiableSet(supportedParagraphTypes);
     }
 
     @NotNull
@@ -91,5 +96,10 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
 
     public String toString() {
         return "Deb822KnownField." + this.getCanonicalFieldName();
+    }
+
+    @Override
+    public @NotNull Set<String> getSupportedParagraphTypes() {
+        return this.supportedParagraphTypes;
     }
 }
