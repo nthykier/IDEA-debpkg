@@ -58,6 +58,10 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
                     MULTI_ARCH_SAME_ARCH_ALL_FIXER.getAnnotationText());
             anno.registerFix(MULTI_ARCH_SAME_ARCH_ALL_FIXER, null, null, new MultiarchSameArchitectureAllProblemDescriptor(pair.getValueParts()));
         }
+        if (! field2values.containsKey(paragraphType.toLowerCase())) {
+            holder.createErrorAnnotation(paragraph,
+                    Deb822Bundle.message("deb822.files.annotator.fields.missing-mandatory-field", paragraphType) );
+        }
     }
 
     protected KnownFieldTable getKnownFieldTable() {

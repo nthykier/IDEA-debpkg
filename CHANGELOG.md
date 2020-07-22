@@ -5,6 +5,7 @@
 ## [Unreleased]
 ### Added
 - Added check to highlight if fields are placed in the wrong paragraph in debian/control files. (Closes: #1)
+- Added check to ensure that mandatory "Source" and "Package" fields are present in debian/control.
 
 ### Changed
 
