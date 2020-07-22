@@ -22,12 +22,9 @@ public class Deb822PsiImplUtil {
     }
 
     public static @Nullable PsiReference getReference(@NotNull Deb822Value value) {
-        PsiElement parent = value.getParent();
-        while (parent != null && !(parent instanceof Deb822FieldValuePair)) {
-            parent = parent.getParent();
-        }
+        Deb822FieldValuePair parent = getAncestorOfType(value, Deb822FieldValuePair.class);
         if (parent != null) {
-            Deb822Field field = ((Deb822FieldValuePair)parent).getField();
+            Deb822Field field = parent.getField();
             Deb822KnownField knownField = field.getDeb822KnownField();
             Deb822KnownFieldKeyword keyword;
             if (knownField == null) {
@@ -39,5 +36,15 @@ public class Deb822PsiImplUtil {
             }
         }
         return null;
+    }
+
+    @Nullable
+    public static <T extends PsiElement> T getAncestorOfType(@NotNull PsiElement element,
+                                                             @NotNull Class<T> clazz) {
+        PsiElement parent = element.getParent();
+        while (parent != null && !clazz.isAssignableFrom(parent.getClass())) {
+            parent = parent.getParent();
+        }
+        return clazz.cast(parent);
     }
 }

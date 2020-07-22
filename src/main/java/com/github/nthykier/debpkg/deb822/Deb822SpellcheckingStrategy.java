@@ -4,6 +4,7 @@ import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
+import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy;
 import com.intellij.spellchecker.tokenizer.Tokenizer;
@@ -24,12 +25,9 @@ public class Deb822SpellcheckingStrategy extends SpellcheckingStrategy {
     @NotNull
     public Tokenizer<?> getTokenizer(PsiElement element) {
         if (element instanceof Deb822ValueParts) {
-            PsiElement parent = element.getParent();
-            while (parent != null && !(parent instanceof Deb822FieldValuePair)) {
-                parent = parent.getParent();
-            }
-            if (parent != null) {
-                Deb822Field field = ((Deb822FieldValuePair)parent).getField();
+            Deb822FieldValuePair parent = Deb822PsiImplUtil.getAncestorOfType(element, Deb822FieldValuePair.class);
+             if (parent != null) {
+                Deb822Field field = parent.getField();
                 Deb822KnownField knownField = field.getDeb822KnownField();
                 if (knownField != null) {
                     String name;

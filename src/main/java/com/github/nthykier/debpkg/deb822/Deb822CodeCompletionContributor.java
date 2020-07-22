@@ -5,6 +5,7 @@ import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
+import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
@@ -44,18 +45,17 @@ public class Deb822CodeCompletionContributor extends CompletionContributor {
                                                @NotNull CompletionResultSet resultSet) {
                         PsiElement fieldValue = parameters.getPosition();
                         Deb822Field field;
+                        Deb822FieldValuePair fieldValuePair;
                         Deb822KnownField knownField;
                         if (handleSubstvarCompletion(parameters, resultSet)) {
                             /* User is going for a substitution variable */
                             return;
                         }
-                        while (fieldValue != null && ! (fieldValue instanceof Deb822FieldValuePair)) {
-                            fieldValue = fieldValue.getParent();
-                        }
-                        if (fieldValue == null) {
+                        fieldValuePair = Deb822PsiImplUtil.getAncestorOfType(fieldValue, Deb822FieldValuePair.class);
+                        if (fieldValuePair == null) {
                             return;
                         }
-                        field = ((Deb822FieldValuePair)fieldValue).getField();
+                        field = fieldValuePair.getField();
                         knownField = field.getDeb822KnownField();
                         if (knownField == null || !knownField.hasKnownValues()) {
                             return;
