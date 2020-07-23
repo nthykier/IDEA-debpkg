@@ -55,16 +55,23 @@ public class Deb822PsiImplUtil {
     @Nullable
     public static <T extends PsiElement> T getAncestorOfType(@NotNull PsiElement element,
                                                              @NotNull Class<T> clazz) {
-        return iteratePsiElements(element, PsiElement::getParent, clazz);
+        return iteratePsiElements(element.getParent(), PsiElement::getParent, clazz);
     }
 
-    private static <T extends PsiElement> T iteratePsiElements(@NotNull PsiElement element,
+    @Nullable
+    public static <T extends PsiElement> T getPreviousSiblingOfType(@Nullable PsiElement startingSibling,
+                                                                    @NotNull Class<T> clazz) {
+        return iteratePsiElements(startingSibling, PsiElement::getPrevSibling, clazz);
+    }
+
+
+    private static <T extends PsiElement> T iteratePsiElements(@Nullable PsiElement startElement,
                                                                @NotNull Function<PsiElement, PsiElement> nextElement,
                                                                @NotNull Class<T> clazz) {
-        PsiElement parent = element.getParent();
-        while (parent != null && !clazz.isAssignableFrom(parent.getClass())) {
-            parent = nextElement.apply(parent);
+        PsiElement e = startElement;
+        while (e != null && !clazz.isAssignableFrom(e.getClass())) {
+            e = nextElement.apply(e);
         }
-        return clazz.cast(parent);
+        return clazz.cast(e);
     }
 }
