@@ -13,6 +13,8 @@ import com.intellij.psi.PsiReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Function;
+
 public class Deb822PsiImplUtil {
 
     public static PsiReference getReference(@NotNull Deb822Substvar substvar) {
@@ -41,9 +43,15 @@ public class Deb822PsiImplUtil {
     @Nullable
     public static <T extends PsiElement> T getAncestorOfType(@NotNull PsiElement element,
                                                              @NotNull Class<T> clazz) {
+        return iteratePsiElements(element, PsiElement::getParent, clazz);
+    }
+
+    private static <T extends PsiElement> T iteratePsiElements(@NotNull PsiElement element,
+                                                               @NotNull Function<PsiElement, PsiElement> nextElement,
+                                                               @NotNull Class<T> clazz) {
         PsiElement parent = element.getParent();
         while (parent != null && !clazz.isAssignableFrom(parent.getClass())) {
-            parent = parent.getParent();
+            parent = nextElement.apply(parent);
         }
         return clazz.cast(parent);
     }
