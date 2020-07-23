@@ -8,12 +8,15 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.github.nthykier.debpkg.deb822.Deb822KnownFieldsAndValues.getKnownFieldsFor;
 
 public class AbstractDeb822Field extends ASTWrapperPsiElement implements Deb822FieldBase {
+
+    private static TokenSet FIELD_NAME_TOKEN_SET = TokenSet.create(Deb822Types.FIELD_NAME);
 
     /* We use NULL_FIELD as a dummy value for "not-set/recompute" because "null" is a valid return value */
     private Deb822KnownField knownField = KnownFields.NULL_FIELD;
@@ -35,9 +38,7 @@ public class AbstractDeb822Field extends ASTWrapperPsiElement implements Deb822F
          * text we want.  The default class structure does not and have to copy the text around, which is expensive.
          */
         if (fieldName == null) {
-            ASTNode childNode = this.getNode().getFirstChildNode();
-            assert childNode.getElementType().equals(Deb822Types.FIELD_NAME);
-            fieldName = childNode.getText();
+            fieldName = Deb822PsiImplUtil.getTextFromCompositeWrappingAToken(this, FIELD_NAME_TOKEN_SET);
         }
         return fieldName;
     }

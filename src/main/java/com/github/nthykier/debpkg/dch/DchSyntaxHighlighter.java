@@ -18,6 +18,10 @@ public class DchSyntaxHighlighter extends SyntaxHighlighterBase {
             TextAttributesKey.createTextAttributesKey("DCH.BAD_CHARACTER", DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE);
 
 
+    public static final TextAttributesKey FILE_NAME =
+            TextAttributesKey.createTextAttributesKey("DCH.FILE_NAME", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
+
+
     private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
     private static final Map<IElementType, TextAttributesKey[]> TOKEN_TYPE2TEXT_ATTR_KEYS = new HashMap<>();
@@ -52,7 +56,7 @@ public class DchSyntaxHighlighter extends SyntaxHighlighterBase {
         addTokenMapEntry(DchTypes.GREATER_THAN, "DCH.EMAIL_SEPARATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
         addTokenMapEntry(DchTypes.LESS_THAN, "DCH.EMAIL_SEPARATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
         addTokenMapEntry(DchTypes.DISTRIBUTION_NAME, "DCH.DISTRIBUTION", DefaultLanguageHighlighterColors.LABEL);
-        addTokenMapEntry(DchTypes.CHANGE_RESPONSIBLE, "DCH.CHANGE_RESPONSIBLE", DefaultLanguageHighlighterColors.CONSTANT);
+        addTokenMapEntry(DchTypes.CHANGE_RESPONSIBLE, "DCH.CHANGE_RESPONSIBLE", DefaultLanguageHighlighterColors.STRING);
         addTokenMapEntry(DchTypes.MAINTAINER_NAME, "DCH.MAINTAINER_NAME", DefaultLanguageHighlighterColors.IDENTIFIER);
         addTokenMapEntry(DchTypes.MAINTAINER_EMAIL, "DCH.MAINTAINER_EMAIL", DefaultLanguageHighlighterColors.IDENTIFIER);
 

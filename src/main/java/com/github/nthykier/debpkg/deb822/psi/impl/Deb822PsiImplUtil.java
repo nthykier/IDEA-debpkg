@@ -3,13 +3,13 @@ package com.github.nthykier.debpkg.deb822.psi.impl;
 import com.github.nthykier.debpkg.deb822.*;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
-import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Substvar;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Value;
+import com.github.nthykier.debpkg.deb822.psi.*;
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,6 +39,18 @@ public class Deb822PsiImplUtil {
         }
         return null;
     }
+
+    @NotNull
+    public static String getTextFromCompositeWrappingAToken(@NotNull PsiElement element,
+                                                            @NotNull TokenSet tokenTypes) {
+        ASTNode childNode = element.getNode().getFirstChildNode();
+        String text;
+        assert tokenTypes.contains(childNode.getElementType());
+        text = childNode.getText();
+        assert childNode.getTreeNext() == null;
+        return text;
+    }
+
 
     @Nullable
     public static <T extends PsiElement> T getAncestorOfType(@NotNull PsiElement element,

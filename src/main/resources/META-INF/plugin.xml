@@ -48,5 +48,7 @@
         <lang.syntaxHighlighterFactory language="DebianChangelog" implementationClass="com.github.nthykier.debpkg.dch.DchSyntaxHighlighterFactory" />
         <spellchecker.support language="DebianChangelog" id="dchSpellcheckingStrategy"
                               implementationClass="com.github.nthykier.debpkg.dch.DchSpellcheckingStrategy" />
+        <annotator language="DebianChangelog"
+                   implementationClass="com.github.nthykier.debpkg.dch.DchAnnotator" />
     </extensions>
 </idea-plugin>

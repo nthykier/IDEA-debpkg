@@ -4,9 +4,11 @@
 
 ## [Unreleased]
 ### Added
-- Added check to highlight if fields are placed in the wrong paragraph in debian/control files. (Closes: #1)
-- Added check to ensure that mandatory "Source" and "Package" fields are present in debian/control.
+- Add check to highlight if fields are placed in the wrong paragraph in debian/control files. (Closes: #1)
+- Add check to ensure that mandatory "Source" and "Package" fields are present in debian/control.
 - Add documentation and field-placement level validation for remaining known fields (e.g. Depends).  (Closes: #2)
+- Detect the documentation pattern " * <filename>: <change>" in changelogs and automatically link to the file if
+  it can be found (globs not supported).
 
 ### Changed
 

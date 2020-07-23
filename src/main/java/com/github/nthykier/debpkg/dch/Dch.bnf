@@ -31,6 +31,7 @@ private version ::= PARANTHESES_OPEN VERSION PARANTHESES_CLOSE {
 }
 
 changelog_line ::= (CHANGE_DETAILS|CHANGE_RESPONSIBLE) {
+  extends="com.github.nthykier.debpkg.dch.psi.impl.AbstractDchChangelogEntry"
   recoverWhile=recover_top_level
 }
 
