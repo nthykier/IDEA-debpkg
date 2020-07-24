@@ -118,7 +118,6 @@ fields:
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
 
-
   - canonicalName: Vcs-Arch
     onlyInParagraphType: "Source"
     description: |
@@ -184,6 +183,7 @@ fields:
     description: |
       The build-dependency for this source package.  Needed for any target including <b>clean</b>.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_DEPENDENCY
     supportsSubstvars: false
 
   - canonicalName: "Build-Depends-Arch"
@@ -195,6 +195,7 @@ fields:
 
       Note that these dependencies are <em>not</em> available during <b>clean</b>.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_DEPENDENCY
     supportsSubstvars: false
 
   - canonicalName: "Build-Depends-Indep"
@@ -206,6 +207,7 @@ fields:
 
       Note that these dependencies are <em>not</em> available during <b>clean</b>.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_DEPENDENCY
     supportsSubstvars: false
 
   - canonicalName: "Build-Conflicts"
@@ -217,6 +219,7 @@ fields:
       present in the first place.  Usually this is a question of using a <b>--without-foo</b> or <b>--disable-foo</b>
       or such to the build configuration.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_NEGATIVE_DEPENDENCY
     supportsSubstvars: false
 
   - canonicalName: "Build-Conflicts-Arch"
@@ -228,6 +231,7 @@ fields:
       present in the first place.  Usually this is a question of using a <b>--without-foo</b> or <b>--disable-foo</b>
       or such to the build configuration.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_NEGATIVE_DEPENDENCY
     supportsSubstvars: false
 
 
@@ -240,6 +244,7 @@ fields:
       present in the first place.  Usually this is a question of using a <b>--without-foo</b> or <b>--disable-foo</b>
       or such to the build configuration.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_NEGATIVE_DEPENDENCY
     supportsSubstvars: false
 
   - canonicalName: "Pre-Depends"
@@ -261,6 +266,7 @@ fields:
       additional requirements on the package being depended on.  Use of <b>${misc:Pre-Depends}</b> is pre-approved
       and recommended.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
 
   - canonicalName: "Depends"
@@ -285,6 +291,7 @@ fields:
       <em>significant amount of functionality</em> or when it is used in the <b>postinst</b> or <b>prerm</b>
       scripts.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
 
 
@@ -300,6 +307,7 @@ fields:
       By default, APT will attempt to install recommends unless they cannot be installed or the user has configured
       APT skip recommends.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
 
 
@@ -313,6 +321,7 @@ fields:
       <em>Example:</em>
       <pre>Suggests: bar</pre>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
 
   - canonicalName: "Enhances"
@@ -324,6 +333,7 @@ fields:
       <em>Example:</em>
       <pre>Enhances: bar</pre>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
 
   - canonicalName: "Provides"
@@ -364,6 +374,7 @@ fields:
       The <b>bar</b> package fails because the version is only <em>0.9</em> and <b>bar-clone</b> because the provides
       is unversioned but the dependency clause is versioned.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
 
   - canonicalName: "Conflicts"
@@ -383,6 +394,7 @@ fields:
       Note if a package conflicts with itself (indirectly or via <b>Provides</b>), then it is using a special rule
       for Conflicts.  See section 7.6.2 "Replacing whole packages, forcing their removal" in the Debian Policy Manual.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
 
   - canonicalName: "Breaks"
@@ -407,6 +419,7 @@ fields:
 
       Note the use of <em>~</em> in version numbers are generally used to ensure this works correctly in case of a backports (in the Debian archive), where the package is rebuilt with the "~bpo" suffix in its version.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
 
   - canonicalName: "Replaces"
@@ -428,6 +441,7 @@ fields:
 
       Please check the description of the <b>Breaks</b> field for when you would use <b>Breaks</b> vs. <b>Conflicts</b>.  It also covers common uses of <b>Replaces</b>.
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
 
   - canonicalName: Uploaders

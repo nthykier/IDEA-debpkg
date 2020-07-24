@@ -1,9 +1,6 @@
 package com.github.nthykier.debpkg.deb822.field.impl;
 
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
-import com.github.nthykier.debpkg.deb822.field.KnownFields;
+import com.github.nthykier.debpkg.deb822.field.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,14 +19,17 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
     private final String defaultValue;
     private final boolean warnIfDefault;
     private final Set<String> supportedParagraphTypes;
+    private final Deb822KnownFieldValueLanguage fieldValueLanguage;
 
     public Deb822KnownFieldImpl(@NotNull String canonicalFieldName, @NotNull Deb822KnownFieldValueType fieldValueType,
-                                boolean areAllKeywordsKnown, @NotNull Map<String, Deb822KnownFieldKeyword> allKnownKeywords,
+                                @NotNull Deb822KnownFieldValueLanguage fieldValueLanguage, boolean areAllKeywordsKnown,
+                                @NotNull Map<String, Deb822KnownFieldKeyword> allKnownKeywords,
                                 String docs, boolean supportsSubstvars, String defaultValue, boolean warnIfDefault,
                                 @NotNull Set<String> supportedParagraphTypes
     ) {
         this.canonicalFieldName = canonicalFieldName;
         this.fieldValueType = fieldValueType;
+        this.fieldValueLanguage = fieldValueLanguage;
         this.areAllKeywordsKnown = areAllKeywordsKnown;
         this.allKnownKeywords = Collections.unmodifiableMap(allKnownKeywords) ;
         this.hasKnownValues = areAllKeywordsKnown || !this.allKnownKeywords.isEmpty();
@@ -80,8 +80,15 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
     }
 
     @NotNull
+    @Override
     public Deb822KnownFieldValueType getFieldValueType() {
         return this.fieldValueType;
+    }
+
+    @NotNull
+    @Override
+    public Deb822KnownFieldValueLanguage getFieldValueLanguage() {
+        return this.fieldValueLanguage;
     }
 
     @Override

@@ -36,6 +36,9 @@ public interface Deb822KnownField {
     @NotNull
     Deb822KnownFieldValueType getFieldValueType();
 
+    @NotNull
+    Deb822KnownFieldValueLanguage getFieldValueLanguage();
+
     /**
      * The default value of this field if known.
      *

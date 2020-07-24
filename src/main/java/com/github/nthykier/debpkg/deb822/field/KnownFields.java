@@ -15,7 +15,8 @@ public class KnownFields {
 
     public static final Deb822KnownField NULL_FIELD = new Deb822KnownFieldImpl(
             "DUMMY-FIELD", Deb822KnownFieldValueType.FREE_TEXT_VALUE,
-            false, Collections.emptyMap(), "Dummy field; if you see this text, it is a bug!",
+            Deb822KnownFieldValueLanguage.REGULAR_FIELD_VALUE, false, Collections.emptyMap(),
+            "Dummy field; if you see this text, it is a bug!",
             false, null, false, ANY_PARAGRAPH_TYPES
     );
 }

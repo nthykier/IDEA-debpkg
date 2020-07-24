@@ -78,6 +78,9 @@ public class Deb822KnownFieldsAndValues {
         Deb822KnownFieldValueType valueType = Deb822KnownFieldValueType.valueOf(
                 getOptionalString(fieldDef, "valueType", "FREE_TEXT_VALUE")
         );
+        Deb822KnownFieldValueLanguage fieldValueLanguage = Deb822KnownFieldValueLanguage.valueOf(
+                getOptionalString(fieldDef, "valueLanguage", "REGULAR_FIELD_VALUE")
+        );
         List<Object> keywordList = getList(fieldDef, "keywordList");
         String docs = getOptionalString(fieldDef, "description", null);
         String defaultValue = getOptionalString(fieldDef, "defaultValue", null);
@@ -134,7 +137,7 @@ public class Deb822KnownFieldsAndValues {
         } else {
             keywordMap = Collections.emptyMap();
         }
-        return new Deb822KnownFieldImpl(canonicalName, valueType, allKeywordsKnown, keywordMap, docs,
+        return new Deb822KnownFieldImpl(canonicalName, valueType, fieldValueLanguage, allKeywordsKnown, keywordMap, docs,
                 supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes);
     }
 
