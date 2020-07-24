@@ -64,6 +64,12 @@ public class Deb822PsiImplUtil {
         return iteratePsiElements(startingSibling, PsiElement::getPrevSibling, clazz);
     }
 
+    @Nullable
+    public static <T extends PsiElement> T getNextSiblingOfType(@Nullable PsiElement startingSibling,
+                                                                @NotNull Class<T> clazz) {
+        return iteratePsiElements(startingSibling, PsiElement::getNextSibling, clazz);
+    }
+
 
     private static <T extends PsiElement> T iteratePsiElements(@Nullable PsiElement startElement,
                                                                @NotNull Function<PsiElement, PsiElement> nextElement,

@@ -38,7 +38,9 @@ field ::= FIELD_NAME {
   extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822Field"
   implements="com.github.nthykier.debpkg.deb822.psi.Deb822FieldBase"
 }
-value_parts ::= COMMENT* (value|COMMA|substvar) (COMMENT|value|COMMA|substvar)*
+value_parts ::= COMMENT* (value|COMMA|substvar) (COMMENT|value|COMMA|substvar)* {
+  extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822ValueParts"
+}
 
 value ::= VALUE_TOKEN {
   methods=[getReference]
