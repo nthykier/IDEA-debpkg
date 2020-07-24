@@ -1,15 +1,15 @@
 package com.github.nthykier.debpkg.deb822.psi.impl;
 
 import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvar;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Substvar;
+import com.github.nthykier.debpkg.deb822.psi.Deb822SubstvarBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Deb822SubstvarFakePsiElement extends Deb822FakePsiElementBase<Deb822Substvar> {
+public class Deb822SubstvarFakePsiElement extends Deb822FakePsiElementBase<Deb822SubstvarBase> {
 
     private final Deb822KnownSubstvar knownSubstvar;
 
-    public Deb822SubstvarFakePsiElement(Deb822Substvar element, @Nullable Deb822KnownSubstvar knownSubstvar) {
+    public Deb822SubstvarFakePsiElement(Deb822SubstvarBase element, @Nullable Deb822KnownSubstvar knownSubstvar) {
         super(element);
         this.knownSubstvar = knownSubstvar;
     }

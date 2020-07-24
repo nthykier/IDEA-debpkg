@@ -47,6 +47,7 @@ value ::= VALUE_TOKEN {
 }
 
 substvar ::= SUBSTVAR_TOKEN {
+  implements="com.github.nthykier.debpkg.deb822.psi.Deb822SubstvarBase"
   methods=[getReference]
 }
 

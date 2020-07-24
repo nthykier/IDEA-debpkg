@@ -17,7 +17,7 @@ import java.util.function.Function;
 
 public class Deb822PsiImplUtil {
 
-    public static PsiReference getReference(@NotNull Deb822Substvar substvar) {
+    public static PsiReference getReference(@NotNull Deb822SubstvarBase substvar) {
         String substvarName = substvar.getText();
         Deb822KnownSubstvar knownSubstvar = Deb822KnownSubstvars.lookupSubstvar(substvarName);
         return new Deb822SubstvarPsiReference(substvar, TextRange.from(0, substvar.getTextLength()), knownSubstvar);
