@@ -20,7 +20,7 @@ import com.intellij.psi.TokenType;import com.intellij.spellchecker.tokenizer.Tok
 NEWLINE=\n
 SINGLE_SPACE=[ ]
 WHITE_SPACE=[\ \t\f]
-END_OF_LINE_COMMENT="#"[^\r\n]*
+END_OF_LINE_COMMENT=[#][^\r\n]*
 SUBSTVAR=[$][{][a-zA-Z0-9][a-zA-Z0-9\-:]*[}]
 SEPARATOR=[:]
 /* All characters in range 0x21 to 0x39 (incl.) + 0x3b to 0x7e (incl.) are valid, except for the
