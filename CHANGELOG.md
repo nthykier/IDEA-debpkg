@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [0.0.3]
+### Added
 - Add check to highlight if fields are placed in the wrong paragraph in debian/control files. (Closes: #1)
 - Add check to ensure that mandatory `Source` and `Package` fields are present in debian/control.
 - Add documentation and field-placement level validation for remaining known fields (e.g. Depends).  (Closes: #2)
