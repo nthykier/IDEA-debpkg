@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.nthykier.debpkg.deb822.psi.Deb822Types.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.deb822.psi.*;
 
-public class Deb822ValuePartsImpl extends ASTWrapperPsiElement implements Deb822ValueParts {
+public class Deb822ValuePartsImpl extends AbstractDeb822ValueParts implements Deb822ValueParts {
 
   public Deb822ValuePartsImpl(@NotNull ASTNode node) {
     super(node);

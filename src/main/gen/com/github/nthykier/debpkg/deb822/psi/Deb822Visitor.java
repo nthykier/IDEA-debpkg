@@ -24,7 +24,7 @@ public class Deb822Visitor extends PsiElementVisitor {
   }
 
   public void visitSubstvar(@NotNull Deb822Substvar o) {
-    visitPsiElement(o);
+    visitSubstvarBase(o);
   }
 
   public void visitValue(@NotNull Deb822Value o) {
@@ -40,6 +40,10 @@ public class Deb822Visitor extends PsiElementVisitor {
   }
 
   public void visitParagraphSupport(@NotNull Deb822ParagraphSupport o) {
+    visitPsiElement(o);
+  }
+
+  public void visitSubstvarBase(@NotNull Deb822SubstvarBase o) {
     visitPsiElement(o);
   }
 
