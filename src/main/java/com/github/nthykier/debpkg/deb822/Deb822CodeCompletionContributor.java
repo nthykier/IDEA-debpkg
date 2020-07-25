@@ -9,6 +9,7 @@ import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
@@ -19,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Deb822CodeCompletionContributor extends CompletionContributor {
+public class Deb822CodeCompletionContributor extends CompletionContributor implements DumbAware {
 
     public Deb822CodeCompletionContributor() {
         extend(CompletionType.BASIC, PlatformPatterns.psiElement(Deb822Types.FIELD_NAME),
