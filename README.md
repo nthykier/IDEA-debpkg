@@ -26,26 +26,31 @@ commonly used formats in Debian packaging.
  * Completion of field names, known values for fields and known substitution variables.
  * Documentation for fields, known values in fields and known substitution variables ("CTRL + mouse-over")
  * Spellchecking of field values with exception for some known fields.
+ * Check that fields are placed in a paragraph where it makes sense.
+ * Folding of long field values with "Description" folded by default.
 
 Plus the features listed for Generic deb822 files.
-
-*Known omissions:*
- * Some fields - notably relation fields (like Depends) - are only known by name (i.e. it can be auto-completed, but it has no documentation)
- * Checks that the field belong in the paragraph (only Package/Source are checked in v0.0.2).
 
 ### Generic deb822 files (*.deb822)
 
  * Basic syntax highlighting.
  * Basic semantic validation (i.e. no duplicate fields)
  * Support for adding / removing comments via the <kbd>Code</kbd> > <kbd>Comment with Line Comment</kbd> feature.
+ * Folding of long field values.
 
 ## Getting started
 
-In version 0.0.2, the plugin only provide file type support.  It should auto-detect packaging files such as
-`debian/control` and `debian/changelog` automatically (note the directory name is important too!).  Alternatively,
-you can set the file type manually by using IDEA's "Associate with File Type..." feature.
+After installing the plugin, it automatically detect relevant files
+supported and start applying highlights and relevant validation rules
+based on common patterns such as "debian/control" or "*.deb822".
 
-Once associated, the supported feature set automatically activates on the relevant editor actions.
+Note that some of the auto-detection relies on the files being placed
+in the `debian` directory (such as `debian/control` and
+`debian/changelog`). Alternatively, you can set the file type manually
+by using IDEA's "Associate with File Type..." feature.
+
+Once associated, the supported feature set automatically activates on
+the relevant editor actions.
  
 ## Installation
 
