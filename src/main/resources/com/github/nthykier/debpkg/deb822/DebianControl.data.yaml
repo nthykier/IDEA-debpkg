@@ -4,7 +4,7 @@ fields:
     description: |
       Declares the name of a binary package
     valueType: SINGLE_TRIVIAL_VALUE
-    valueValidation: /^[a-z0-9][a-z0-0.+-]+$/
+    valueValidation: /^[a-z0-9][a-z0-9.+-]+$/
     supportsSubstvars: false
 
   - canonicalName: Source
@@ -14,7 +14,7 @@ fields:
     valueType: SINGLE_TRIVIAL_VALUE
     # Only valid for DebianControl; in other variants, it may have an optional version number appended
     # a la "foo (1.0-1)"
-    valueValidation: /^[a-z0-9][a-z0-0.+-]+$/
+    valueValidation: /^[a-z0-9][a-z0-9.+-]+$/
     supportsSubstvars: false
 
   - canonicalName: Package-Type
