@@ -34,9 +34,19 @@ public class Deb822CompletionContributorTest extends LightPlatformCodeInsightFix
         myFixture.type("${");
         assertLookupElementContains("}");
 
-        myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "Depends: ");
+        myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "Foo: ");
         myFixture.type("${shlib");
         assertLookupElementContains("shlibs:Depends}");
+
+        myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "Foo: ");
+        myFixture.type("${shlibs:Pre-Dep");
+        assertAutocompletedSingleMatch();
+
+
+        /* Dependency fields (tests DependencyLanguage code completion) */
+        myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "Depends: ");
+        myFixture.type("${shlib");
+        assertLookupElementContains("${shlibs:Depends}");
 
         myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "Pre-Depends: ");
         myFixture.type("${shlibs:Pre-Dep");

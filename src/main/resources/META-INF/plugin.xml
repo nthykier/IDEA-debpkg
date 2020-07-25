@@ -42,6 +42,22 @@
                                 implementationClass="com.github.nthykier.debpkg.deb822.Deb822CodeCompletionContributor" />
 
 
+        <!-- Deb822 Dependency language -->
+
+        <languageInjector implementation="com.github.nthykier.debpkg.deb822.Deb822DependencyLanguageInjector" />
+        <lang.parserDefinition language="DependencyLanguage" implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageParserDefinition" />
+        <annotator language="DependencyLanguage"
+                   implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageAnnotator" />
+        <lang.syntaxHighlighterFactory language="DependencyLanguage" implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageSyntaxHighlighterFactory" />
+
+        <lang.documentationProvider language="DependencyLanguage"
+                                    implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageDocumentationProvider" />
+        <fileType name="Deb822DependencyLanguage File (internal injected format)" implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageFileType" fieldName="INSTANCE"
+                  language="DependencyLanguage" extensions="deplang" />
+        <completion.contributor language="DependencyLanguage"
+                                implementationClass="com.github.nthykier.debpkg.deb822.deplang.DepLangCodeCompletionContributor" />
+
+
         <!-- Debian Changelog -->
 
         <fileType name="Debian Changelog" implementationClass="com.github.nthykier.debpkg.dch.DchFileType" fieldName="INSTANCE"

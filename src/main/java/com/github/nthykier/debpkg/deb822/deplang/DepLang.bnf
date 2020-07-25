@@ -1,0 +1,97 @@
+// Copyright 2000-2020 JetBrains s.r.o. and other contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+{
+  parserClass="com.github.nthykier.debpkg.deb822.deplang.parser.DependencyLanguageParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="DepLang"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.github.nthykier.debpkg.deb822.deplang.psi"
+  psiImplPackage="com.github.nthykier.debpkg.deb822.deplang.psi.impl"
+  /* Reuse the Deb822PsiImplUtil */
+  psiImplUtilClass="com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil"
+
+  elementTypeHolderClass="com.github.nthykier.debpkg.deb822.deplang.psi.DependencyLanguageTypes"
+  elementTypeClass="com.github.nthykier.debpkg.deb822.deplang.psi.DepLangElementType"
+  tokenTypeClass="com.github.nthykier.debpkg.deb822.deplang.psi.DepLangTokenType"
+
+  tokens=[
+    OPERATOR_AND=','
+    OPERATOR_OR='|'
+    PARANTHESES_OPEN='('
+    PARANTHESES_CLOSE=')'
+    NEGATION='!'
+    LESS_THAN='<'
+    GREATER_THAN='>'
+    BRACKETS_OPEN='['
+    BRACKETS_CLOSE=']'
+    COMMENT="regexp:^#[^\n]*"
+    MISPLACED_COMMENT="regexp:#[^\n]*"
+    VERSION_OP="regexp:(?:[<>]?[<>=]|[!=]?[=])"
+  ]
+
+  name("name") = "name"
+  name("name_or_substvar|package_name") = "name (or substitution variable)"
+  name("name_or_substvar_as_version|version") = "version (or substitution variable)"
+}
+
+start ::= and_dependency_clause+
+
+
+/* Meta rule of X (Y X)* with pinning on the separator */
+private meta a_b_a_p ::= <<a>> (<<b>> <<a>>)* {
+ pin = 1
+}
+
+and_dependency_clause ::= <<a_b_a_p or_dependency_clause ','>> ','? {
+  recoverWhile=recover_dependency_clauses
+}
+
+or_dependency_clause ::= <<a_b_a_p dependency '|'>>  {
+  recoverWhile=recover_dependency_clauses
+}
+
+private recover_dependency_clauses ::= !(','|'|')
+
+
+/* Private rules to support custom names */
+private name ::= WORDISH
+private name_or_substvar ::= (WORDISH|substvar)
+private name_or_substvar_as_version ::= name_or_substvar
+
+substvar ::= SUBSTVAR_TOKEN {
+  implements="com.github.nthykier.debpkg.deb822.psi.Deb822SubstvarBase"
+  methods=[getReference]
+}
+
+package_name ::= name_or_substvar
+version ::= name_or_substvar_as_version
+
+/* (arch_restriction_part)? (build_profile_restriction_part)? */
+dependency ::= package_name (version_part)? (arch_restriction_part)? (build_profile_restriction_part)? {
+  pin=1
+}
+
+version_part ::= '(' version_operator version ')' {
+  pin=1
+  recoverWhile=recover_until_closing_token
+}
+
+private recover_until_closing_token ::= !(')'|'<'|'['|','|'|')
+
+version_operator ::= ('='|'>='|'<='|'<<'|'>>' | /* <-- valid / invalid --> */ '!='|'=='|'<''>'?|'>') {
+ pin(".*")=1
+}
+
+
+private arch_restriction_part ::= '[' restriction_list ']' {
+  pin=1
+  recoverWhile=recover_until_closing_token
+}
+
+private build_profile_restriction_part ::= '<' restriction_list '>' {
+  pin=1
+  recoverWhile=recover_until_closing_token
+}
+
+restriction_list ::= ('!'? name)+
