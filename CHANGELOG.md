@@ -9,14 +9,16 @@
 - Add documentation and field-placement level validation for remaining known fields (e.g. Depends).  (Closes: #2)
 - Detect the documentation pattern " * <filename>: <change>" in changelogs and automatically link to the file if
   it can be found (globs not supported).
+- Parse dependency fields with a different parser enabling basic format checking of the dependency fields.
+- Check for invalid version operators dependency fields.
+- Add check for some substvars used unconventionally in dependency fields (e.g. ${misc:Depends} used as a version).
+- Add support for folding long field values with "Description" in debian/control being folded by default.
 
 ### Changed
-
-### Deprecated
-
-### Removed
+- Code completition is now more context-aware inside dependency fields.
 
 ### Fixed
+- Fix misplaced "Package"/"Source" field warning not coping with moving paragraphs around.
 
 ### Security
 ## [0.0.2]
