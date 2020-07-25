@@ -20,12 +20,13 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
     private final boolean warnIfDefault;
     private final Set<String> supportedParagraphTypes;
     private final Deb822KnownFieldValueLanguage fieldValueLanguage;
+    private final boolean isFoldedByDefault;
 
     public Deb822KnownFieldImpl(@NotNull String canonicalFieldName, @NotNull Deb822KnownFieldValueType fieldValueType,
                                 @NotNull Deb822KnownFieldValueLanguage fieldValueLanguage, boolean areAllKeywordsKnown,
                                 @NotNull Map<String, Deb822KnownFieldKeyword> allKnownKeywords,
                                 String docs, boolean supportsSubstvars, String defaultValue, boolean warnIfDefault,
-                                @NotNull Set<String> supportedParagraphTypes
+                                @NotNull Set<String> supportedParagraphTypes, boolean isFoldedByDefault
     ) {
         this.canonicalFieldName = canonicalFieldName;
         this.fieldValueType = fieldValueType;
@@ -38,6 +39,7 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
         this.defaultValue = defaultValue;
         this.warnIfDefault = warnIfDefault;
         this.supportedParagraphTypes = supportedParagraphTypes.isEmpty() ? KnownFields.ANY_PARAGRAPH_TYPES : Collections.unmodifiableSet(supportedParagraphTypes);
+        this.isFoldedByDefault = isFoldedByDefault;
     }
 
     @NotNull
@@ -108,5 +110,10 @@ public class Deb822KnownFieldImpl implements Deb822KnownField {
     @Override
     public @NotNull Set<String> getSupportedParagraphTypes() {
         return this.supportedParagraphTypes;
+    }
+
+    @Override
+    public boolean isFoldedByDefault() {
+        return this.isFoldedByDefault;
     }
 }

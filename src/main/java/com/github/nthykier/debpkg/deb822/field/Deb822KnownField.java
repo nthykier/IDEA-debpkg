@@ -74,4 +74,6 @@ public interface Deb822KnownField {
         Set<String> supportedTypes = getSupportedParagraphTypes();
         return supportedTypes.contains(paragraphType) || supportedTypes.contains(KnownFields.ANY_PARAGRAPH);
     }
+
+    boolean isFoldedByDefault();
 }

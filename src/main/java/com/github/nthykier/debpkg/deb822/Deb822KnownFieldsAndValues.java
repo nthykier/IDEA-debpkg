@@ -88,6 +88,7 @@ public class Deb822KnownFieldsAndValues {
         boolean allKeywordsKnown = false;
         boolean supportsSubstvars = getBool(fieldDef, "supportsSubstvars", true);
         boolean warnIfDefault = getBool(fieldDef, "warnIfDefault", false);
+        boolean isFoldedByDefault =  getBool(fieldDef, "foldedByDefault", false);
         Set<String> supportedParagraphTypes = parseStringOrListAsList(fieldDef,
                 "onlyInParagraphType",
                 Deb822KnownFieldsAndValues::parseSupportedParagraphTypes,
@@ -138,7 +139,7 @@ public class Deb822KnownFieldsAndValues {
             keywordMap = Collections.emptyMap();
         }
         return new Deb822KnownFieldImpl(canonicalName, valueType, fieldValueLanguage, allKeywordsKnown, keywordMap, docs,
-                supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes);
+                supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault);
     }
 
     private static Deb822KnownFieldKeyword parseKeyword(Object keywordDefRaw) {

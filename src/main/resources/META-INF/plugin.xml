@@ -21,6 +21,8 @@
         <lang.commenter language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822Commenter"/>
         <lang.documentationProvider language="DebianControl"
                                     implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlDocumentationProvider" />
+        <lang.foldingBuilder language="Deb822"
+                             implementationClass="com.github.nthykier.debpkg.deb822.Deb822FoldingBuilder" />
         <localInspection language="Deb822"
                          groupPath="Deb822"
                          shortName="DuplicateFieldNameInDeb822Paragraph"

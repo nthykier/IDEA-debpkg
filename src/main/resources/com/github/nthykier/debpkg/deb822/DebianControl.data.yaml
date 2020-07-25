@@ -786,6 +786,7 @@ fields:
       <p>The <em>Extended Description</em> is a standalone description that should describe what the packaeg does and how it relates to the rest of the system (in terms of, for example, which subsystem it is which part of).</p>
       <p>Please see <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#description">https://www.debian.org/doc/debian-policy/ch-controlfields.html#description</a> for more details about the description field and suggestions for how to write it.</a>
     valueType: FREE_TEXT_VALUE
+    foldedByDefault: true
 
 substvars:
   - name: "${Arch}"

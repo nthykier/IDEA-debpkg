@@ -17,6 +17,6 @@ public class KnownFields {
             "DUMMY-FIELD", Deb822KnownFieldValueType.FREE_TEXT_VALUE,
             Deb822KnownFieldValueLanguage.REGULAR_FIELD_VALUE, false, Collections.emptyMap(),
             "Dummy field; if you see this text, it is a bug!",
-            false, null, false, ANY_PARAGRAPH_TYPES
+            false, null, false, ANY_PARAGRAPH_TYPES, false
     );
 }
