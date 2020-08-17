@@ -2,9 +2,9 @@ package com.github.nthykier.debpkg.dch;
 
 import com.github.nthykier.debpkg.dch.psi.DchChangelogLine;
 import com.github.nthykier.debpkg.dch.psi.impl.DchFileReference;
-import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
@@ -30,8 +30,10 @@ public class DchAnnotator implements Annotator {
                             element.getTextOffset() + rangeInElement.getStartOffset(),
                             startOffset + rangeInElement.getLength());
                     if (dchRef.multiResolve(false).length > 0) {
-                        Annotation anno = holder.createInfoAnnotation(textRange, "");
-                        anno.setTextAttributes(DchSyntaxHighlighter.FILE_NAME);
+                        holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                                .range(textRange)
+                                .textAttributes(DchSyntaxHighlighter.FILE_NAME)
+                                .create();
                     }
                 }
             }

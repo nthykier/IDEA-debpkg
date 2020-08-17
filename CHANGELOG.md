@@ -6,6 +6,8 @@
 ### Added
 
 ### Changed
+- Rewrite part of the annotation code to make it future proof at the expense of support for IDEA platforms based on 2019.  If you need 2019, please
+  remain on 0.0.3 for now.
 
 ### Deprecated
 

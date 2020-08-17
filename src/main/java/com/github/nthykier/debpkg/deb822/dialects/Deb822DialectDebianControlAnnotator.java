@@ -9,9 +9,9 @@ import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.github.nthykier.debpkg.util.Deb822TypeSafeLocalQuickFix;
 import com.intellij.codeInspection.*;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.TokenType;
@@ -58,7 +58,8 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
             /* pair and pair.getValueParts() cannot be null if we are here; help IntelliJ realise that */
             assert pair != null && pair.getValueParts() != null;
             AnnotatorUtil.createAnnotationWithQuickFix(
-                    holder::createErrorAnnotation,
+                    holder,
+                    HighlightSeverity.ERROR,
                     quickfixer,
                     "arch-all-multi-arch-same",
                     pair.getValueParts(),
@@ -66,8 +67,9 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
             );
         }
         if (! field2values.containsKey(paragraphType.toLowerCase())) {
-            holder.createErrorAnnotation(paragraph,
-                    Deb822Bundle.message("deb822.files.annotator.fields.missing-mandatory-field", paragraphType) );
+            holder.newAnnotation(HighlightSeverity.ERROR, Deb822Bundle.message("deb822.files.annotator.fields.missing-mandatory-field", paragraphType))
+                    .range(paragraph)
+                    .create();
         }
     }
 
@@ -89,7 +91,9 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
             return;
         }
         if (!knownField.isSupportedInParagraphType(paragraphType)) {
-            AnnotatorUtil.createAnnotationWithQuickFix(holder::createErrorAnnotation,
+            AnnotatorUtil.createAnnotationWithQuickFix(
+                    holder,
+                    HighlightSeverity.ERROR,
                     AnnotatorUtil.elementRemovalQuickfixer(Deb822FieldValuePair.class),
                     "field-does-not-belong-in-paragraph",
                     pair,
@@ -106,9 +110,9 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         substvars = valueParts.getSubstvarList();
         if (!knownField.supportsSubstsvars() && !substvars.isEmpty()) {
             for (Deb822Substvar substvar : substvars) {
-                holder.createErrorAnnotation(substvar,
-                        Deb822Bundle.message("deb822.files.annotator.fields.substvars.not.supported")
-                );
+                holder.newAnnotation(HighlightSeverity.ERROR, Deb822Bundle.message("deb822.files.annotator.fields.substvars.not.supported"))
+                        .range(substvar)
+                        .create();
             }
             /* Additional errors here are not useful */
             return;
@@ -135,7 +139,9 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         if (knownField.warnIfSetToDefault()) {
             String value = valueParts.getText().trim();
             if (value.equals(knownField.getDefaultValue())) {
-                AnnotatorUtil.createAnnotationWithQuickFix(holder::createWarningAnnotation,
+                AnnotatorUtil.createAnnotationWithQuickFix(
+                        holder,
+                        HighlightSeverity.WARNING,
                         AnnotatorUtil.elementRemovalQuickfixer(Deb822FieldValuePair.class),
                         "field-is-unnecessary-when-value-is-default",
                         pair,
@@ -158,9 +164,9 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         Deb822KnownFieldKeyword knownFieldKeyword = null;
         if (valueTokens.size() == 0) {
             // FIXME: warn about duplicate separators at the concrete separator
-            holder.createErrorAnnotation(valueParts,
-                    Deb822Bundle.message("deb822.files.annotator.fields.empty.list.value")
-            );
+            holder.newAnnotation(HighlightSeverity.ERROR, Deb822Bundle.message("deb822.files.annotator.fields.empty.list.value"))
+                    .range(valueParts)
+                    .create();
             /* not much else we can say here */
             return;
         }
@@ -172,11 +178,15 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
                 knownFieldKeyword = field.getKeyword(value);
             }
             if (knownFieldKeyword != null) {
-                Annotation anno = holder.createInfoAnnotation(token, null);
-                anno.setTextAttributes(Deb822SyntaxHighlighter.VALUE_KEYWORD);
+                holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                        .range(token)
+                        .textAttributes(Deb822SyntaxHighlighter.VALUE_KEYWORD)
+                        .create();
                 if (knownFieldKeyword.isExclusive() && !isSoleValue) {
-                    holder.createErrorAnnotation(token, Deb822Bundle.message("deb822.files.annotator.fields.value-is-exclusive",
-                            knownFieldKeyword.getValueName(), field.getCanonicalFieldName()));
+                    holder.newAnnotation(HighlightSeverity.ERROR, Deb822Bundle.message("deb822.files.annotator.fields.value-is-exclusive",
+                            knownFieldKeyword.getValueName(), field.getCanonicalFieldName()))
+                            .range(token)
+                            .create();
                 }
                 if (field.getCanonicalFieldName().equals("Priority") && value.equals("extra")) {
                     Function<String, Deb822TypeSafeLocalQuickFix<Deb822ValueParts>> quickfixer =
@@ -185,7 +195,8 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
                             );
 
                     AnnotatorUtil.createAnnotationWithQuickFix(
-                            holder::createWarningAnnotation,
+                            holder,
+                            HighlightSeverity.WARNING,
                             quickfixer,
                             "priority-extra-is-obsolete",
                             valueParts,
@@ -211,8 +222,9 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
                     }
                 }
                 if (bad) {
-                    holder.createErrorAnnotation(e,
-                            Deb822Bundle.message("deb822.files.annotator.fields.field-is-single-value-field"));
+                    holder.newAnnotation(HighlightSeverity.ERROR, Deb822Bundle.message("deb822.files.annotator.fields.field-is-single-value-field"))
+                            .range(e)
+                            .create();
                 }
             }
             if (bad) {
@@ -221,9 +233,9 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         }
         /* Not a known keyword - forgive substvars through */
         if (field.areAllKeywordsKnown() && !(Deb822Types.SUBSTVAR_TOKEN.equals(elementType))) {
-            holder.createErrorAnnotation(valueParts,
-                    Deb822Bundle.message("deb822.files.annotator.fields.unknown.value")
-            );
+            holder.newAnnotation(HighlightSeverity.ERROR, Deb822Bundle.message("deb822.files.annotator.fields.unknown.value"))
+                    .range(valueParts)
+                    .create();
         }
     }
 

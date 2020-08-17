@@ -6,6 +6,9 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemDescriptorBase;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.lang.annotation.Annotation;
+import com.intellij.lang.annotation.AnnotationBuilder;
+import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
@@ -18,20 +21,21 @@ import java.util.function.Function;
 
 public class AnnotatorUtil {
 
-    @NotNull
-    public static <T extends PsiElement> Annotation createAnnotationWithQuickFix(
-            @NotNull BiFunction<T, String, Annotation> annotationCreator,
+    public static <T extends PsiElement> void createAnnotationWithQuickFix(
+            @NotNull AnnotationHolder annoHolder,
+            @NotNull HighlightSeverity severity,
             @NotNull Function<String, Deb822TypeSafeLocalQuickFix<T>> quickfixer,
             @NotNull String baseName,
             @NotNull T elementToFix,
             @NotNull ProblemHighlightType highlightType,
             Object... params
     ) {
-        Annotation anno = annotationCreator.apply(elementToFix, getAnnostationText(baseName, params));
         LocalQuickFix quickFix = quickfixer.apply(baseName);
         ProblemDescriptor problemDescriptor = new Deb822ProblemDescriptor<>(quickFix, baseName, elementToFix, highlightType);
-        anno.registerFix(quickFix, null, null, problemDescriptor);
-        return anno;
+        annoHolder.newAnnotation(severity, getAnnostationText(baseName, params))
+                .range(elementToFix)
+                .newLocalQuickFix(quickFix, problemDescriptor).registerFix()
+                .create();
     }
 
     @NotNull

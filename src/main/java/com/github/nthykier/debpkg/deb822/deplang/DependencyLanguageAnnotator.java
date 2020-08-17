@@ -4,13 +4,14 @@ import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvar;
 import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvars;
 import com.github.nthykier.debpkg.deb822.deplang.psi.*;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Substvar;
 import com.github.nthykier.debpkg.deb822.psi.Deb822SubstvarBase;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.github.nthykier.debpkg.util.Deb822TypeSafeLocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
+import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -46,7 +47,9 @@ public class DependencyLanguageAnnotator implements Annotator {
     private void checkSubstvar(@NotNull AnnotationHolder holder, @NotNull Deb822SubstvarBase element) {
         String name = element.getText();
         if (!name.endsWith("}") || !name.startsWith("${")) {
-            holder.createErrorAnnotation(element, "");
+            holder.newSilentAnnotation(HighlightSeverity.ERROR)
+                    .range(element)
+                    .create();
         }
     }
 
@@ -84,15 +87,15 @@ public class DependencyLanguageAnnotator implements Annotator {
         if (!pattern.matcher(tokenText).matches()) {
             Matcher matcher = pattern.matcher(tokenText);
             TextRange brokenRange = textRangeOfBrokenTailBit(matcher, tokenText.length());
+            AnnotationBuilder annoBuilder = holder.newAnnotation(HighlightSeverity.ERROR, Deb822Bundle.message(annotationTextKey, tokenText));
 
             if (brokenRange != null) {
                 int startOffset = element.getTextOffset();
-                holder.createErrorAnnotation(brokenRange.shiftRight(startOffset),
-                        Deb822Bundle.message(annotationTextKey, tokenText));
+                annoBuilder = annoBuilder.range(brokenRange.shiftRight(startOffset));
             } else {
-                holder.createErrorAnnotation(element,
-                        Deb822Bundle.message(annotationTextKey, tokenText));
+                annoBuilder = annoBuilder.range(element);
             }
+            annoBuilder.create();
         }
     }
 
@@ -103,8 +106,9 @@ public class DependencyLanguageAnnotator implements Annotator {
             String substvarName = substvar.getText();
             Deb822KnownSubstvar knownSubstvar = Deb822KnownSubstvars.lookupSubstvar(substvarName);
             if (knownSubstvar != null && !substvarName.contains("Version")) {
-                holder.createWarningAnnotation(substvar,
-                        Deb822Bundle.message("deb822.probably-incorrect-substvar-used-as-version", substvarName));
+                holder.newAnnotation(HighlightSeverity.WARNING, Deb822Bundle.message("deb822.probably-incorrect-substvar-used-as-version", substvarName))
+                        .range(substvar)
+                        .create();
             }
             return;
         }
@@ -129,8 +133,10 @@ public class DependencyLanguageAnnotator implements Annotator {
         if (replacement != null) {
             if (replacement.equals("")) {
                 // Invalid without replacement
-                holder.createErrorAnnotation(operatorToken,
-                        Deb822Bundle.message("deb822.files.annotator.fields.unknown-version-operator-in-dependency", operator));
+                holder.newAnnotation(HighlightSeverity.ERROR,
+                        Deb822Bundle.message("deb822.files.annotator.fields.unknown-version-operator-in-dependency", operator))
+                    .range(operatorToken)
+                    .create();
             } else {
                 Function<String, Deb822TypeSafeLocalQuickFix<DepLangVersionOperator>> quickfixer =
                         AnnotatorUtil.replacementQuickFixer(
@@ -138,7 +144,8 @@ public class DependencyLanguageAnnotator implements Annotator {
                         );
 
                 AnnotatorUtil.createAnnotationWithQuickFix(
-                        holder::createErrorAnnotation,
+                        holder,
+                        HighlightSeverity.ERROR,
                         quickfixer,
                         "incorrect-version-operator-in-dependency-with-known-replacement",
                         operatorToken,
