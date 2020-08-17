@@ -10,6 +10,7 @@
 ### Deprecated
 
 ### Removed
+- Remove default extension for the Dependency language format (which is only used inside debian/control).  The extension was only used during debugging.
 
 ### Fixed
 

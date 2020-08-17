@@ -53,7 +53,7 @@
         <lang.documentationProvider language="DependencyLanguage"
                                     implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageDocumentationProvider" />
         <fileType name="Deb822DependencyLanguage File (internal injected format)" implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageFileType" fieldName="INSTANCE"
-                  language="DependencyLanguage" extensions="deplang" />
+                  language="DependencyLanguage" extensions="" />
         <completion.contributor language="DependencyLanguage"
                                 implementationClass="com.github.nthykier.debpkg.deb822.deplang.DepLangCodeCompletionContributor" />
 
