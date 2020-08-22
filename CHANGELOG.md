@@ -6,6 +6,7 @@
 ### Added
 - Add check for version operator being supported in the current dependency field.  Provides only supports "=".
 - Add check for use of build profiles restrictions in dependency fields that do not support it.
+- Add a spell-check dictionary of known packaging terms to avoid common terms being flagged as spelling mistakes.
 
 ### Changed
 - Rewrite part of the annotation code to make it future proof at the expense of support for IDEA platforms based on 2019.  If you need 2019, please
