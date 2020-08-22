@@ -16,7 +16,7 @@ import static com.github.nthykier.debpkg.deb822.Deb822KnownFieldsAndValues.getKn
 
 public class AbstractDeb822Field extends ASTWrapperPsiElement implements Deb822FieldBase {
 
-    private static TokenSet FIELD_NAME_TOKEN_SET = TokenSet.create(Deb822Types.FIELD_NAME);
+    private static final TokenSet FIELD_NAME_TOKEN_SET = TokenSet.create(Deb822Types.FIELD_NAME);
 
     /* We use NULL_FIELD as a dummy value for "not-set/recompute" because "null" is a valid return value */
     private Deb822KnownField knownField = KnownFields.NULL_FIELD;
