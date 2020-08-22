@@ -47,14 +47,7 @@ public class DepLangCodeCompletionContributor extends CompletionContributor impl
                 }
         );
 
-        PatternCondition nullCheck = new PatternCondition("nullCheck") {
-            @Override
-            public boolean accepts(@NotNull Object o, ProcessingContext context) {
-                return true;
-            }
-        };
-
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement().with(nullCheck).withAncestor(3, PlatformPatterns.psiElement(DependencyLanguageTypes.PACKAGE_NAME)),
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement().withAncestor(3, PlatformPatterns.psiElement(DependencyLanguageTypes.PACKAGE_NAME)),
                 new CompletionProvider<CompletionParameters>() {
                     public void addCompletions(@NotNull CompletionParameters parameters,
                                                @NotNull ProcessingContext context,
