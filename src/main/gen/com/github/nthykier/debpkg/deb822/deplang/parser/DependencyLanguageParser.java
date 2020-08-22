@@ -91,10 +91,10 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // '[' restriction_list ']'
-  static boolean arch_restriction_part(PsiBuilder b, int l) {
+  public static boolean arch_restriction_part(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "arch_restriction_part")) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, ARCH_RESTRICTION_PART, "<arch restriction part>");
     r = consumeToken(b, BRACKETS_OPEN);
     p = r; // pin = 1
     r = r && report_error_(b, restriction_list(b, l + 1));
@@ -105,10 +105,10 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // '<' restriction_list '>'
-  static boolean build_profile_restriction_part(PsiBuilder b, int l) {
+  public static boolean build_profile_restriction_part(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "build_profile_restriction_part")) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, BUILD_PROFILE_RESTRICTION_PART, "<build profile restriction part>");
     r = consumeToken(b, LESS_THAN);
     p = r; // pin = 1
     r = r && report_error_(b, restriction_list(b, l + 1));
@@ -185,6 +185,64 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // (language_definition '--')? and_dependency_clause+
+  public static boolean dependency_info(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dependency_info")) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, DEPENDENCY_INFO, "<dependency info>");
+    r = dependency_info_0(b, l + 1);
+    p = r; // pin = 1
+    r = r && dependency_info_1(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // (language_definition '--')?
+  private static boolean dependency_info_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dependency_info_0")) return false;
+    dependency_info_0_0(b, l + 1);
+    return true;
+  }
+
+  // language_definition '--'
+  private static boolean dependency_info_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dependency_info_0_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = language_definition(b, l + 1);
+    r = r && consumeToken(b, DEPENDENCY_LANG_SEPARATOR);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // and_dependency_clause+
+  private static boolean dependency_info_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dependency_info_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = and_dependency_clause(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!and_dependency_clause(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "dependency_info_1", c)) break;
+    }
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // WORDISH
+  public static boolean language_definition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "language_definition")) return false;
+    if (!nextTokenIs(b, WORDISH)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, WORDISH);
+    exit_section_(b, m, LANGUAGE_DEFINITION, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // WORDISH
   static boolean name(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "name")) return false;
@@ -245,7 +303,7 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !(','|'|')
+  // !(','|'|'|'--')
   static boolean recover_dependency_clauses(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recover_dependency_clauses")) return false;
     boolean r;
@@ -255,17 +313,18 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ','|'|'
+  // ','|'|'|'--'
   private static boolean recover_dependency_clauses_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recover_dependency_clauses_0")) return false;
     boolean r;
     r = consumeToken(b, OPERATOR_AND);
     if (!r) r = consumeToken(b, OPERATOR_OR);
+    if (!r) r = consumeToken(b, DEPENDENCY_LANG_SEPARATOR);
     return r;
   }
 
   /* ********************************************************** */
-  // !(')'|'<'|'['|','|'|')
+  // !(')'|'<'|'['|','|'|'|'--')
   static boolean recover_until_closing_token(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recover_until_closing_token")) return false;
     boolean r;
@@ -275,7 +334,7 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ')'|'<'|'['|','|'|'
+  // ')'|'<'|'['|','|'|'|'--'
   private static boolean recover_until_closing_token_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recover_until_closing_token_0")) return false;
     boolean r;
@@ -284,6 +343,7 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, BRACKETS_OPEN);
     if (!r) r = consumeToken(b, OPERATOR_AND);
     if (!r) r = consumeToken(b, OPERATOR_OR);
+    if (!r) r = consumeToken(b, DEPENDENCY_LANG_SEPARATOR);
     return r;
   }
 
@@ -323,20 +383,9 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // and_dependency_clause+
+  // dependency_info
   static boolean start(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "start")) return false;
-    if (!nextTokenIs(b, "", SUBSTVAR_TOKEN, WORDISH)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = and_dependency_clause(b, l + 1);
-    while (r) {
-      int c = current_position_(b);
-      if (!and_dependency_clause(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "start", c)) break;
-    }
-    exit_section_(b, m, null, r);
-    return r;
+    return dependency_info(b, l + 1);
   }
 
   /* ********************************************************** */

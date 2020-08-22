@@ -7,11 +7,14 @@ import com.intellij.psi.PsiElement;
 
 public interface DepLangDependency extends PsiElement {
 
-  @NotNull
-  DepLangPackageName getPackageName();
+  @Nullable
+  DepLangArchRestrictionPart getArchRestrictionPart();
+
+  @Nullable
+  DepLangBuildProfileRestrictionPart getBuildProfileRestrictionPart();
 
   @NotNull
-  List<DepLangRestrictionList> getRestrictionListList();
+  DepLangPackageName getPackageName();
 
   @Nullable
   DepLangVersionPart getVersionPart();

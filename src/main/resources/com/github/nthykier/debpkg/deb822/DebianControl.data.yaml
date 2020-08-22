@@ -234,7 +234,6 @@ fields:
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_NEGATIVE_DEPENDENCY
     supportsSubstvars: false
 
-
   - canonicalName: "Build-Conflicts-Indep"
     onlyInParagraphType: "Source"
     description: |
@@ -268,6 +267,7 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
+    supportsBuildProfileRestriction: false
 
   - canonicalName: "Depends"
     onlyInParagraphType: "Package"
@@ -293,7 +293,7 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
-
+    supportsBuildProfileRestriction: false
 
   - canonicalName: "Recommends"
     onlyInParagraphType: "Package"
@@ -309,7 +309,7 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
-
+    supportsBuildProfileRestriction: false
 
   - canonicalName: "Suggests"
     onlyInParagraphType: "Package"
@@ -323,6 +323,7 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
+    supportsBuildProfileRestriction: false
 
   - canonicalName: "Enhances"
     onlyInParagraphType: "Package"
@@ -335,6 +336,7 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
+    supportsBuildProfileRestriction: false
 
   - canonicalName: "Provides"
     onlyInParagraphType: "Package"
@@ -376,6 +378,8 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
+    supportedVersionOperators: "="
+    supportsBuildProfileRestriction: false
 
   - canonicalName: "Conflicts"
     onlyInParagraphType: "Package"
@@ -396,6 +400,7 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
+    supportsBuildProfileRestriction: false
 
   - canonicalName: "Breaks"
     onlyInParagraphType: "Package"
@@ -421,6 +426,7 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
+    supportsBuildProfileRestriction: false
 
   - canonicalName: "Replaces"
     onlyInParagraphType: "Package"
@@ -443,6 +449,7 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
+    supportsBuildProfileRestriction: false
 
   - canonicalName: Uploaders
     onlyInParagraphType: "Source"

@@ -12,7 +12,23 @@ public class DepLangVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitArchRestrictionPart(@NotNull DepLangArchRestrictionPart o) {
+    visitPsiElement(o);
+  }
+
+  public void visitBuildProfileRestrictionPart(@NotNull DepLangBuildProfileRestrictionPart o) {
+    visitPsiElement(o);
+  }
+
   public void visitDependency(@NotNull DepLangDependency o) {
+    visitPsiElement(o);
+  }
+
+  public void visitDependencyInfo(@NotNull DepLangDependencyInfo o) {
+    visitPsiElement(o);
+  }
+
+  public void visitLanguageDefinition(@NotNull DepLangLanguageDefinition o) {
     visitPsiElement(o);
   }
 

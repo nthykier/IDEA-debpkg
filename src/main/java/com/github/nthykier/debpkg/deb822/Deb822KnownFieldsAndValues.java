@@ -1,9 +1,11 @@
 package com.github.nthykier.debpkg.deb822;
 
+import com.github.nthykier.debpkg.deb822.deplang.DependencyLanguage;
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.field.*;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldKeywordImpl;
+import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownRelationFieldImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.KnownFieldTableImpl;
 import com.intellij.lang.Language;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +21,10 @@ public class Deb822KnownFieldsAndValues {
 
     private static final Map<Language, KnownFieldTable> LANGUAGE2KNOWN_FIELDS = new HashMap<>();
     private static final Map<String, Deb822KnownField> KNOWN_FIELDS = new HashMap<>();
+
+    private static final Set<String> KNOWN_VERSION_OPERATORS = new LinkedHashSet<>(Arrays.asList(
+            ">>", ">=", "=", "<=", "<<"
+    ));
 
     private Deb822KnownFieldsAndValues() {}
 
@@ -73,6 +79,13 @@ public class Deb822KnownFieldsAndValues {
         return Collections.unmodifiableSet(values);
     }
 
+    private static Set<String> convertToSet(List<String> valuesAsList) {
+        if (valuesAsList.isEmpty()) {
+            return Collections.emptySet();
+        }
+        return Collections.unmodifiableSet(new LinkedHashSet<>(valuesAsList));
+    }
+
     private static Deb822KnownField parseKnownFieldDefinition(Map<String, Object> fieldDef) {
         String canonicalName = getRequiredString(fieldDef, "canonicalName");
         Deb822KnownFieldValueType valueType = Deb822KnownFieldValueType.valueOf(
@@ -88,11 +101,16 @@ public class Deb822KnownFieldsAndValues {
         boolean allKeywordsKnown = false;
         boolean supportsSubstvars = getBool(fieldDef, "supportsSubstvars", true);
         boolean warnIfDefault = getBool(fieldDef, "warnIfDefault", false);
-        boolean isFoldedByDefault =  getBool(fieldDef, "foldedByDefault", false);
+        boolean isFoldedByDefault = getBool(fieldDef, "foldedByDefault", false);
         Set<String> supportedParagraphTypes = parseStringOrListAsList(fieldDef,
                 "onlyInParagraphType",
                 Deb822KnownFieldsAndValues::parseSupportedParagraphTypes,
                 ANY_PARAGRAPH_TYPES);
+        Set<String> supportedVersionOperators = parseStringOrListAsList(fieldDef,
+                "supportedVersionOperators",
+                Deb822KnownFieldsAndValues::convertToSet,
+                null);
+        boolean supportsBuildProfileRestriction = getBool(fieldDef, "supportsBuildProfileRestriction", false);
         switch (valueType) {
             case SINGLE_TRIVIAL_VALUE:
                 if (!keywordList.isEmpty()) {
@@ -138,8 +156,28 @@ public class Deb822KnownFieldsAndValues {
         } else {
             keywordMap = Collections.emptyMap();
         }
-        return new Deb822KnownFieldImpl(canonicalName, valueType, fieldValueLanguage, allKeywordsKnown, keywordMap, docs,
-                supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault);
+        if (fieldValueLanguage.getLanguage() == DependencyLanguage.INSTANCE) {
+            if (supportedVersionOperators == null) {
+                supportedVersionOperators = KNOWN_VERSION_OPERATORS;
+            }
+
+            return new Deb822KnownRelationFieldImpl(canonicalName, valueType, fieldValueLanguage, allKeywordsKnown, keywordMap, docs,
+                    supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault,
+                    supportedVersionOperators, supportsBuildProfileRestriction
+            );
+        } else {
+            if (supportedVersionOperators != null) {
+                throw new IllegalArgumentException("Field " + canonicalName + " has supportedVersionOperators but is"
+                        + " not a language field (valueLanguage)");
+            }
+            if (supportsBuildProfileRestriction) {
+                throw new IllegalArgumentException("Field " + canonicalName + " has supportsBuildProfileRestriction but is"
+                        + " not a language field (valueLanguage)");
+            }
+
+            return new Deb822KnownFieldImpl(canonicalName, valueType, fieldValueLanguage, allKeywordsKnown, keywordMap, docs,
+                    supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault);
+        }
     }
 
     private static Deb822KnownFieldKeyword parseKeyword(Object keywordDefRaw) {

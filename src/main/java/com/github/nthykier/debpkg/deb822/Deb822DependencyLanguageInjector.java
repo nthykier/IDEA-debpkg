@@ -42,7 +42,7 @@ public class Deb822DependencyLanguageInjector implements LanguageInjector {
             injectionPlacesRegistrar.addPlace(
                     languageInstance,
                     new TextRange(0, host.getTextLength()),
-                    null,
+                    fieldValuePair.getField().getFieldName().toLowerCase() + " -- ",
                     null);
         }
     }

@@ -9,7 +9,11 @@ import com.github.nthykier.debpkg.deb822.deplang.psi.impl.*;
 public interface DependencyLanguageTypes {
 
   IElementType AND_DEPENDENCY_CLAUSE = new DepLangElementType("AND_DEPENDENCY_CLAUSE");
+  IElementType ARCH_RESTRICTION_PART = new DepLangElementType("ARCH_RESTRICTION_PART");
+  IElementType BUILD_PROFILE_RESTRICTION_PART = new DepLangElementType("BUILD_PROFILE_RESTRICTION_PART");
   IElementType DEPENDENCY = new DepLangElementType("DEPENDENCY");
+  IElementType DEPENDENCY_INFO = new DepLangElementType("DEPENDENCY_INFO");
+  IElementType LANGUAGE_DEFINITION = new DepLangElementType("LANGUAGE_DEFINITION");
   IElementType OR_DEPENDENCY_CLAUSE = new DepLangElementType("OR_DEPENDENCY_CLAUSE");
   IElementType PACKAGE_NAME = new DepLangElementType("PACKAGE_NAME");
   IElementType RESTRICTION_LIST = new DepLangElementType("RESTRICTION_LIST");
@@ -21,6 +25,7 @@ public interface DependencyLanguageTypes {
   IElementType BRACKETS_CLOSE = new DepLangTokenType("]");
   IElementType BRACKETS_OPEN = new DepLangTokenType("[");
   IElementType COMMENT = new DepLangTokenType("COMMENT");
+  IElementType DEPENDENCY_LANG_SEPARATOR = new DepLangTokenType("--");
   IElementType GREATER_THAN = new DepLangTokenType(">");
   IElementType LESS_THAN = new DepLangTokenType("<");
   IElementType MISPLACED_COMMENT = new DepLangTokenType("MISPLACED_COMMENT");
@@ -39,8 +44,20 @@ public interface DependencyLanguageTypes {
       if (type == AND_DEPENDENCY_CLAUSE) {
         return new DepLangAndDependencyClauseImpl(node);
       }
+      else if (type == ARCH_RESTRICTION_PART) {
+        return new DepLangArchRestrictionPartImpl(node);
+      }
+      else if (type == BUILD_PROFILE_RESTRICTION_PART) {
+        return new DepLangBuildProfileRestrictionPartImpl(node);
+      }
       else if (type == DEPENDENCY) {
         return new DepLangDependencyImpl(node);
+      }
+      else if (type == DEPENDENCY_INFO) {
+        return new DepLangDependencyInfoImpl(node);
+      }
+      else if (type == LANGUAGE_DEFINITION) {
+        return new DepLangLanguageDefinitionImpl(node);
       }
       else if (type == OR_DEPENDENCY_CLAUSE) {
         return new DepLangOrDependencyClauseImpl(node);

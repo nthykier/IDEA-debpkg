@@ -55,9 +55,9 @@ public class DependencyLanguageLexer implements FlexLexer {
 
   /* The ZZ_CMAP_A table has 256 entries */
   static final char ZZ_CMAP_A[] = zzUnpackCMap(
-    "\11\0\1\3\1\6\1\0\1\3\1\5\22\0\1\3\1\13\1\0\1\4\1\22\3\0\1\16\1\17\1\0\1\2"+
-    "\1\15\1\7\1\2\1\0\12\1\1\7\1\0\1\12\1\11\1\10\2\0\32\1\1\20\1\0\1\21\1\0\1"+
-    "\2\1\0\32\1\1\23\1\14\1\24\1\2\201\0");
+    "\11\0\1\3\1\6\1\0\1\3\1\5\22\0\1\3\1\13\1\0\1\4\1\23\3\0\1\16\1\17\1\0\1\2"+
+    "\1\15\1\22\1\2\1\0\12\1\1\7\1\0\1\12\1\11\1\10\2\0\32\1\1\20\1\0\1\21\1\0"+
+    "\1\2\1\0\32\1\1\24\1\14\1\25\1\2\201\0");
 
   /** 
    * Translates DFA states to action switch labels.
@@ -66,11 +66,11 @@ public class DependencyLanguageLexer implements FlexLexer {
 
   private static final String ZZ_ACTION_PACKED_0 =
     "\2\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7"+
-    "\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17"+
-    "\1\20\1\6\3\17";
+    "\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\1"+
+    "\1\17\1\20\1\6\1\21\3\17";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[22];
+    int [] result = new int[24];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -95,12 +95,12 @@ public class DependencyLanguageLexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\25\0\52\0\77\0\124\0\151\0\176\0\223"+
-    "\0\250\0\223\0\52\0\52\0\52\0\52\0\52\0\52"+
-    "\0\275\0\322\0\52\0\347\0\374\0\52";
+    "\0\0\0\26\0\54\0\102\0\130\0\156\0\204\0\232"+
+    "\0\260\0\232\0\54\0\54\0\54\0\54\0\54\0\54"+
+    "\0\306\0\334\0\362\0\54\0\54\0\u0108\0\u011e\0\54";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[22];
+    int [] result = new int[24];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -125,17 +125,18 @@ public class DependencyLanguageLexer implements FlexLexer {
   private static final String ZZ_TRANS_PACKED_0 =
     "\1\3\1\4\1\3\1\5\1\6\1\3\1\5\1\3"+
     "\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16"+
-    "\1\17\1\20\1\21\3\3\1\4\1\3\1\5\1\22"+
-    "\1\3\1\5\1\3\1\7\1\10\1\11\1\12\1\13"+
-    "\1\14\1\15\1\16\1\17\1\20\1\21\2\3\26\0"+
-    "\2\4\4\0\1\4\20\0\1\5\2\0\1\5\16\0"+
-    "\5\6\2\0\16\6\10\0\2\23\24\0\1\23\24\0"+
-    "\2\23\13\0\1\24\21\0\1\25\1\0\5\22\2\0"+
-    "\16\22\1\0\1\24\5\0\1\24\14\0\1\26\1\0"+
-    "\1\24\22\0\1\26";
+    "\1\17\1\20\1\21\1\22\3\3\1\4\1\3\1\5"+
+    "\1\23\1\3\1\5\1\3\1\7\1\10\1\11\1\12"+
+    "\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22"+
+    "\2\3\27\0\2\4\4\0\1\4\12\0\1\4\6\0"+
+    "\1\5\2\0\1\5\17\0\5\6\2\0\17\6\10\0"+
+    "\2\24\25\0\1\24\25\0\2\24\35\0\1\25\4\0"+
+    "\1\26\22\0\1\27\1\0\5\23\2\0\17\23\1\0"+
+    "\1\26\5\0\1\26\12\0\1\26\2\0\1\30\1\0"+
+    "\1\26\23\0\1\30";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[273];
+    int [] result = new int[308];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -173,10 +174,10 @@ public class DependencyLanguageLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\2\0\1\11\7\1\6\11\2\1\1\11\2\1\1\11";
+    "\2\0\1\11\7\1\6\11\3\1\2\11\2\1\1\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[22];
+    int [] result = new int[24];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -526,82 +527,87 @@ public class DependencyLanguageLexer implements FlexLexer {
             { return TokenType.BAD_CHARACTER;
             } 
             // fall through
-          case 17: break;
+          case 18: break;
           case 2: 
             { return DependencyLanguageTypes.WORDISH;
             } 
             // fall through
-          case 18: break;
+          case 19: break;
           case 3: 
             { return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 19: break;
+          case 20: break;
           case 4: 
             { return DependencyLanguageTypes.MISPLACED_COMMENT;
             } 
             // fall through
-          case 20: break;
+          case 21: break;
           case 5: 
             { return DependencyLanguageTypes.GREATER_THAN;
             } 
             // fall through
-          case 21: break;
+          case 22: break;
           case 6: 
             { return DependencyLanguageTypes.VERSION_OP;
             } 
             // fall through
-          case 22: break;
+          case 23: break;
           case 7: 
             { return DependencyLanguageTypes.LESS_THAN;
             } 
             // fall through
-          case 23: break;
+          case 24: break;
           case 8: 
             { return DependencyLanguageTypes.NEGATION;
             } 
             // fall through
-          case 24: break;
+          case 25: break;
           case 9: 
             { return DependencyLanguageTypes.OPERATOR_OR;
             } 
             // fall through
-          case 25: break;
+          case 26: break;
           case 10: 
             { return DependencyLanguageTypes.OPERATOR_AND;
             } 
             // fall through
-          case 26: break;
+          case 27: break;
           case 11: 
             { return DependencyLanguageTypes.PARANTHESES_OPEN;
             } 
             // fall through
-          case 27: break;
+          case 28: break;
           case 12: 
             { return DependencyLanguageTypes.PARANTHESES_CLOSE;
             } 
             // fall through
-          case 28: break;
+          case 29: break;
           case 13: 
             { return DependencyLanguageTypes.BRACKETS_OPEN;
             } 
             // fall through
-          case 29: break;
+          case 30: break;
           case 14: 
             { return DependencyLanguageTypes.BRACKETS_CLOSE;
             } 
             // fall through
-          case 30: break;
+          case 31: break;
           case 15: 
             { return DependencyLanguageTypes.SUBSTVAR_TOKEN;
             } 
             // fall through
-          case 31: break;
+          case 32: break;
           case 16: 
             { return DependencyLanguageTypes.COMMENT;
             } 
             // fall through
-          case 32: break;
+          case 33: break;
+          case 17: 
+            { return DependencyLanguageTypes.DEPENDENCY_LANG_SEPARATOR;
+            } 
+            // fall through
+          case 34: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

@@ -1,9 +1,13 @@
 package com.github.nthykier.debpkg.deb822.deplang;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
+import com.github.nthykier.debpkg.deb822.Deb822KnownFieldsAndValues;
 import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvar;
 import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvars;
 import com.github.nthykier.debpkg.deb822.deplang.psi.*;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownRelationField;
 import com.github.nthykier.debpkg.deb822.psi.Deb822SubstvarBase;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.github.nthykier.debpkg.util.Deb822TypeSafeLocalQuickFix;
@@ -25,6 +29,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class DependencyLanguageAnnotator implements Annotator {
 
@@ -41,8 +46,48 @@ public class DependencyLanguageAnnotator implements Annotator {
             checkPackageName(holder, (DepLangPackageName)element);
         } else if (element instanceof Deb822SubstvarBase) {
             checkSubstvar(holder, (Deb822SubstvarBase)element);
+        } else if (element instanceof DepLangDependency) {
+            checkDependeny(holder, (DepLangDependency)element);
         }
     }
+
+    private static @Nullable DepLangLanguageDefinition getLanguageInfo(@NotNull PsiElement e) {
+        while ( e != null && !(e instanceof DepLangDependencyInfo)) {
+            e = e.getParent();
+        }
+        if (e != null) {
+            return ((DepLangDependencyInfo)e).getLanguageDefinition();
+        }
+        return null;
+    }
+
+    private static @Nullable Deb822KnownRelationField lookupContainingDeb822KnownField(@NotNull PsiElement e) {
+        DepLangLanguageDefinition languageDefinition = getLanguageInfo(e);
+        Deb822KnownField knownField;
+        if (languageDefinition == null) {
+            return null;
+        }
+        knownField = Deb822KnownFieldsAndValues.getKnownFieldsFor(Deb822DialectDebianControlLanguage.INSTANCE).getField(languageDefinition.getText());
+        if (knownField == null || knownField.getFieldValueLanguage().getLanguage() != DependencyLanguage.INSTANCE) {
+            return null;
+        }
+        return (Deb822KnownRelationField)knownField;
+    }
+
+
+    private void checkDependeny(@NotNull AnnotationHolder holder, @NotNull DepLangDependency element) {
+        if (element.getBuildProfileRestrictionPart() != null) {
+            Deb822KnownRelationField knownRelationField = lookupContainingDeb822KnownField(element);
+            if (knownRelationField != null && !knownRelationField.supportsBuildProfileRestriction()) {
+                holder.newAnnotation(HighlightSeverity.ERROR,
+                        Deb822Bundle.message("deb822.files.annotator.fields.dependency-field-does-not-support-build-profile", knownRelationField.getCanonicalFieldName())
+                )
+                        .range(element)
+                        .create();
+            }
+        }
+    }
+
 
     private void checkSubstvar(@NotNull AnnotationHolder holder, @NotNull Deb822SubstvarBase element) {
         String name = element.getText();
@@ -130,6 +175,8 @@ public class DependencyLanguageAnnotator implements Annotator {
     private void checkVersionOperator(@NotNull AnnotationHolder holder, @NotNull DepLangVersionOperator operatorToken) {
         String operator = operatorToken.getText();
         String replacement = INVALID_VERSION_OPERATORS.get(operator);
+        Deb822KnownRelationField knownField = lookupContainingDeb822KnownField(operatorToken);
+
         if (replacement != null) {
             if (replacement.equals("")) {
                 // Invalid without replacement
@@ -152,6 +199,20 @@ public class DependencyLanguageAnnotator implements Annotator {
                         ProblemHighlightType.ERROR,
                         operator, replacement
                 );
+                /* We know what the user intended, so use the replacement operator from here on */
+                operator = replacement;
+            }
+
+        }
+        if (knownField != null) {
+            if (!knownField.supportedVersionOperators().contains(operator)) {
+                String supportedOperators = knownField.supportedVersionOperators().stream().map(it -> "\"" + it + "\"").collect(Collectors.joining(", "));
+                holder.newAnnotation(HighlightSeverity.ERROR,
+                        Deb822Bundle.message("deb822.files.annotator.fields.unsupported-version-operator-in-field",
+                                operator, knownField.getCanonicalFieldName(), supportedOperators)
+                )
+                        .range(operatorToken)
+                        .create();
             }
         }
     }

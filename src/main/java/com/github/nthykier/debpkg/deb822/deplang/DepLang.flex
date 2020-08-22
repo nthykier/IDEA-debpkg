@@ -44,6 +44,8 @@ SUBSTVAR_NAME=[a-zA-Z0-9][a-zA-Z0-9\-:]*
 
 [<]                                             { return DependencyLanguageTypes.LESS_THAN; }
 [>]                                             { return DependencyLanguageTypes.GREATER_THAN; }
+/* Fake token */
+[-][-]                                          { return DependencyLanguageTypes.DEPENDENCY_LANG_SEPARATOR; }
 
 {WORDISH}                                       { return DependencyLanguageTypes.WORDISH; }
 // Same as the above, except covers epoch

@@ -12,43 +12,19 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.deb822.deplang.psi.*;
 import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 
-public class DepLangDependencyImpl extends ASTWrapperPsiElement implements DepLangDependency {
+public class DepLangLanguageDefinitionImpl extends ASTWrapperPsiElement implements DepLangLanguageDefinition {
 
-  public DepLangDependencyImpl(@NotNull ASTNode node) {
+  public DepLangLanguageDefinitionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull DepLangVisitor visitor) {
-    visitor.visitDependency(this);
+    visitor.visitLanguageDefinition(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof DepLangVisitor) accept((DepLangVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public DepLangArchRestrictionPart getArchRestrictionPart() {
-    return findChildByClass(DepLangArchRestrictionPart.class);
-  }
-
-  @Override
-  @Nullable
-  public DepLangBuildProfileRestrictionPart getBuildProfileRestrictionPart() {
-    return findChildByClass(DepLangBuildProfileRestrictionPart.class);
-  }
-
-  @Override
-  @NotNull
-  public DepLangPackageName getPackageName() {
-    return findNotNullChildByClass(DepLangPackageName.class);
-  }
-
-  @Override
-  @Nullable
-  public DepLangVersionPart getVersionPart() {
-    return findChildByClass(DepLangVersionPart.class);
   }
 
 }

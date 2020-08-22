@@ -1,6 +1,5 @@
 package com.github.nthykier.debpkg.deb822.deplang.psi;
 
-import com.github.nthykier.debpkg.deb822.Deb822FileType;
 import com.github.nthykier.debpkg.deb822.deplang.DepLangFile;
 import com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageFileType;
 import com.github.nthykier.debpkg.deb822.psi.*;
@@ -14,8 +13,12 @@ public class DepLangElementFactory {
         return (DepLangFile)PsiFileFactory.getInstance(project).createFileFromText(name, DependencyLanguageFileType.INSTANCE, text);
     }
 
+    public static DepLangDependencyInfo createDependencyInfo(Project project, String text) {
+        return (DepLangDependencyInfo)(createFile(project, text).getFirstChild());
+    }
+
     public static DepLangAndDependencyClause createAndDependencyClause(Project project, String text) {
-        return (DepLangAndDependencyClause)(createFile(project, text).getFirstChild());
+        return createDependencyInfo(project, text).getAndDependencyClauseList().get(0);
     }
 
 
