@@ -50,7 +50,7 @@ public class DchFileReference extends PsiPolyVariantReferenceBase<PsiElement> {
         /* Wrap the PsiFileSystemItem to neuter rename/refactor support.  We do not want to update every link in the
          * changelog as it would carelessly end up rewriting the history.
          */
-        wrapper = (PsiFileSystemItem f) -> new WrappingPsiElement(this.myElement, this.getRangeInElement(), f);
+        wrapper = (PsiFileSystemItem f) -> new PathReference(this.myElement, this.getRangeInElement(), f);
         if (dirParts != null) {
             return Arrays.stream(results).filter(this::checkMatch).map(wrapper).map(PsiElementResolveResult::new).toArray(ResolveResult[]::new);
         }
@@ -65,7 +65,7 @@ public class DchFileReference extends PsiPolyVariantReferenceBase<PsiElement> {
     private boolean checkMatch(PsiFileSystemItem psiFileSystemItem) {
         PsiFileSystemItem element = psiFileSystemItem;
         int i;
-        boolean match = true;
+        boolean match = false;
         for (i = dirParts.length - 1; i >= 0 ; i--) {
             String expected = dirParts[i];
             String actual = element.getName();
@@ -95,13 +95,13 @@ public class DchFileReference extends PsiPolyVariantReferenceBase<PsiElement> {
         return fullname.substring(slash + 1);
     }
 
-    private static class WrappingPsiElement extends FakePsiElement {
+    private static class PathReference extends FakePsiElement {
 
         private final PsiElement myElement;
         private final PsiFileSystemItem target;
         private final TextRange range;
 
-        WrappingPsiElement(PsiElement element, TextRange range, PsiFileSystemItem fileSystemItem) {
+        PathReference(PsiElement element, TextRange range, PsiFileSystemItem fileSystemItem) {
             this.myElement = element;
             this.target = fileSystemItem;
             this.range = range;
@@ -120,6 +120,11 @@ public class DchFileReference extends PsiPolyVariantReferenceBase<PsiElement> {
         @Override
         public ItemPresentation getPresentation() {
             return target.getPresentation();
+        }
+
+        @Override
+        public String getName() {
+            return target.getName();
         }
 
         @Override

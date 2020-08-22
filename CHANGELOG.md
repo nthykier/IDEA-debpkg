@@ -8,6 +8,7 @@
 ### Changed
 - Rewrite part of the annotation code to make it future proof at the expense of support for IDEA platforms based on 2019.  If you need 2019, please
   remain on 0.0.3 for now.
+- Provide a better hover text for file references in the changelog file.
 
 ### Deprecated
 
@@ -17,6 +18,7 @@
 ### Fixed
 
 ### Security
+
 ## [0.0.3]
 ### Added
 - Add check to highlight if fields are placed in the wrong paragraph in debian/control files. (Closes: #1)
