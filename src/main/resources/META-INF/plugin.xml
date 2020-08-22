@@ -36,7 +36,7 @@
                    implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlAnnotator" />
         <spellchecker.support language="Deb822" id="deb822SpellcheckingStrategy"
                               implementationClass="com.github.nthykier.debpkg.deb822.Deb822SpellcheckingStrategy" />
-        <!--spellchecker.bundledDictionaryProvider implementation="com.github.nthykier.debpkg.deb822.Deb822BundledDictionaryProvider" /-->
+        <spellchecker.bundledDictionaryProvider implementation="com.github.nthykier.debpkg.deb822.Deb822BundledDictionaryProvider" />
 
         <completion.contributor language="Deb822"
                                 implementationClass="com.github.nthykier.debpkg.deb822.Deb822CodeCompletionContributor" />
