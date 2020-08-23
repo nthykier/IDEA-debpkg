@@ -15,7 +15,7 @@ import java.util.List;
 
 public abstract class AbstractDchChangelogEntry extends ASTWrapperPsiElement implements DchChangelogLine {
 
-    private static TokenSet DCH_LINE_TOKEN_SET = TokenSet.create(DchTypes.CHANGE_DETAILS, DchTypes.CHANGE_RESPONSIBLE);
+    private static final TokenSet DCH_LINE_TOKEN_SET = TokenSet.create(DchTypes.CHANGE_DETAILS, DchTypes.CHANGE_RESPONSIBLE);
 
     private String cachedText;
 
