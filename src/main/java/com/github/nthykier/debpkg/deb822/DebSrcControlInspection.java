@@ -3,14 +3,9 @@ package com.github.nthykier.debpkg.deb822;
 import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlAnnotator;
 import com.github.nthykier.debpkg.deb822.psi.*;
-import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.intellij.codeInspection.*;
-import com.intellij.codeInspection.util.IntentionFamilyName;
-import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
