@@ -73,6 +73,8 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
                         addText(b, visitor, currentChild);
                     }
                 } else if (currentChild.textContains('\n')) {
+                    /* We add an ellipsis when there is (or might be) some hidden text */
+                    b.append(" {...}");
                     break;
                 } else {
                     addText(b, visitor, currentChild);
