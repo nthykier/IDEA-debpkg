@@ -38,25 +38,23 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         return paragraph.isFirstParagraph() ? PARAGRAPH_TYPE_SOURCE : PARAGRAPH_TYPE_BINARY_PACKAGE;
     }
 
-    private void checkParagraph(@NotNull AnnotationHolder holder, @NotNull Deb822Paragraph paragraph) {
-        Map<String, String> field2values = new HashMap<>();
-        Map<String, Deb822FieldValuePair> field2pair = new HashMap<>();
-        String arch, multivalue;
-        KnownFieldTable knownFieldTable = getKnownFieldTable();
-        String paragraphType = paragraph.isFirstParagraph() ? "Source" : "Package";
-        for (Deb822FieldValuePair pair : paragraph.getFieldMap().values()) {
-            String keyOrig = pair.getField().getFieldName();
-            String keyLc = keyOrig.toLowerCase();
-            Deb822ValueParts parts = pair.getValueParts();
-            String value = parts != null ? pair.getValueParts().getText().trim() : "";
-            checkFieldValuePair(knownFieldTable, pair, holder, paragraphType);
-            field2values.putIfAbsent(keyLc, value);
-            field2pair.putIfAbsent(keyLc, pair);
+    private void checkMultiArchVsArchitecture(@NotNull AnnotationHolder holder, @NotNull Map<String, Deb822FieldValuePair> fieldMap) {
+        Deb822FieldValuePair archFieldPair = fieldMap.get("architecture");
+        Deb822FieldValuePair multiarchFieldPair = fieldMap.get("multi-arch");
+        Deb822ValueParts archValueParts, multiarchValueParts;
+        String arch, multiarchValue;
+        if (archFieldPair == null || multiarchFieldPair == null) {
+            return;
         }
-        arch = field2values.getOrDefault("architecture", "any");
-        multivalue = field2values.getOrDefault("multi-arch", "no");
-        if (arch.equals("all") && multivalue.equals("same")) {
-            Deb822FieldValuePair pair = field2pair.get("multi-arch");
+        archValueParts = archFieldPair.getValueParts();
+        multiarchValueParts = multiarchFieldPair.getValueParts();
+        if (archValueParts == null || multiarchValueParts == null) {
+            return;
+        }
+        arch = archValueParts.getText().trim();
+        multiarchValue = multiarchValueParts.getText().trim();
+        if (arch.equals("all") && multiarchValue.equals("same")) {
+            Deb822FieldValuePair pair = fieldMap.get("multi-arch");
             Function<String, Deb822TypeSafeLocalQuickFix<Deb822ValueParts>> quickfixer =
                     AnnotatorUtil.replacementQuickFixer(
                             (Project p) -> Deb822ElementFactory.createValuePartsFromText(p, "Multi-Arch: foreign")
@@ -69,11 +67,25 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
                     HighlightSeverity.ERROR,
                     quickfixer,
                     "arch-all-multi-arch-same",
-                    pair.getValueParts(),
+                    multiarchFieldPair.getValueParts(),
                     ProblemHighlightType.ERROR
             );
         }
-        if (! field2values.containsKey(paragraphType.toLowerCase())) {
+    }
+
+    private void checkParagraph(@NotNull AnnotationHolder holder, @NotNull Deb822Paragraph paragraph) {
+        Map<String, Deb822FieldValuePair> field2pair = new HashMap<>();
+        KnownFieldTable knownFieldTable = getKnownFieldTable();
+        String paragraphType = paragraph.isFirstParagraph() ? "Source" : "Package";
+        Map<String, Deb822FieldValuePair> fieldMap = paragraph.getFieldMap();
+        for (Deb822FieldValuePair pair : fieldMap.values()) {
+            String keyOrig = pair.getField().getFieldName();
+            String keyLc = keyOrig.toLowerCase();
+            checkFieldValuePair(knownFieldTable, pair, holder, paragraphType);
+            field2pair.putIfAbsent(keyLc, pair);
+        }
+        checkMultiArchVsArchitecture(holder, fieldMap);
+        if (! field2pair.containsKey(paragraphType.toLowerCase())) {
             holder.newAnnotation(HighlightSeverity.ERROR, Deb822Bundle.message("deb822.files.annotator.fields.missing-mandatory-field", paragraphType))
                     .range(paragraph)
                     .create();
