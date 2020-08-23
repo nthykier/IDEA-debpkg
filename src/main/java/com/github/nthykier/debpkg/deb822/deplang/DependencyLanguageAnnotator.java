@@ -117,7 +117,7 @@ public class DependencyLanguageAnnotator implements Annotator {
         }
         packageName = element.getText();
         colonIndex = packageName.indexOf(':');
-        if (colonIndex > -1) {
+        if (colonIndex > -1 && colonIndex != packageName.length() - 1) {
             // Ignore ":any" and other architecture qualifier
             packageName = packageName.substring(0, colonIndex);
         }

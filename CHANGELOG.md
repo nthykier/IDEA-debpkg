@@ -20,6 +20,7 @@
 
 ### Fixed
 - Fix unhandled exception in annotation of dependency fields with invalid package names (etc.).
+- Fix missing error when a package name contained a trailing colon in a dependency field.  This is invalid, but the annotator silently accepted it as valid.
 
 ### Security
 
