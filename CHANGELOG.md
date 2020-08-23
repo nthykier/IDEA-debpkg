@@ -19,6 +19,7 @@
 - Remove default extension for the Dependency language format (which is only used inside debian/control).  The extension was only used during debugging.
 
 ### Fixed
+- Fix unhandled exception in annotation of dependency fields with invalid package names (etc.).
 
 ### Security
 

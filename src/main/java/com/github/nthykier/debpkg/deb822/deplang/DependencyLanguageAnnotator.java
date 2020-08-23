@@ -166,7 +166,7 @@ public class DependencyLanguageAnnotator implements Annotator {
         if (matcher.find() && matcher.start() == 0) {
             return new TextRange(
                     matcher.end(),
-                    tokenLength - matcher.end()
+                    tokenLength
             );
         }
         return null;
