@@ -33,7 +33,7 @@ public class AnnotatorUtil {
     ) {
         LocalQuickFix quickFix = quickfixer.apply(baseName);
         ProblemDescriptor problemDescriptor = new Deb822ProblemDescriptor<>(quickFix, baseName, elementToFix, highlightType);
-        annoHolder.newAnnotation(severity, getAnnostationText(baseName, params))
+        annoHolder.newAnnotation(severity, getAnnotationText(baseName, params))
                 .range(elementToFix)
                 .newLocalQuickFix(quickFix, problemDescriptor).registerFix()
                 .create();
@@ -57,7 +57,7 @@ public class AnnotatorUtil {
 
     @NotNull
     @Nls(capitalization = Nls.Capitalization.Sentence)
-    public static String getAnnostationText(@NotNull String baseName, Object... params) {
+    public static String getAnnotationText(@NotNull String baseName, Object... params) {
         return Deb822Bundle.message("deb822.files.annotator.fields." + baseName, params);
     }
 
