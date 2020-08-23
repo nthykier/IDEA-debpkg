@@ -23,16 +23,18 @@
                                     implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlDocumentationProvider" />
         <lang.foldingBuilder language="Deb822"
                              implementationClass="com.github.nthykier.debpkg.deb822.Deb822FoldingBuilder" />
-        <localInspection language="Deb822"
-                         groupPath="Deb822"
-                         shortName="DuplicateFieldNameInDeb822Paragraph"
-                         key="deb822.files.inspection.name.duplicate_field.display.name"
-                         groupKey="deb822.files.inspection.group.display.name"
+        <localInspection language="DebianControl"
+                         groupPath="DebianControl"
+                         shortName="DCtrlMissingRulesRequiresRoot"
+                         key="deb822.files.suggested-field.source-missing-rules-requires-root"
+                         groupKey="dctrl.inspection.group.display.name"
                          enabledByDefault="true"
-                         level="ERROR"
-                         implementationClass="com.github.nthykier.debpkg.deb822.DebSrcControlInspection"
+                         level="WEAK WARNING"
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlMissingRulesRequiresRootInspection"
         />
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
+                   implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
+        <annotator language="DebianControl" id="DEBIAN_CONTROL_SCANNER" order="after DEB822_BASIC_SCANNER"
                    implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlAnnotator" />
         <spellchecker.support language="Deb822" id="deb822SpellcheckingStrategy"
                               implementationClass="com.github.nthykier.debpkg.deb822.Deb822SpellcheckingStrategy" />

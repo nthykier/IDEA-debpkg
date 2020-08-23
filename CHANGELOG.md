@@ -13,6 +13,7 @@
 - Rewrite part of the annotation code to make it future proof at the expense of support for IDEA platforms based on 2019.  If you need 2019, please
   remain on 0.0.3 for now.
 - Provide a better hover text for file references in the changelog file.
+- Rewrite the "duplicate fields" check as an annotation meaning it can no longer be disabled (nor is it severity configurable).
 
 ### Deprecated
 

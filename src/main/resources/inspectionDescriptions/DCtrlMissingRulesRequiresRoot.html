@@ -1,0 +1,15 @@
+<html>
+<body>
+<p>Detects implicit legacy "Rules-Requires-Root: binary-targets".</p>
+<p>
+    This inspection detects packages that rely on the implicit default of <b>Rules-Requires-Root: binary-targets</b>.
+    Historically, all Debian packages required root or fakeroot to build.  As of Debian buster, it is possible
+    and recommended to explicitly declare whether a package need root or fakeroot by setting the
+    <b>Rules-Requires-Root</b> field to either <b>no</b> or <b>binary-targets</b>.  Most modern packages will
+    work out of the box with <b>Rules-Requires-Root: no</b>.
+</p>
+<!-- tooltip end -->
+<!--p>Text after this comment will only be shown in the settings of the inspection.</p-->
+</body>
+</html>
+

@@ -1,4 +1,4 @@
-package com.github.nthykier.debpkg.deb822;
+package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlAnnotator;
@@ -9,11 +9,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
-public class DebSrcControlInspection extends LocalInspectionTool {
+public class DCtrlMissingRulesRequiresRootInspection extends LocalInspectionTool {
 
     @NotNull
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
@@ -22,19 +20,7 @@ public class DebSrcControlInspection extends LocalInspectionTool {
         }
         return new Deb822Visitor() {
             public void visitParagraph(@NotNull Deb822Paragraph deb822Paragraph) {
-                Map<String, Deb822FieldValuePair> seen = new HashMap<>();
                 super.visitParagraph(deb822Paragraph);
-                /* We use getFieldValuePairList here because we want to see duplicates and getFieldMap cannot help with
-                 *  that
-                 */
-                for (Deb822FieldValuePair pair : deb822Paragraph.getFieldValuePairList()) {
-                    String fieldName = pair.getField().getFieldName();
-                    Deb822FieldValuePair existingValue = seen.get(fieldName);
-                    seen.putIfAbsent(fieldName, pair);
-                    if (existingValue != null) {
-                        holder.registerProblem(pair, Deb822Bundle.message("deb822.files.inspection.issue.duplicate.field_names", fieldName));
-                    }
-                }
                 if (Deb822DialectDebianControlAnnotator.guessParagraphType(deb822Paragraph).equals(Deb822DialectDebianControlAnnotator.PARAGRAPH_TYPE_SOURCE)) {
                     checkSourceParagraph(holder, deb822Paragraph);
                 }
@@ -61,7 +47,6 @@ public class DebSrcControlInspection extends LocalInspectionTool {
             };
             holder.registerProblem(src,
                     Deb822Bundle.message("deb822.files.suggested-field.source-missing-rules-requires-root"),
-                    ProblemHighlightType.WEAK_WARNING,
                     fixes
             );
         }
