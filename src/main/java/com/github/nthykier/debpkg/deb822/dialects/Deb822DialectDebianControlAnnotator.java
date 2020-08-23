@@ -23,12 +23,19 @@ import java.util.*;
 import java.util.function.Function;
 
 public class Deb822DialectDebianControlAnnotator implements Annotator {
+    public static String PARAGRAPH_TYPE_SOURCE = "Source";
+    public static String PARAGRAPH_TYPE_BINARY_PACKAGE = "Package";
+
     private static final TokenSet SPACE_OR_COMMA = TokenSet.create(TokenType.WHITE_SPACE, Deb822Types.COMMA);
 
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
         if (element instanceof Deb822Paragraph) {
             checkParagraph(holder, (Deb822Paragraph)element);
         }
+    }
+
+    public static String guessParagraphType(Deb822Paragraph paragraph) {
+        return paragraph.isFirstParagraph() ? PARAGRAPH_TYPE_SOURCE : PARAGRAPH_TYPE_BINARY_PACKAGE;
     }
 
     private void checkParagraph(@NotNull AnnotationHolder holder, @NotNull Deb822Paragraph paragraph) {

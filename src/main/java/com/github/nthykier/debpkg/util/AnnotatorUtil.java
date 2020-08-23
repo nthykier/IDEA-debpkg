@@ -1,6 +1,10 @@
 package com.github.nthykier.debpkg.util;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
+import com.github.nthykier.debpkg.deb822.psi.Deb822ElementFactory;
+import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
+import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemDescriptorBase;
@@ -44,6 +48,12 @@ public class AnnotatorUtil {
     public static <T extends PsiElement> Function<String, Deb822TypeSafeLocalQuickFix<T>> elementRemovalQuickfixer(final Class<T> clazz) {
         return (String s) -> new FieldDeletingQuickFix<>(s, clazz);
     }
+
+    @NotNull
+    public static <T extends Deb822FieldValuePair> Function<String, Deb822TypeSafeLocalQuickFix<T>> fieldInsertionQuickFix(final Function<Project, T> factoryMethod, String... insertRelativeTo) {
+        return (String s) -> new InsertFieldInParagraphLocalQuickFix<>(s, factoryMethod, insertRelativeTo);
+    }
+
 
     @NotNull
     @Nls(capitalization = Nls.Capitalization.Sentence)
@@ -134,6 +144,61 @@ public class AnnotatorUtil {
         @NotNull
         protected T getCorrectedElement(@NotNull Project project) {
             return this.elementGenerator.apply(project);
+        }
+    }
+
+    private static class InsertFieldInParagraphLocalQuickFix<T extends Deb822FieldValuePair> implements Deb822TypeSafeLocalQuickFix<T> {
+
+        private final String basename;
+        private final Function<Project, T> elementGenerator;
+        private final String[] beforeFields;
+
+        InsertFieldInParagraphLocalQuickFix(@NotNull String basename, @NotNull Function<Project, T> elementGenerator, String... beforeFields) {
+            this.basename = basename;
+            this.elementGenerator = elementGenerator;
+            this.beforeFields = beforeFields;
+        }
+
+        @NotNull
+        protected T getCorrectedElement(@NotNull Project project) {
+            return Objects.requireNonNull(this.elementGenerator.apply(project),"Bug in "
+                    + this.getClass().getCanonicalName() + " - Replacement is null");
+        }
+
+        @NotNull
+        public String getBaseName() {
+            return this.basename;
+        }
+
+        @Override
+        public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+            Deb822Paragraph paragraph = Deb822PsiImplUtil.getAncestorOfType(descriptor.getPsiElement(), Deb822Paragraph.class);
+            T newField;
+            // A Deb822FieldValuePair does not contain a trailing newline; force it in to avoid breaking the next field
+            // The "Foo: bar" part is only there to avoid a parser error from missing a field / paragraph.  Without it
+            // we get a Psi Error element rather than the newline whitespace element that we want.
+            PsiElement whitespace = Deb822ElementFactory.createFile(project, "\nFoo: bar\n").getFirstChild();
+            Deb822FieldValuePair insertRelativeTo = null;
+
+            if (paragraph == null) {
+                throw new IncorrectOperationException("Insertion failed; could not determine which paragraph should have the new field");
+            }
+
+            for (String fieldName : beforeFields) {
+                insertRelativeTo = paragraph.getFieldValuePair(fieldName);
+                if (insertRelativeTo != null) {
+                    break;
+                }
+            }
+
+            newField = getCorrectedElement(project);
+            if (insertRelativeTo != null) {
+                paragraph.addBefore(newField, insertRelativeTo);
+                paragraph.addBefore(whitespace, insertRelativeTo);
+            } else {
+                paragraph.add(newField);
+                paragraph.add(whitespace);
+            }
         }
     }
 }
