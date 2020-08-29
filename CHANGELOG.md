@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [0.0.4]
+### Added
 - Add check for version operator being supported in the current dependency field.  Provides only supports `=`.
 - Add check for use of build profiles restrictions in dependency fields that do not support it.
 - Add a spell-check dictionary of known packaging terms to avoid common terms being flagged as spelling mistakes.
