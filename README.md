@@ -18,6 +18,8 @@ commonly used formats in Debian packaging.
 
  * Basic syntax highlighting with syntactical validation.
  * Spellchecking of changelog content (but not bits you cannot control).
+ * Bundled spelling dictionary with common Debian package related terms and jargon to avoid some
+   false-positive spelling mistakes.
 
 ### debian/control
 
@@ -26,8 +28,10 @@ commonly used formats in Debian packaging.
  * Completion of field names, known values for fields and known substitution variables.
  * Documentation for fields, known values in fields and known substitution variables ("CTRL + mouse-over")
  * Spellchecking of field values with exception for some known fields.
- * Check that fields are placed in a paragraph where it makes sense.
+ * Check fields are placed in a paragraph where it makes sense.
  * Folding of long field values with "Description" folded by default.
+ * Validate dependency fields for use of unsupported version operators (e.g. in `Provides`) or build profile
+   restrictions (in any binary package relation field).
 
 Plus the features listed for Generic deb822 files.
 
@@ -37,17 +41,19 @@ Plus the features listed for Generic deb822 files.
  * Basic semantic validation (i.e. no duplicate fields)
  * Support for adding / removing comments via the <kbd>Code</kbd> > <kbd>Comment with Line Comment</kbd> feature.
  * Folding of long field values.
+ * Bundled spelling dictionary with common Debian package related terms and jargon to avoid some
+   false-positive spelling mistakes.
 
 ## Getting started
 
-After installing the plugin, it automatically detect relevant files
+After installing the plugin, it automatically detects relevant files
 supported and start applying highlights and relevant validation rules
-based on common patterns such as "debian/control" or "*.deb822".
+based on common patterns such as `debian/control` or `*.deb822`.
 
-Note that some of the auto-detection relies on the files being placed
+Note that most of the auto-detection rules relies on the files being placed
 in the `debian` directory (such as `debian/control` and
 `debian/changelog`). Alternatively, you can set the file type manually
-by using IDEA's "Associate with File Type..." feature.
+by using IDEA's <kbd>Associate with File Type...</kbd> feature.
 
 Once associated, the supported feature set automatically activates on
 the relevant editor actions.
