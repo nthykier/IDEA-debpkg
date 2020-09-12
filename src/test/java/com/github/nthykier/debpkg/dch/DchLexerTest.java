@@ -15,19 +15,38 @@ import java.util.List;
 public class DchLexerTest extends TestCase {
 
     public void testSimpleDeb822File() throws IOException {
-        String content = "debhelper (13.2) unstable; urgency=medium\n"
+        String content = "debhelper (13.2) UNRELEASED; urgency=medium\n"
                 + "  \n"
                 + "  [ Niels Thykier ]\n"
                 + "  * Some change description\n"
                 + "    Spanning Multiple-lines (Closes: #123456)\n"
                 + "\n"
                 + " -- Niels Thykier <niels@thykier.net>  Sun, 05 Jul 2020 21:14:04 +0000\n"
+                + "\n" /* Check non-native versions */
+                + "debhelper (13.1-1) unstable; urgency=medium\n"
+                + "  \n"
+                + "  [ Niels Thykier ]\n"
+                + "  * Some change description\n"
+                + "    Spanning Multiple-lines (Closes: #123455)\n"
+                + "\n"
+                + " -- Niels Thykier <niels@thykier.net>  Sat, 04 Jul 2020 21:14:04 +0000\n"
                 ;
         DchLexer lexer = new DchLexer(null);
         List<IElementType> tokens = new ArrayList<>();
         IElementType token;
         List<IElementType> expected = Arrays.asList(
                 /* Initial line */
+                DchTypes.SOURCE_NAME, DchTypes.PARANTHESES_OPEN, DchTypes.VERSION, DchTypes.PARANTHESES_CLOSE,
+                /* Continued */ DchTypes.DISTRIBUTION_NAME, DchTypes.SEMI_COLON, DchTypes.KEYVALUE_PAIR,
+                /* Changes */
+                DchTypes.CHANGE_RESPONSIBLE,
+                DchTypes.CHANGE_DETAILS,
+                DchTypes.CHANGE_DETAILS,
+                /* Sign-off line*/
+                DchTypes.SIGNOFF_STARTER, DchTypes.MAINTAINER_NAME,
+                /* Continued */ DchTypes.LESS_THAN, DchTypes.MAINTAINER_EMAIL, DchTypes.GREATER_THAN,
+                /* Continued */ DchTypes.DOUBLE_SPACE, DchTypes.SIGNOFF_DATE,
+                /* Initial line of second entry */
                 DchTypes.SOURCE_NAME, DchTypes.PARANTHESES_OPEN, DchTypes.VERSION, DchTypes.PARANTHESES_CLOSE,
                 /* Continued */ DchTypes.DISTRIBUTION_NAME, DchTypes.SEMI_COLON, DchTypes.KEYVALUE_PAIR,
                 /* Changes */
