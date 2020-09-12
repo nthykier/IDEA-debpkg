@@ -14,6 +14,7 @@
 ### Fixed
 - Avoid false error if a field is followed by a new line like `Depends:\n foo,...`.  (Closes: #3)
 - In the `d/changelog` format, highlight file references in ` * file:\n ...` cases as well.  (Closes: #4)
+- Stop recommending the `Rules-Requires-Root` in generic deb822 file if they happen to have a `Source` field.
 
 ### Security
 ## [0.0.4]

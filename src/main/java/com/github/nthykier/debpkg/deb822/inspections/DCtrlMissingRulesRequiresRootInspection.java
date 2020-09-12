@@ -2,6 +2,7 @@ package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlAnnotator;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.intellij.codeInspection.*;
@@ -15,6 +16,10 @@ public class DCtrlMissingRulesRequiresRootInspection extends LocalInspectionTool
 
     @NotNull
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
+        /* This only makes sense for debian/control files */
+        if (holder.getFile().getLanguage() != Deb822DialectDebianControlLanguage.INSTANCE) {
+            return PsiElementVisitor.EMPTY_VISITOR;
+        }
         if (!(holder.getFile() instanceof Deb822File)) {
             return PsiElementVisitor.EMPTY_VISITOR;
         }
