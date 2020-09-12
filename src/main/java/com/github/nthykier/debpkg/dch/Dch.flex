@@ -21,7 +21,7 @@ NEWLINE=\n
 SPACE_CHAR=[ ]
 WHITE_SPACE={SPACE_CHAR}
 SOURCE_NAME=[a-z0-9][a-z0-9+-.]+
-VERSION=([0-9]*[:])?([0-9a-zA-Z.+~]-)*[0-9a-zA-Z.+~]+
+VERSION=([0-9]*[:])?[0-9][0-9a-zA-Z.+~-]*
 SEMI_COLON=[;]
 DASH=[\-]
 

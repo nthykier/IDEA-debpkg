@@ -17,6 +17,7 @@
 - In the `d/changelog` format, highlight file references in ` * file:\n ...` cases as well.  (Closes: #4)
 - Stop recommending the `Rules-Requires-Root` in generic deb822 file if they happen to have a `Source` field.
 - Provide a better hover text for unrecognised deb822 fields instead of just dumping an internal name in front of it.
+- Avoid false errors on non-native versions in changelog files.
 
 ### Security
 ## [0.0.4]
