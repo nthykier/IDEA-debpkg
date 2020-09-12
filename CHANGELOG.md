@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 ### Added
+- Automatically recognise `.dsc` files as a generic deb822 file.
 
 ### Changed
 

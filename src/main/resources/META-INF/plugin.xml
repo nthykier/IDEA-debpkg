@@ -12,7 +12,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Deb822 support -->
         <fileType name="Deb822 File (generic)" implementationClass="com.github.nthykier.debpkg.deb822.Deb822FileType" fieldName="INSTANCE"
-                  language="Deb822" extensions="deb822" />
+                  language="Deb822" extensions="deb822;dsc" />
         <fileType name="debian/control" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlFileType" fieldName="INSTANCE"
                   language="DebianControl" extensions="" />
         <lang.parserDefinition language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822ParserDefinition" />

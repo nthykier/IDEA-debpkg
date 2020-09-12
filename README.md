@@ -35,7 +35,7 @@ commonly used formats in Debian packaging.
 
 Plus the features listed for Generic deb822 files.
 
-### Generic deb822 files (*.deb822)
+### Generic deb822 files (*.deb822, *.dsc)
 
  * Basic syntax highlighting.
  * Basic semantic validation (i.e. no duplicate fields)
