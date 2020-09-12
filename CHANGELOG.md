@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [0.0.5]
+### Added
 - Automatically recognise `.dsc` files as a generic deb822 file.
 
 ### Fixed
