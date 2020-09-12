@@ -6,12 +6,6 @@
 ### Added
 - Automatically recognise `.dsc` files as a generic deb822 file.
 
-### Changed
-
-### Deprecated
-
-### Removed
-
 ### Fixed
 - Avoid false error if a field is followed by a new line like `Depends:\n foo,...`.  (Closes: #3)
 - In the `d/changelog` format, highlight file references in ` * file:\n ...` cases as well.  (Closes: #4)
@@ -19,7 +13,6 @@
 - Provide a better hover text for unrecognised deb822 fields instead of just dumping an internal name in front of it.
 - Avoid false errors on non-native versions in changelog files.
 
-### Security
 ## [0.0.4]
 ### Added
 - Add check for version operator being supported in the current dependency field.  Provides only supports `=`.
