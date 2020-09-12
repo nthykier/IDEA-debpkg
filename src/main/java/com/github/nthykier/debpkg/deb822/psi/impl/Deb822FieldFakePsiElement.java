@@ -8,18 +8,17 @@ public class Deb822FieldFakePsiElement extends Deb822FakePsiElementBase<Deb822Fi
 
     private final Deb822KnownField knownField;
 
-    public Deb822FieldFakePsiElement(Deb822FieldBase element, @Nullable Deb822KnownField knownField) {
+    private Deb822FieldFakePsiElement(Deb822FieldBase element, @Nullable Deb822KnownField knownField) {
         super(element);
         this.knownField = knownField;
     }
 
     @Override
     public String getName() {
-        String name = this.element.getFieldName();
         if (knownField != null) {
             return knownField.getCanonicalFieldName();
         }
-        return name + " (not recognized)";
+        return this.element.getFieldName() + " (not recognized)";
     }
 
     @Override
@@ -32,6 +31,17 @@ public class Deb822FieldFakePsiElement extends Deb822FakePsiElementBase<Deb822Fi
             return docs;
         } else {
             return this.element.getFieldName() + " (no documentation available)";
+        }
+    }
+
+    public static Deb822FieldFakePsiElement newInstance(Deb822FieldBase element, @Nullable Deb822KnownField knownField) {
+        return new Field(element, knownField);
+    }
+
+    /* Jump though a hoop to ensure a better hover text for unrecognised fields */
+    private static class Field extends Deb822FieldFakePsiElement {
+        Field(Deb822FieldBase element, @Nullable Deb822KnownField knownField) {
+            super(element, knownField);
         }
     }
 }

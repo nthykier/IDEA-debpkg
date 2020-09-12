@@ -13,7 +13,7 @@ public class Deb822FieldPsiReference extends PsiReferenceBase<Deb822FieldBase> {
 
     public Deb822FieldPsiReference(Deb822FieldBase element, TextRange textRange, @Nullable Deb822KnownField knownField) {
         super(element, textRange, true);
-        this.target = new Deb822FieldFakePsiElement(element, knownField);
+        this.target = Deb822FieldFakePsiElement.newInstance(element, knownField);
     }
 
     @Override
