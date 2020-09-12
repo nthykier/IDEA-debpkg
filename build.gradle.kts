@@ -12,7 +12,9 @@ plugins {
 
 // Import variables from gradle.properties file
 val pluginGroup: String by project
-val pluginName: String by project
+// `pluginName_` variable ends with `_` because of the collision with Kotlin magic getter in the `intellij` closure.
+// Read more about the issue: https://github.com/JetBrains/intellij-platform-plugin-template/issues/29
+val pluginName_: String by project
 val pluginVersion: String by project
 val pluginSinceBuild: String by project
 val pluginUntilBuild: String by project
