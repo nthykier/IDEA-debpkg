@@ -13,6 +13,7 @@
 
 ### Fixed
 - Avoid false error if a field is followed by a new line like `Depends:\n foo,...`.  (Closes: #3)
+- In the `d/changelog` format, highlight file references in ` * file:\n ...` cases as well.  (Closes: #4)
 
 ### Security
 ## [0.0.4]

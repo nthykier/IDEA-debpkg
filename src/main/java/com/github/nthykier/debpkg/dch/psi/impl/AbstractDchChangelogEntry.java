@@ -99,7 +99,7 @@ public abstract class AbstractDchChangelogEntry extends ASTWrapperPsiElement imp
             final int startOffset = 2;
             int spaceIndex = text.indexOf(' ', startOffset + 1);
             int indexOfColon = text.indexOf(':', startOffset + 1);
-            if (indexOfColon > -1 && indexOfColon < spaceIndex) {
+            if (indexOfColon > -1 && (spaceIndex == -1 || indexOfColon < spaceIndex)) {
                 int commaIndex = text.lastIndexOf(',', indexOfColon - 1);
                 if (commaIndex == -1) {
                     /* Simple case; single file name with no spaces or commas */
