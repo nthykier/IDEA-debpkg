@@ -12,6 +12,7 @@
 ### Removed
 
 ### Fixed
+- Avoid false error if a field is followed by a new line like `Depends:\n foo,...`.  (Closes: #3)
 
 ### Security
 ## [0.0.4]

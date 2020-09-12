@@ -61,6 +61,7 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
  * PARSING_INITIAL_VALUE_AFTER_SEPARATOR
  */
 <PARSING_INITIAL_VALUE_AFTER_SEPARATOR>{
+{NEWLINE}                                                        { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE; }
 {WHITE_SPACE}+                                                   { yybegin(PARSING_INITIAL_VALUE); return TokenType.WHITE_SPACE; }
 {SUBSTVAR}                                                       { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }
 [$][{][}]                                                        { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN; }

@@ -22,6 +22,9 @@ public class Deb822LexerTest extends TestCase {
                 + "Architecture: any\n"
                 + "Depends: ${misc:Depends}, ${shlib:Depends}\n"
                 + "# Random comment\n"
+                + "Recommends:\n"
+                + " foo,\n"
+                + " bar,\n"
                 + "Description:foo\n"
                 + " Extended description\n"
                 + " .\n"
@@ -45,6 +48,8 @@ public class Deb822LexerTest extends TestCase {
                 /* Field Depends */
                 Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.SUBSTVAR_TOKEN, Deb822Types.COMMA, Deb822Types.SUBSTVAR_TOKEN,
                 Deb822Types.COMMENT,
+                /* Field Recommends */
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN, Deb822Types.COMMA, Deb822Types.VALUE_TOKEN, Deb822Types.COMMA,
                 /* Field Description */
                 Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN,
                 /* cont */ Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN, Deb822Types.COMMENT, Deb822Types.VALUE_TOKEN,
