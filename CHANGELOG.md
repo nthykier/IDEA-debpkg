@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 ### Added
+- Recognition of `.buildinfo` and `.changes` file.  To avoid false-positives, debpkg will only auto-detect the format
+  when the basename appear to follow the `PACKAGE_VERSION_ARCH.EXTENSION` pattern.
 
 ### Changed
 - The Deb822 parser now recognizes GPG signatures.  By default, the GPG lines will be folded.

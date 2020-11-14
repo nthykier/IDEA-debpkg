@@ -13,6 +13,16 @@
         <!-- Deb822 support -->
         <fileType name="Deb822 File (generic)" implementationClass="com.github.nthykier.debpkg.deb822.Deb822FileType" fieldName="INSTANCE"
                   language="Deb822" extensions="deb822;dsc" />
+        <!-- Deliberately omit .changes / buildinfo as default extension; They are a bit to generic plus they are not
+             primary file formats for editing.  Instead, we rely on a runtime detection based on the basename.  A
+             normal file will use the pattern: "<pkg>_<source>_<archish>.<extension>".
+
+             That pattern is vastly less likely to cause false-positive matches.
+          -->
+        <fileType name="Debian buildinfo File (.buildinfo)" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectBuildinfoFileType"
+                  fieldName="INSTANCE"  language="Deb822" extensions="" />
+        <fileType name="Debian changes File (.changes)" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectChangesFileType"
+                  fieldName="INSTANCE"  language="Deb822" extensions="" />
         <fileType name="debian/control" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlFileType" fieldName="INSTANCE"
                   language="DebianControl" extensions="" />
         <lang.parserDefinition language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822ParserDefinition" />

@@ -35,7 +35,7 @@ commonly used formats in Debian packaging.
 
 Plus the features listed for Generic deb822 files.
 
-### Generic deb822 files (*.deb822, *.dsc)
+### Generic deb822 files (*.deb822, *.dsc, *_\*\_\*.buildinfo, *_\*\_\*.changes)
 
  * Basic syntax highlighting.
  * Basic semantic validation (i.e. no duplicate fields)
@@ -54,8 +54,13 @@ based on common patterns such as `debian/control` or `*.deb822`.
 
 Note that most of the auto-detection rules relies on the files being placed
 in the `debian` directory (such as `debian/control` and
-`debian/changelog`). Alternatively, you can set the file type manually
-by using IDEA's <kbd>Associate with File Type...</kbd> feature.
+`debian/changelog`).  A few formats that are usually generated (and not hand
+edited) will only be auto-detected if the file uses the common pattern for
+that file type (e.g. NAME_VERSION_ARCH.changes).  This is deliberate to
+reduce false positives in case other plugins react to similar extensions.
+
+Alternatively, you can set the file type manually by using IDEA's
+<kbd>Associate with File Type...</kbd> feature.
 
 Once associated, the supported feature set automatically activates on
 the relevant editor actions.
