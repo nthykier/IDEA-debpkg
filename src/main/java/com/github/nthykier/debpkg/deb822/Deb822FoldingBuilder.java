@@ -69,11 +69,13 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
             Deb822ValueParts valueParts = fieldValuePair.getValueParts();
             String placeholderText = null;
             ASTNode node;
-            if (knownField == null || valueParts == null) {
+            boolean foldedByDefault;
+            if (valueParts == null) {
                 continue;
             }
+            foldedByDefault = knownField != null && knownField.isFoldedByDefault();
             node = valueParts.getNode();
-            if (knownField.isFoldedByDefault() || !quick) {
+            if (foldedByDefault || !quick) {
                 placeholderText = getPlaceholderText(node);
             }
             descriptors.add(new FoldingDescriptor(
@@ -83,7 +85,7 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
                     Collections.emptySet(),
                     false,
                     placeholderText,
-                    knownField.isFoldedByDefault()
+                    foldedByDefault
             ));
         }
         return descriptors.toArray(FoldingDescriptor.EMPTY);

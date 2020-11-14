@@ -9,6 +9,8 @@
 
 ### Changed
 - The Deb822 parser now recognizes GPG signatures.  By default, the GPG lines will be folded.
+- Enable folding support for unknown fields.  Previously only known multi-line fields could be folded.  Unknown
+  fields will never be folded by default.
 
 ### Deprecated
 
