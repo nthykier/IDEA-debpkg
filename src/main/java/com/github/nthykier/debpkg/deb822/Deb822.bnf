@@ -17,13 +17,27 @@
   name("value_parts")="Value or Substvars"
 }
 
-deb822file ::= COMMENT* all_paragraphs COMMENT*
+deb822file ::= COMMENT* gpg_signed? all_paragraphs gpg_signature? COMMENT*
 
 all_paragraphs ::= paragraph (COMMENT* paragraph)*
 paragraph ::= field_value_pair (COMMENT* field_value_pair)* (PARAGRAPH_FINISH|<<eof>>) {
   extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822Paragraph"
   implements="com.github.nthykier.debpkg.deb822.psi.Deb822ParagraphSupport"
 }
+
+gpg_signed ::= GPG_BEGIN_SIGNED_MESSAGE armor_headers {
+  pin=1
+}
+
+gpg_signature ::= GPG_BEGIN_SIGNATURE armor_headers gpg_signature_blob GPG_END_SIGNATURE {
+  pin=1
+  recoverWhile=recover_signature
+}
+
+private armor_headers ::= GPG_ARMOR_HEADER* GPG_ARMOR_HEADERS_END {
+}
+
+private gpg_signature_blob ::= GPG_SIGNATURE_BLOB_PART*
 
 
 field_value_pair ::= field SEPARATOR value_parts {
@@ -52,3 +66,5 @@ substvar ::= SUBSTVAR_TOKEN {
 }
 
 private recover_property ::= !(FIELD_NAME|SEPARATOR|SUBSTVAR_TOKEN|VALUE_TOKEN|COMMA|COMMENT|PARAGRAPH_FINISH)
+
+private recover_signature ::= !(GPG_ARMOR_HEADERS_END|GPG_SIGNATURE_BLOB_PART|GPG_END_SIGNATURE)

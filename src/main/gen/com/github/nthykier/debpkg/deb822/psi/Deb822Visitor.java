@@ -19,6 +19,14 @@ public class Deb822Visitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitGpgSignature(@NotNull Deb822GpgSignature o) {
+    visitPsiElement(o);
+  }
+
+  public void visitGpgSigned(@NotNull Deb822GpgSigned o) {
+    visitPsiElement(o);
+  }
+
   public void visitParagraph(@NotNull Deb822Paragraph o) {
     visitParagraphSupport(o);
   }

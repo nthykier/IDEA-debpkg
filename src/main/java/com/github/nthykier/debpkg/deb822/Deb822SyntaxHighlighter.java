@@ -50,6 +50,11 @@ public class Deb822SyntaxHighlighter extends SyntaxHighlighterBase {
         addTokenMapEntry(Deb822Types.SUBSTVAR_TOKEN, "DEB822.SUBSTVAR", DefaultLanguageHighlighterColors.LABEL);
         addTokenMapEntry(Deb822Types.COMMENT, "DEB822.COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
         addTokenMapEntry(Deb822Types.FIELD_NAME, "DEB822.FIELD", DefaultLanguageHighlighterColors.KEYWORD);
+        addTokenMapEntry(Deb822Types.GPG_BEGIN_SIGNED_MESSAGE, "DEB822.GPG_MARKERS", DefaultLanguageHighlighterColors.BLOCK_COMMENT);
+        addTokenMapEntry(Deb822Types.GPG_BEGIN_SIGNATURE, "DEB822.GPG_MARKERS", DefaultLanguageHighlighterColors.BLOCK_COMMENT);
+        addTokenMapEntry(Deb822Types.GPG_END_SIGNATURE, "DEB822.GPG_MARKERS", DefaultLanguageHighlighterColors.BLOCK_COMMENT);
+        addTokenMapEntry(Deb822Types.GPG_ARMOR_HEADER, "DEB822.GPG_SIGNATURE_BLOB", DefaultLanguageHighlighterColors.BLOCK_COMMENT);
+        addTokenMapEntry(Deb822Types.GPG_SIGNATURE_BLOB_PART, "DEB822.GPG_SIGNATURE_BLOB", DefaultLanguageHighlighterColors.BLOCK_COMMENT);
 
         addTokenMapEntry(TokenType.BAD_CHARACTER, BAD_CHARACTER);
     }

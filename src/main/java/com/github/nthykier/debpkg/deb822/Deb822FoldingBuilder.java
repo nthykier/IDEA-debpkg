@@ -1,16 +1,13 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
-import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
-import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
-import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
+import com.github.nthykier.debpkg.deb822.psi.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilderEx;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.source.tree.CompositeElement;
@@ -23,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware {
@@ -30,24 +28,68 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
     @NotNull
     @Override
     public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
-        // Initialize the list of folding regions
         List<FoldingDescriptor> descriptors = new ArrayList<>();
         Collection<Deb822FieldValuePair> fieldValuePairs =
                 PsiTreeUtil.findChildrenOfType(root, Deb822FieldValuePair.class);
 
+        Collection<Deb822GpgSignature> signatures = PsiTreeUtil.findChildrenOfType(root, Deb822GpgSignature.class);
+        Collection<Deb822GpgSigned> gpgSignedStatements = PsiTreeUtil.findChildrenOfType(root, Deb822GpgSigned.class);
+
+        for (Deb822GpgSignature signature : signatures) {
+            descriptors.add(new FoldingDescriptor(
+                    signature.getNode(),
+                    signature.getTextRange(),
+                    null,
+                    Collections.emptySet(),
+                    false,
+                    "-----BEGIN PGP SIGNATURE-----",
+                    true
+            ));
+        }
+
+        for (Deb822GpgSigned gpgSignedStatement : gpgSignedStatements) {
+            ASTNode node = gpgSignedStatement.getNode();
+            TextRange range = node.getTextRange();
+            /* The ASTNode always ends with two newline characters; keep them unfolded for readability */
+            TextRange reducedRange = new TextRange(range.getStartOffset(), range.getEndOffset() - 2);
+
+            descriptors.add(new FoldingDescriptor(
+                    node,
+                    reducedRange,
+                    null,
+                    Collections.emptySet(),
+                    false,
+                    "-----BEGIN PGP SIGNED MESSAGE-----",
+                    true
+            ));
+        }
+
         for (final Deb822FieldValuePair fieldValuePair : fieldValuePairs) {
             Deb822KnownField knownField = fieldValuePair.getField().getDeb822KnownField();
             Deb822ValueParts valueParts = fieldValuePair.getValueParts();
+            String placeholderText = null;
+            ASTNode node;
             if (knownField == null || valueParts == null) {
                 continue;
             }
-            descriptors.add(new FoldingDescriptor(valueParts, valueParts.getTextRange()));
+            node = valueParts.getNode();
+            if (knownField.isFoldedByDefault() || !quick) {
+                placeholderText = getPlaceholderText(node);
+            }
+            descriptors.add(new FoldingDescriptor(
+                    node,
+                    valueParts.getTextRange(),
+                    null,
+                    Collections.emptySet(),
+                    false,
+                    placeholderText,
+                    knownField.isFoldedByDefault()
+            ));
         }
         return descriptors.toArray(FoldingDescriptor.EMPTY);
     }
 
     /**
-     * Gets the Simple Language 'value' string corresponding to the 'key'
      * @param node  Node corresponding to PsiLiteralExpression containing a string in the format
      *              SIMPLE_PREFIX_STR + SIMPLE_SEPARATOR_STR + Key, where Key is
      *              defined by the Simple language file.
@@ -111,13 +153,7 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
 
     @Override
     public boolean isCollapsedByDefault(@NotNull ASTNode node) {
-        PsiElement e = node.getPsi();
-        Deb822FieldValuePair fieldValuePair = Deb822PsiImplUtil.getAncestorOfType(e, Deb822FieldValuePair.class);
-        Deb822KnownField knownField;
-        if (fieldValuePair == null) {
-            return false;
-        }
-        knownField = fieldValuePair.getField().getDeb822KnownField();
-        return knownField != null && knownField.isFoldedByDefault();
+        /* We setup "Collapsed by default" in the FoldingDescriptors */
+        return false;
     }
 }

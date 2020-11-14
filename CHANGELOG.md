@@ -6,6 +6,7 @@
 ### Added
 
 ### Changed
+- The Deb822 parser now recognizes GPG signatures.  By default, the GPG lines will be folded.
 
 ### Deprecated
 

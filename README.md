@@ -43,6 +43,8 @@ Plus the features listed for Generic deb822 files.
  * Folding of long field values.
  * Bundled spelling dictionary with common Debian package related terms and jargon to avoid some
    false-positive spelling mistakes.
+ * Folding support to hide GPG signatures.  There is no logic to determine whether the given file permits the
+   GPG signature.
 
 ## Getting started
 

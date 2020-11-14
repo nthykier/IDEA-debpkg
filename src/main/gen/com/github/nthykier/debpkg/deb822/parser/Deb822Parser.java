@@ -82,15 +82,48 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // COMMENT* all_paragraphs COMMENT*
+  // GPG_ARMOR_HEADER* GPG_ARMOR_HEADERS_END {
+  // }
+  static boolean armor_headers(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "armor_headers")) return false;
+    if (!nextTokenIs(b, "", GPG_ARMOR_HEADER, GPG_ARMOR_HEADERS_END)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = armor_headers_0(b, l + 1);
+    r = r && consumeToken(b, GPG_ARMOR_HEADERS_END);
+    r = r && armor_headers_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // GPG_ARMOR_HEADER*
+  private static boolean armor_headers_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "armor_headers_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!consumeToken(b, GPG_ARMOR_HEADER)) break;
+      if (!empty_element_parsed_guard_(b, "armor_headers_0", c)) break;
+    }
+    return true;
+  }
+
+  // {
+  // }
+  private static boolean armor_headers_2(PsiBuilder b, int l) {
+    return true;
+  }
+
+  /* ********************************************************** */
+  // COMMENT* gpg_signed? all_paragraphs gpg_signature? COMMENT*
   static boolean deb822file(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "deb822file")) return false;
-    if (!nextTokenIs(b, "", COMMENT, FIELD_NAME)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = deb822file_0(b, l + 1);
+    r = r && deb822file_1(b, l + 1);
     r = r && all_paragraphs(b, l + 1);
-    r = r && deb822file_2(b, l + 1);
+    r = r && deb822file_3(b, l + 1);
+    r = r && deb822file_4(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -106,13 +139,27 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
     return true;
   }
 
+  // gpg_signed?
+  private static boolean deb822file_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "deb822file_1")) return false;
+    gpg_signed(b, l + 1);
+    return true;
+  }
+
+  // gpg_signature?
+  private static boolean deb822file_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "deb822file_3")) return false;
+    gpg_signature(b, l + 1);
+    return true;
+  }
+
   // COMMENT*
-  private static boolean deb822file_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "deb822file_2")) return false;
+  private static boolean deb822file_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "deb822file_4")) return false;
     while (true) {
       int c = current_position_(b);
       if (!consumeToken(b, COMMENT)) break;
-      if (!empty_element_parsed_guard_(b, "deb822file_2", c)) break;
+      if (!empty_element_parsed_guard_(b, "deb822file_4", c)) break;
     }
     return true;
   }
@@ -140,6 +187,47 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
     p = r; // pin = 2
     r = r && value_parts(b, l + 1);
     exit_section_(b, l, m, r, p, recover_property_parser_);
+    return r || p;
+  }
+
+  /* ********************************************************** */
+  // GPG_BEGIN_SIGNATURE armor_headers gpg_signature_blob GPG_END_SIGNATURE
+  public static boolean gpg_signature(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "gpg_signature")) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, GPG_SIGNATURE, "<gpg signature>");
+    r = consumeToken(b, GPG_BEGIN_SIGNATURE);
+    p = r; // pin = 1
+    r = r && report_error_(b, armor_headers(b, l + 1));
+    r = p && report_error_(b, gpg_signature_blob(b, l + 1)) && r;
+    r = p && consumeToken(b, GPG_END_SIGNATURE) && r;
+    exit_section_(b, l, m, r, p, recover_signature_parser_);
+    return r || p;
+  }
+
+  /* ********************************************************** */
+  // GPG_SIGNATURE_BLOB_PART*
+  static boolean gpg_signature_blob(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "gpg_signature_blob")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!consumeToken(b, GPG_SIGNATURE_BLOB_PART)) break;
+      if (!empty_element_parsed_guard_(b, "gpg_signature_blob", c)) break;
+    }
+    return true;
+  }
+
+  /* ********************************************************** */
+  // GPG_BEGIN_SIGNED_MESSAGE armor_headers
+  public static boolean gpg_signed(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "gpg_signed")) return false;
+    if (!nextTokenIs(b, GPG_BEGIN_SIGNED_MESSAGE)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, GPG_SIGNED, null);
+    r = consumeToken(b, GPG_BEGIN_SIGNED_MESSAGE);
+    p = r; // pin = 1
+    r = r && armor_headers(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -227,6 +315,27 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // !(GPG_ARMOR_HEADERS_END|GPG_SIGNATURE_BLOB_PART|GPG_END_SIGNATURE)
+  static boolean recover_signature(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "recover_signature")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NOT_);
+    r = !recover_signature_0(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // GPG_ARMOR_HEADERS_END|GPG_SIGNATURE_BLOB_PART|GPG_END_SIGNATURE
+  private static boolean recover_signature_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "recover_signature_0")) return false;
+    boolean r;
+    r = consumeToken(b, GPG_ARMOR_HEADERS_END);
+    if (!r) r = consumeToken(b, GPG_SIGNATURE_BLOB_PART);
+    if (!r) r = consumeToken(b, GPG_END_SIGNATURE);
+    return r;
+  }
+
+  /* ********************************************************** */
   // SUBSTVAR_TOKEN
   public static boolean substvar(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "substvar")) return false;
@@ -309,6 +418,11 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
   static final Parser recover_property_parser_ = new Parser() {
     public boolean parse(PsiBuilder b, int l) {
       return recover_property(b, l + 1);
+    }
+  };
+  static final Parser recover_signature_parser_ = new Parser() {
+    public boolean parse(PsiBuilder b, int l) {
+      return recover_signature(b, l + 1);
     }
   };
 }

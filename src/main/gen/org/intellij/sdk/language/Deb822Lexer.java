@@ -30,6 +30,9 @@ public class Deb822Lexer implements FlexLexer {
   public static final int MAYBE_CONT_VALUE = 8;
   public static final int SEEN_INITIAL_VALUE = 10;
   public static final int PARSING_CONT_VALUE = 12;
+  public static final int GPG_PARSE_ARMORED_HEADERS = 14;
+  public static final int GPG_BEGIN_SIGNATURE_ARMORED_HEADERS = 16;
+  public static final int GPG_SIGNATURE_BLOB = 18;
 
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -38,30 +41,34 @@ public class Deb822Lexer implements FlexLexer {
    * l is of the form l = 2*k, k a non negative integer
    */
   private static final int ZZ_LEXSTATE[] = { 
-     0,  1,  2,  2,  3,  3,  4,  4,  5,  6,  7,  7,  7, 7
+     0,  1,  2,  2,  3,  3,  4,  4,  5,  6,  7,  7,  7,  7,  8,  9, 
+     8, 10, 11, 12
   };
 
   /** 
    * Translates characters to character classes
-   * Chosen bits are [9, 6, 6]
-   * Total runtime size is 1568 bytes
+   * Chosen bits are [7, 7, 7]
+   * Total runtime size is 1928 bytes
    */
   public static int ZZ_CMAP(int ch) {
-    return ZZ_CMAP_A[(ZZ_CMAP_Y[ZZ_CMAP_Z[ch>>12]|((ch>>6)&0x3f)]<<6)|(ch&0x3f)];
+    return ZZ_CMAP_A[(ZZ_CMAP_Y[ZZ_CMAP_Z[ch>>14]|((ch>>7)&0x7f)]<<7)|(ch&0x7f)];
   }
 
-  /* The ZZ_CMAP_Z table has 272 entries */
+  /* The ZZ_CMAP_Z table has 68 entries */
   static final char ZZ_CMAP_Z[] = zzUnpackCMap(
-    "\1\0\1\100\1\200\u010d\100");
+    "\1\0\103\200");
 
-  /* The ZZ_CMAP_Y table has 192 entries */
+  /* The ZZ_CMAP_Y table has 256 entries */
   static final char ZZ_CMAP_Y[] = zzUnpackCMap(
-    "\1\0\1\1\1\2\175\3\1\4\77\3");
+    "\1\0\1\1\53\2\1\3\22\2\1\4\37\2\1\3\237\2");
 
-  /* The ZZ_CMAP_A table has 320 entries */
+  /* The ZZ_CMAP_A table has 640 entries */
   static final char ZZ_CMAP_A[] = zzUnpackCMap(
-    "\11\0\1\3\1\1\1\15\1\16\1\5\22\0\1\2\2\14\1\4\1\6\7\14\1\17\1\11\2\14\12\10"+
-    "\1\13\6\14\32\10\6\14\32\10\1\7\1\14\1\12\1\14\6\0\1\15\242\0\2\15\26\0");
+    "\11\34\1\14\1\1\1\16\1\3\1\5\22\34\1\2\2\15\1\4\1\6\5\15\1\35\1\36\1\37\1"+
+    "\11\1\15\1\36\12\10\1\13\2\15\1\36\3\15\1\30\1\17\1\10\1\26\1\20\1\10\1\21"+
+    "\1\10\1\22\3\10\1\27\1\23\1\10\1\24\1\10\1\33\1\25\1\31\1\32\5\10\4\15\1\36"+
+    "\1\15\32\10\1\7\1\15\1\12\1\15\6\34\1\16\32\34\1\0\337\34\1\0\177\34\13\0"+
+    "\35\34\2\16\5\34\1\0\57\34\1\0\40\34");
 
   /** 
    * Translates DFA states to action switch labels.
@@ -69,13 +76,16 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\10\0\1\1\2\2\1\3\1\4\1\5\1\6\1\7"+
-    "\1\10\1\6\1\10\1\11\1\1\1\6\1\12\1\1"+
-    "\1\13\3\14\1\0\1\15\1\0\4\15\1\0\1\16"+
-    "\2\0\1\17\1\20\1\0\1\21";
+    "\15\0\1\1\2\2\1\3\1\4\1\1\1\5\1\6"+
+    "\1\7\2\10\1\6\1\11\1\1\1\6\1\12\1\1"+
+    "\1\13\3\14\3\1\1\15\1\16\1\2\1\1\2\17"+
+    "\2\0\1\20\1\0\4\20\1\0\1\21\6\0\1\17"+
+    "\2\0\1\22\1\23\1\0\1\24\1\25\1\17\1\0"+
+    "\1\17\1\0\1\17\1\0\1\17\1\0\1\17\1\0"+
+    "\1\17\60\0\1\26\3\0\1\27\4\0\1\30";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[43];
+    int [] result = new int[136];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -100,15 +110,26 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\20\0\40\0\60\0\100\0\120\0\140\0\160"+
-    "\0\200\0\220\0\240\0\260\0\300\0\200\0\320\0\200"+
-    "\0\340\0\360\0\u0100\0\200\0\u0110\0\u0120\0\200\0\u0130"+
-    "\0\200\0\u0140\0\u0150\0\u0160\0\u0170\0\200\0\u0110\0\u0180"+
-    "\0\u0110\0\320\0\u0120\0\u0130\0\200\0\u0190\0\u01a0\0\200"+
-    "\0\200\0\u01b0\0\200";
+    "\0\0\0\40\0\100\0\140\0\200\0\240\0\300\0\340"+
+    "\0\u0100\0\u0120\0\u0140\0\u0160\0\u0180\0\u01a0\0\u01c0\0\u01e0"+
+    "\0\u0200\0\u0220\0\u0240\0\u01a0\0\u0260\0\u01a0\0\u0280\0\u02a0"+
+    "\0\u02c0\0\u01a0\0\u02e0\0\u0300\0\u01a0\0\u0320\0\u01a0\0\u0340"+
+    "\0\u0360\0\u0380\0\u03a0\0\u03c0\0\u03e0\0\u03a0\0\u03a0\0\u01a0"+
+    "\0\u0400\0\u0420\0\u0440\0\u0460\0\u0480\0\u01a0\0\u02e0\0\u02e0"+
+    "\0\u04a0\0\u0300\0\u0260\0\u0320\0\u01a0\0\u04c0\0\u03a0\0\u03c0"+
+    "\0\u04e0\0\u03e0\0\u0400\0\u0500\0\u0520\0\u0540\0\u01a0\0\u01a0"+
+    "\0\u0560\0\u01a0\0\u01a0\0\u0580\0\u05a0\0\u05c0\0\u05e0\0\u0600"+
+    "\0\u0620\0\u0640\0\u0660\0\u0680\0\u06a0\0\u06c0\0\u06e0\0\u0700"+
+    "\0\u0720\0\u0740\0\u0760\0\u0780\0\u07a0\0\u07c0\0\u07e0\0\u0800"+
+    "\0\u0820\0\u0840\0\u0860\0\u0880\0\u08a0\0\u08c0\0\u08e0\0\u0900"+
+    "\0\u0920\0\u0940\0\u0960\0\u0980\0\u09a0\0\u09c0\0\u09e0\0\u0a00"+
+    "\0\u0a20\0\u0a40\0\u0a60\0\u0a80\0\u0aa0\0\u0ac0\0\u0ae0\0\u0b00"+
+    "\0\u0b20\0\u0b40\0\u0b60\0\u0b80\0\u0ba0\0\u0bc0\0\u0be0\0\u0c00"+
+    "\0\u0c20\0\u0c40\0\u0c60\0\u0c80\0\u0ca0\0\u0cc0\0\u01a0\0\u0ce0"+
+    "\0\u0d00\0\u0d20\0\u01a0\0\u0d40\0\u0d60\0\u0d80\0\u0da0\0\u01a0";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[43];
+    int [] result = new int[136];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -131,31 +152,71 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\11\1\12\2\13\1\14\11\11\1\13\2\11\1\12"+
-    "\2\13\1\14\1\11\3\15\1\11\1\15\1\11\1\15"+
-    "\1\11\1\13\1\15\2\11\2\13\7\11\1\16\2\11"+
-    "\1\13\1\11\1\17\1\20\2\21\1\17\1\11\1\22"+
-    "\7\17\1\23\1\24\1\17\1\20\2\25\1\17\1\11"+
-    "\1\22\7\17\1\26\1\24\1\11\1\27\2\11\1\30"+
-    "\14\11\1\27\1\31\1\11\1\30\1\11\3\15\1\11"+
-    "\1\15\1\11\1\15\2\11\1\15\1\32\1\20\1\13"+
-    "\1\33\1\32\1\11\1\34\7\32\1\33\1\24\21\0"+
-    "\1\12\20\0\2\13\12\0\1\13\1\0\1\14\1\0"+
-    "\3\14\1\0\12\14\4\0\1\15\1\0\5\15\1\0"+
-    "\1\15\2\0\1\15\1\17\3\0\1\17\2\0\10\17"+
-    "\3\0\2\21\12\0\1\21\10\0\1\35\10\0\1\17"+
-    "\1\0\2\21\1\17\2\0\7\17\1\23\2\0\1\36"+
-    "\2\37\1\0\1\40\7\0\1\36\1\41\1\0\1\17"+
-    "\1\36\2\37\1\17\1\40\1\0\6\17\1\42\1\43"+
-    "\1\0\1\44\1\45\3\44\1\0\12\44\1\32\2\0"+
-    "\2\32\2\0\10\32\1\0\1\32\1\0\1\13\1\33"+
-    "\1\32\2\0\7\32\1\33\10\0\1\46\20\0\1\47"+
-    "\1\0\1\50\6\0\1\51\26\0\1\52\1\0\1\53"+
-    "\15\0\2\47\1\50\1\47\14\0\2\52\1\53\1\52"+
-    "\4\0";
+    "\1\16\1\17\2\20\1\21\7\16\1\20\24\16\1\17"+
+    "\2\20\1\21\1\16\3\22\1\23\1\22\1\16\1\20"+
+    "\1\22\1\16\15\22\1\16\3\22\2\16\2\20\7\16"+
+    "\1\24\1\20\23\16\1\25\1\26\1\27\1\30\1\25"+
+    "\1\16\1\31\5\25\1\27\22\25\1\32\1\25\1\26"+
+    "\1\33\1\34\1\25\1\16\1\31\5\25\1\33\22\25"+
+    "\1\32\1\16\1\35\2\16\1\36\34\16\1\35\1\37"+
+    "\1\16\1\36\1\16\3\22\1\16\1\22\2\16\1\22"+
+    "\1\16\15\22\1\16\3\22\1\40\1\26\1\20\1\41"+
+    "\1\40\1\16\1\42\5\40\1\41\22\40\1\32\1\16"+
+    "\1\43\2\16\1\44\1\16\6\44\1\16\1\44\1\16"+
+    "\16\44\1\45\2\44\1\16\1\46\2\16\1\44\1\16"+
+    "\6\44\1\16\1\44\1\16\16\44\1\45\2\44\1\16"+
+    "\1\47\2\16\1\44\1\16\6\44\1\16\1\44\1\16"+
+    "\16\44\1\45\2\44\1\16\1\50\2\51\4\16\2\52"+
+    "\2\16\1\51\2\16\15\52\2\16\1\52\2\16\1\50"+
+    "\2\51\4\16\1\52\1\53\2\16\1\51\2\16\15\52"+
+    "\2\16\1\52\1\16\41\0\1\17\40\0\2\20\10\0"+
+    "\1\20\23\0\1\21\1\0\3\21\1\0\32\21\4\0"+
+    "\1\22\1\0\5\22\2\0\1\22\1\0\15\22\1\0"+
+    "\3\22\11\0\1\54\26\0\1\25\2\0\2\25\2\0"+
+    "\5\25\1\0\22\25\3\0\2\27\10\0\1\27\23\0"+
+    "\1\25\1\0\1\27\1\30\1\25\2\0\5\25\1\27"+
+    "\22\25\10\0\1\55\31\0\1\56\1\57\1\60\1\0"+
+    "\1\61\6\0\1\57\1\0\1\56\21\0\1\25\1\56"+
+    "\1\57\1\62\1\25\1\61\1\0\5\25\1\57\1\25"+
+    "\1\63\20\25\1\0\1\64\1\65\3\64\1\0\32\64"+
+    "\1\40\2\0\2\40\2\0\30\40\1\0\1\40\1\0"+
+    "\1\20\1\41\1\40\2\0\5\40\1\41\22\40\10\0"+
+    "\1\66\31\0\1\43\33\0\1\67\6\0\1\70\1\0"+
+    "\5\70\1\71\1\0\1\70\1\0\21\70\1\0\1\43"+
+    "\2\0\1\70\1\0\5\70\1\71\1\0\1\70\1\0"+
+    "\16\70\1\72\2\70\1\0\1\50\2\73\10\0\1\73"+
+    "\33\0\2\52\5\0\15\52\2\0\1\52\11\0\1\52"+
+    "\1\74\5\0\15\52\2\0\1\52\12\0\1\75\36\0"+
+    "\1\76\1\0\1\77\4\0\15\76\5\0\1\100\46\0"+
+    "\1\101\1\0\1\102\4\0\15\101\4\0\1\71\1\103"+
+    "\36\71\10\0\1\52\1\104\5\0\15\52\2\0\1\52"+
+    "\12\0\1\105\36\0\2\76\1\77\1\76\3\0\15\76"+
+    "\14\0\2\101\1\102\1\101\3\0\15\101\14\0\1\52"+
+    "\1\106\5\0\15\52\2\0\1\52\12\0\1\107\36\0"+
+    "\1\52\1\110\5\0\15\52\2\0\1\52\20\0\1\111"+
+    "\30\0\2\52\5\0\1\52\1\112\13\52\2\0\1\52"+
+    "\21\0\1\113\27\0\2\52\5\0\4\52\1\114\10\52"+
+    "\2\0\1\52\22\0\1\115\26\0\2\52\5\0\7\52"+
+    "\1\116\5\52\2\0\1\52\23\0\1\117\17\0\1\120"+
+    "\5\0\2\52\5\0\15\52\2\0\1\52\24\0\1\121"+
+    "\40\0\1\122\15\0\1\123\56\0\1\124\42\0\1\125"+
+    "\37\0\1\126\34\0\1\127\20\0\1\130\61\0\1\131"+
+    "\40\0\1\132\14\0\1\133\57\0\1\134\42\0\1\135"+
+    "\33\0\1\136\40\0\1\137\40\0\1\140\35\0\1\141"+
+    "\46\0\1\142\32\0\1\143\45\0\1\144\26\0\1\145"+
+    "\7\0\1\146\41\0\1\147\33\0\1\150\42\0\1\151"+
+    "\41\0\1\152\6\0\1\153\67\0\1\154\25\0\1\155"+
+    "\46\0\1\156\43\0\1\157\15\0\1\160\46\0\1\161"+
+    "\37\0\1\162\30\0\1\163\53\0\1\164\23\0\1\165"+
+    "\37\0\1\166\53\0\1\167\23\0\1\170\37\0\1\171"+
+    "\56\0\1\172\20\0\1\173\37\0\1\174\47\0\1\175"+
+    "\27\0\1\176\27\0\1\177\1\174\11\0\1\174\43\0"+
+    "\1\200\30\0\1\201\37\0\1\202\27\0\1\203\1\201"+
+    "\11\0\1\201\34\0\1\204\37\0\1\205\37\0\1\206"+
+    "\37\0\1\207\27\0\1\210\1\207\11\0\1\207\23\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[448];
+    int [] result = new int[3520];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -193,12 +254,15 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\10\0\1\11\4\1\1\11\1\1\1\11\3\1\1\11"+
-    "\2\1\1\11\1\1\1\11\3\1\1\0\1\11\1\0"+
-    "\4\1\1\0\1\11\2\0\2\11\1\0\1\11";
+    "\15\0\1\11\5\1\1\11\1\1\1\11\3\1\1\11"+
+    "\2\1\1\11\1\1\1\11\10\1\1\11\3\1\2\0"+
+    "\1\11\1\0\4\1\1\0\1\11\6\0\1\1\2\0"+
+    "\2\11\1\0\2\11\1\1\1\0\1\1\1\0\1\1"+
+    "\1\0\1\1\1\0\1\1\1\0\1\1\60\0\1\11"+
+    "\3\0\1\11\4\0\1\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[43];
+    int [] result = new int[136];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -548,93 +612,128 @@ public class Deb822Lexer implements FlexLexer {
             { return TokenType.BAD_CHARACTER;
             } 
             // fall through
-          case 18: break;
+          case 25: break;
           case 2: 
             { return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 19: break;
+          case 26: break;
           case 3: 
             { yybegin(YYINITIAL); return Deb822Types.COMMENT;
             } 
             // fall through
-          case 20: break;
+          case 27: break;
           case 4: 
             { yybegin(WAITING_FOR_SEPATOR); return Deb822Types.FIELD_NAME;
             } 
             // fall through
-          case 21: break;
+          case 28: break;
           case 5: 
             { yybegin(PARSING_INITIAL_VALUE_AFTER_SEPARATOR); return Deb822Types.SEPARATOR;
             } 
             // fall through
-          case 22: break;
+          case 29: break;
           case 6: 
             { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE_TOKEN;
             } 
             // fall through
-          case 23: break;
+          case 30: break;
           case 7: 
             { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 24: break;
+          case 31: break;
           case 8: 
             { yybegin(PARSING_INITIAL_VALUE); return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 25: break;
+          case 32: break;
           case 9: 
             { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA;
             } 
             // fall through
-          case 26: break;
+          case 33: break;
           case 10: 
             { yybegin(YYINITIAL); return Deb822Types.PARAGRAPH_FINISH;
             } 
             // fall through
-          case 27: break;
+          case 34: break;
           case 11: 
             { yybegin(PARSING_CONT_VALUE); return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 28: break;
+          case 35: break;
           case 12: 
             { return Deb822Types.VALUE_TOKEN;
             } 
             // fall through
-          case 29: break;
+          case 36: break;
           case 13: 
+            { yybegin(YYINITIAL); return Deb822Types.GPG_ARMOR_HEADERS_END;
+            } 
+            // fall through
+          case 37: break;
+          case 14: 
+            { yybegin(GPG_SIGNATURE_BLOB); return Deb822Types.GPG_ARMOR_HEADERS_END;
+            } 
+            // fall through
+          case 38: break;
+          case 15: 
+            { return Deb822Types.GPG_SIGNATURE_BLOB_PART;
+            } 
+            // fall through
+          case 39: break;
+          case 16: 
             // lookahead expression with fixed lookahead length
             zzMarkedPos = Character.offsetByCodePoints
                 (zzBufferL/*, zzStartRead, zzEndRead - zzStartRead*/, zzMarkedPos, -1);
             { return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 30: break;
-          case 14: 
+          case 40: break;
+          case 17: 
             { return Deb822Types.COMMENT;
             } 
             // fall through
-          case 31: break;
-          case 15: 
+          case 41: break;
+          case 18: 
             { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN;
             } 
             // fall through
-          case 32: break;
-          case 16: 
+          case 42: break;
+          case 19: 
             // lookahead expression with fixed lookahead length
             zzMarkedPos = Character.offsetByCodePoints
                 (zzBufferL/*, zzStartRead, zzEndRead - zzStartRead*/, zzMarkedPos, -2);
             { return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 33: break;
-          case 17: 
+          case 43: break;
+          case 20: 
             { return Deb822Types.SUBSTVAR_TOKEN;
             } 
             // fall through
-          case 34: break;
+          case 44: break;
+          case 21: 
+            { return Deb822Types.GPG_ARMOR_HEADER;
+            } 
+            // fall through
+          case 45: break;
+          case 22: 
+            { yybegin(GPG_PARSE_ARMORED_HEADERS); return Deb822Types.GPG_END_SIGNATURE;
+            } 
+            // fall through
+          case 46: break;
+          case 23: 
+            { yybegin(GPG_BEGIN_SIGNATURE_ARMORED_HEADERS); return Deb822Types.GPG_BEGIN_SIGNATURE;
+            } 
+            // fall through
+          case 47: break;
+          case 24: 
+            { yybegin(GPG_PARSE_ARMORED_HEADERS); return Deb822Types.GPG_BEGIN_SIGNED_MESSAGE;
+            } 
+            // fall through
+          case 48: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }
