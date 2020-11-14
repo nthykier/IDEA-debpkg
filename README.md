@@ -35,7 +35,15 @@ commonly used formats in Debian packaging.
 
 Plus the features listed for Generic deb822 files.
 
-### Generic deb822 files (*.deb822, *.dsc, *_\*\_\*.buildinfo, *_\*\_\*.changes)
+### debian/copyright
+
+ * Conditional detection as a Deb822 file based on the presence of the `Format:` field.  The matching is
+   conditional as `debian/copyright` to avoid false-positives for projects that do not use the machine-
+   readable Debian copyright format.
+
+Plus the features listed for Generic deb822 files.
+
+### Generic deb822 files (*.deb822, *.dsc, *_\*\_\*.buildinfo, *\_\*\_\*.changes)
 
  * Basic syntax highlighting.
  * Basic semantic validation (i.e. no duplicate fields)

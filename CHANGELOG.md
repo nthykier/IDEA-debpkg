@@ -6,6 +6,8 @@
 ### Added
 - Recognition of `.buildinfo` and `.changes` file.  To avoid false-positives, debpkg will only auto-detect the format
   when the basename appear to follow the `PACKAGE_VERSION_ARCH.EXTENSION` pattern.
+- Auto-detect `debian/copyright` as a deb822 file provided it has a `Format:` field with a value of
+  `https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/` (including some variants of that value).
 
 ### Changed
 - The Deb822 parser now recognizes GPG signatures.  By default, the GPG lines will be folded.
