@@ -1,0 +1,120 @@
+fields:
+  - canonicalName: Format
+    valueType: SINGLE_TRIVIAL_VALUE
+    description: |
+      Describes which version of the packaging format used.
+    onlyInParagraphType: "Header"
+
+  - canonicalName: Upstream-Name
+    valueType: FREE_TEXT_VALUE
+    description: |
+      No offline documentation available.
+
+      Source: <a href="https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field">https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field</a>
+    onlyInParagraphType: "Header"
+
+  - canonicalName: Upstream-Contact
+    valueType: FREE_TEXT_VALUE
+    description: |
+      No offline documentation available.
+
+      Source: <a href="https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field">https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field</a>
+    onlyInParagraphType: "Header"
+
+  - canonicalName: Source
+    valueType: FREE_TEXT_VALUE
+    description: |
+      No offline documentation available.
+
+      Source: <a href="https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field">https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field</a>
+    onlyInParagraphType: "Header"
+
+  - canonicalName: Disclaimer
+    valueType: FREE_TEXT_VALUE
+    description: |
+      No offline documentation available.
+
+      Source: <a href="https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field">https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field</a>
+    onlyInParagraphType: "Header"
+
+  - canonicalName: Files-Excluded
+    valueType: FREE_TEXT_VALUE
+    description: |
+      No offline documentation available.
+
+      Source: <a href="https://www.debian.org/doc/manuals/debmake-doc/ch05.en.html#dfsg">https://www.debian.org/doc/manuals/debmake-doc/ch05.en.html#dfsg</a>
+    onlyInParagraphType: "Header"
+
+  - canonicalName: Comment
+    valueType: FREE_TEXT_VALUE
+    description: |
+      Free-text comment field
+
+  - canonicalName: Files
+    description: |
+      Whitespace-separated list: list of patterns indicating files covered by the license and copyright specified in this paragraph.
+
+      Filename patterns in the Files field are specified using a simplified shell glob syntax. Patterns are separated by whitespace.
+
+      <ol>
+       <li>Only the wildcards * and ? apply; the former matches any number of characters (including none), the latter a single character. Both match slashes (/) and leading dots, unlike shell globs. The pattern *.in therefore matches any file whose name ends in .in anywhere in the source tree, not just at the top level.</li>
+
+        <li>Patterns match pathnames that start at the root of the source tree. Thus, <em>Makefile.in</em> matches only the file at the root of the tree, but <em>*/Makefile.in</em> matches at any depth.</li>
+
+        <li>The backslash (\) is used to remove the magic from the next character; see table below.</li>
+      </ol>
+
+      <table>
+        <tr><th>Escape sequence</th><th>Matches</th></tr>
+        <tr><td>\*</td><td>star (asterisk)</td></tr>
+        <tr><td>\?</td><td>question mark</td></tr>
+        <tr><td>\\</td><td>backslash</td></tr>
+      </table>
+
+      Any other character following a backslash is an error.
+
+      This is the same pattern syntax as fnmatch(3) without the FNM_PATHNAME flag, or the argument to the -path test of the GNU <em>find</em> command, except that [] wildcards are not recognized.
+
+      Multiple <em>Files</em> paragraphs are allowed. The last paragraph that matches a particular file applies to it. More general paragraphs should therefore be given first, followed by more specific overrides.
+
+      Exclusions are only supported by adding <em>Files</em> paragraphs to override the previous match.
+
+      This syntax does not distinguish file names from directory names; a trailing slash in a pattern will never match any actual path. A whole directory tree may be selected with a pattern like <em>foo/*<em>.
+
+      The space character, used to separate patterns, cannot be escaped with a backslash. A path like <em>foo bar</em> may be selected with a pattern like <em>foo?bar</em>.
+
+      Source: <a href="https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field">https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field</a>
+    valueType: SPACE_SEPARATED_VALUE_LIST
+    onlyInParagraphType:
+      - "Files"
+      - "License"
+    supportsSubstvars: false
+
+  - canonicalName: Copyright
+    onlyInParagraphType:
+     - "Files"
+     - "Header"
+    description: |
+      Lists the declared copyright statements for the files listed in the Files field.  Typically one per line for readability.
+
+      <p>It is common to use this field as a superset of all copyright statements for the listed files rather than creating a paragraph for each variant.</p>
+
+      <em>Example</em>:
+      <pre>
+         Copyright © 2005-2021 Jane Doe
+         Copyright 2010-2020 John Doe
+      </pre>
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+    foldedByDefault: true
+
+  - canonicalName: License
+    description: |
+      Declares the license terms for the files
+    valueType: FREE_TEXT_VALUE
+    onlyInParagraphType:
+      - "Files"
+      - "License"
+      - "Header"
+    supportsSubstvars: false
+    foldedByDefault: true

@@ -50,7 +50,6 @@ public class KnownFieldTableImpl implements KnownFieldTable {
         return this.knownFieldMap.values();
     }
 
-    @Contract("null, _ -> param2")
     @Override
     public Deb822KnownField getField(@NotNull String fieldName, Deb822KnownField defaultValue) {
         return this.knownFieldMap.getOrDefault(fieldName, defaultValue);

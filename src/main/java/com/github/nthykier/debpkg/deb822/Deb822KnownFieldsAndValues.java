@@ -2,6 +2,7 @@ package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.deb822.deplang.DependencyLanguage;
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianCopyrightLanguage;
 import com.github.nthykier.debpkg.deb822.field.*;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldKeywordImpl;
@@ -20,7 +21,8 @@ import static com.github.nthykier.debpkg.deb822.field.KnownFields.ANY_PARAGRAPH_
 public class Deb822KnownFieldsAndValues {
 
     private static final Map<Language, KnownFieldTable> LANGUAGE2KNOWN_FIELDS = new HashMap<>();
-    private static final Map<String, Deb822KnownField> KNOWN_FIELDS = new HashMap<>();
+    private static final Map<String, Deb822KnownField> DCTRL_KNOWN_FIELDS = new HashMap<>();
+    private static final Map<String, Deb822KnownField> DCOPY_KNOWN_FIELDS = new HashMap<>();
 
     private static final Set<String> KNOWN_VERSION_OPERATORS = new LinkedHashSet<>(Arrays.asList(
             ">>", ">=", "=", "<=", "<<"
@@ -35,8 +37,10 @@ public class Deb822KnownFieldsAndValues {
             if (knownFieldTable != null) {
                 return knownFieldTable;
             }
-            if (language == Deb822DialectDebianControlLanguage.INSTANCE) {
-                knownFieldTable = new KnownFieldTableImpl(language, KNOWN_FIELDS);
+            if (language.is(Deb822DialectDebianControlLanguage.INSTANCE)) {
+                knownFieldTable = new KnownFieldTableImpl(language, DCTRL_KNOWN_FIELDS);
+            } else if (language.is(Deb822DialectDebianCopyrightLanguage.INSTANCE)) {
+                knownFieldTable = new KnownFieldTableImpl(language, DCOPY_KNOWN_FIELDS);
             } else if (language.isKindOf(Deb822Language.INSTANCE)) {
                 knownFieldTable = new KnownFieldTableImpl(language, Collections.emptyMap());
             }
@@ -48,19 +52,25 @@ public class Deb822KnownFieldsAndValues {
         throw new IllegalArgumentException("Language must be a variant of Deb822Language");
     }
 
-    private static void checkedAddField(String fieldNameLC, Deb822KnownField field) {
-        Deb822KnownField existing = KNOWN_FIELDS.putIfAbsent(fieldNameLC, field);
+    private static void checkedAddField(Map<String, Deb822KnownField> knownFields, String fieldNameLC, Deb822KnownField field) {
+        Deb822KnownField existing = knownFields.putIfAbsent(fieldNameLC, field);
         assert existing == null : "Field " + existing.getCanonicalFieldName() + " is declared twice";
     }
 
     private static void loadKnownFieldDefinitions() {
-        InputStream s = Deb822KnownFieldsAndValues.class.getResourceAsStream("DebianControl.data.yaml");
+        loadKnownFieldDefinitionsFromResource("DebianControl.data.yaml", DCTRL_KNOWN_FIELDS);
+        loadKnownFieldDefinitionsFromResource("DebianCopyright.data.yaml", DCOPY_KNOWN_FIELDS);
+    }
+
+    private static void loadKnownFieldDefinitionsFromResource(String resourceName,
+                                                              Map<String, Deb822KnownField> knownFieldMap) {
+        InputStream s = Deb822KnownFieldsAndValues.class.getResourceAsStream(resourceName);
         Yaml y = new Yaml();
         Map<String, Object> data = y.load(s);
         List<Map<String, Object>> fieldDefinitions = getList(data, "fields");
         for (Map<String, Object> fieldDefinition : fieldDefinitions) {
             Deb822KnownField field = parseKnownFieldDefinition(fieldDefinition);
-            checkedAddField(field.getCanonicalFieldName().toLowerCase().intern(), field);
+            checkedAddField(knownFieldMap, field.getCanonicalFieldName().toLowerCase().intern(), field);
         }
     }
 

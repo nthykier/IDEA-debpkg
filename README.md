@@ -29,7 +29,7 @@ commonly used formats in Debian packaging.
  * Documentation for fields, known values in fields and known substitution variables ("CTRL + mouse-over")
  * Spellchecking of field values with exception for some known fields.
  * Check fields are placed in a paragraph where it makes sense.
- * Folding of long field values with "Description" folded by default.
+ * Folding of long field values with `Description` folded by default.
  * Validate dependency fields for use of unsupported version operators (e.g. in `Provides`) or build profile
    restrictions (in any binary package relation field).
 
@@ -40,6 +40,9 @@ Plus the features listed for Generic deb822 files.
  * Conditional detection as a Deb822 file based on the presence of the `Format:` field.  The matching is
    conditional as `debian/copyright` to avoid false-positives for projects that do not use the machine-
    readable Debian copyright format.
+ * Completion of field names of common known fields.
+ * Documentation for some known fields ("CTRL + mouse-over")
+ * Folding of long field values with `License` and `Copyright` folded by default.
 
 Plus the features listed for Generic deb822 files.
 

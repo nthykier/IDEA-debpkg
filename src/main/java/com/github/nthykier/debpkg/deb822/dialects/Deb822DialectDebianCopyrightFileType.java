@@ -1,6 +1,5 @@
 package com.github.nthykier.debpkg.deb822.dialects;
 
-import com.github.nthykier.debpkg.deb822.Deb822Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +13,7 @@ public class Deb822DialectDebianCopyrightFileType extends LanguageFileType {
     public static final Deb822DialectDebianCopyrightFileType INSTANCE = new Deb822DialectDebianCopyrightFileType();
 
     private Deb822DialectDebianCopyrightFileType() {
-        super(Deb822Language.INSTANCE);
+        super(Deb822DialectDebianCopyrightLanguage.INSTANCE);
     }
 
     @Override

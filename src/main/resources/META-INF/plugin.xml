@@ -26,15 +26,16 @@
 
         <!-- There is no requirement for debian/copyright to be a deb822 file, so we use a filetype detector for that -->
         <fileType name="Debian deb822 copyright File" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianCopyrightFileType"
-                  fieldName="INSTANCE"  language="Deb822" extensions="" />
+                  fieldName="INSTANCE"  language="DebianCopyright" extensions="" />
         <fileTypeDetector implementation="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianCopyrightFileTypeDetector" />
         <fileType name="debian/control" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlFileType" fieldName="INSTANCE"
                   language="DebianControl" extensions="" />
         <lang.parserDefinition language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822ParserDefinition" />
         <lang.parserDefinition language="DebianControl" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlParserDefinition" />
+        <lang.parserDefinition language="DebianCopyright" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianCopyrightParserDefinition" />
         <lang.syntaxHighlighterFactory language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighterFactory" />
         <lang.commenter language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822Commenter"/>
-        <lang.documentationProvider language="DebianControl"
+        <lang.documentationProvider language="Deb822"
                                     implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlDocumentationProvider" />
         <lang.foldingBuilder language="Deb822"
                              implementationClass="com.github.nthykier.debpkg.deb822.Deb822FoldingBuilder" />

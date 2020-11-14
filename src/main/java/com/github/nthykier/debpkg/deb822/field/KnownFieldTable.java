@@ -21,7 +21,6 @@ public interface KnownFieldTable {
     @NotNull
     Collection<Deb822KnownField> getAllFields();
 
-    @Contract("null, _ -> param2")
     default Deb822KnownField getField(@NotNull String fieldName, Deb822KnownField defaultValue) {
         Deb822KnownField value = getField(fieldName);
         if (value == null) {
