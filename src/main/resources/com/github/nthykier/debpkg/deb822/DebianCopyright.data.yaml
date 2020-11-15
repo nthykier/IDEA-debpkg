@@ -42,7 +42,11 @@ fields:
     description: |
       No offline documentation available.
 
-      Source: <a href="https://www.debian.org/doc/manuals/debmake-doc/ch05.en.html#dfsg">https://www.debian.org/doc/manuals/debmake-doc/ch05.en.html#dfsg</a>
+      Sources:
+      <ol>
+        <li><a href="https://manpages.debian.org/stable/devscripts/uscan.1.en.html#COPYRIGHT_FILE_EXAMPLES">https://manpages.debian.org/stable/devscripts/uscan.1.en.html#COPYRIGHT_FILE_EXAMPLES</a></li>
+        <li><a href="https://www.debian.org/doc/manuals/debmake-doc/ch05.en.html#dfsg">https://www.debian.org/doc/manuals/debmake-doc/ch05.en.html#dfsg</a></li>
+      </ol>
     onlyInParagraphType: "Header"
 
   - canonicalName: Comment
