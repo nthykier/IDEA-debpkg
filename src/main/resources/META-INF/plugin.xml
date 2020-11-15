@@ -36,7 +36,7 @@
         <lang.syntaxHighlighterFactory language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighterFactory" />
         <lang.commenter language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822Commenter"/>
         <lang.documentationProvider language="Deb822"
-                                    implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlDocumentationProvider" />
+                                    implementationClass="com.github.nthykier.debpkg.Deb822DocumentationProvider" />
         <lang.foldingBuilder language="Deb822"
                              implementationClass="com.github.nthykier.debpkg.deb822.Deb822FoldingBuilder" />
         <localInspection language="DebianControl"
