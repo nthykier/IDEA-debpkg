@@ -13,7 +13,7 @@
 - The Deb822 parser now recognizes GPG signatures.  By default, the GPG lines will be folded.
 - Enable folding support for unknown fields.  Previously only known multi-line fields could be folded.  Unknown
   fields will never be folded by default.
-- Folding works better with "fake" single line fields by (a la `Foo:\n value`) where it nows folds away the
+- Folding works better with "fake" single line fields by (a la `Foo:\n value`) where now it folds away the
   leading whitespace (and newline) but keeps the value visible.
 
 ### Deprecated
