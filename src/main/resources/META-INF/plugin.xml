@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.github.nthykier.debpkg</id>
-    <name>Debian packaging support</name>
+    <name>Debian Packaging Support</name>
     <vendor>nthykier</vendor>
 
     <!-- Product and plugin compatibility requirements -->

@@ -15,6 +15,7 @@
   fields will never be folded by default.
 - Folding works better with "fake" single line fields by (a la `Foo:\n value`) where now it folds away the
   leading whitespace (and newline) but keeps the value visible.
+- Use title-case for the plugin name.
 
 ### Deprecated
 

@@ -1,10 +1,10 @@
-# debpkg - Debian packaging support
+# debpkg - Debian Packaging Support
 
 ![Build](https://github.com/nthykier/IDEA-debpkg/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/com.github.nthykier.debpkg.svg)](https://plugins.jetbrains.com/plugin/com.github.nthykier.debpkg)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/com.github.nthykier.debpkg.svg)](https://plugins.jetbrains.com/plugin/com.github.nthykier.debpkg)
 
-## Debian packaging support
+## Debian Packaging Support
 <!-- Plugin description -->
 Support for common Debian packaging files (e.g. debian/control and debian/changelog).
 
