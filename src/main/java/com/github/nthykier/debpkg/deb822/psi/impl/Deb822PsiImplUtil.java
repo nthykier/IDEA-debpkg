@@ -8,12 +8,12 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Deb822PsiImplUtil {
 
@@ -70,14 +70,27 @@ public class Deb822PsiImplUtil {
         return iteratePsiElements(startingSibling, PsiElement::getNextSibling, clazz);
     }
 
+    @Nullable
+    public static PsiElement getNextSiblingMatchingCondition(@Nullable PsiElement startingSibling,
+                                                             @NotNull Predicate<PsiElement> condition) {
+        return findFirstMatchingPsiElement(startingSibling, PsiElement::getNextSibling, condition);
+    }
+
 
     private static <T extends PsiElement> T iteratePsiElements(@Nullable PsiElement startElement,
                                                                @NotNull Function<PsiElement, PsiElement> nextElement,
                                                                @NotNull Class<T> clazz) {
+        Predicate<PsiElement> condition = e -> clazz.isAssignableFrom(e.getClass());
+        return clazz.cast(findFirstMatchingPsiElement(startElement, nextElement, condition));
+    }
+
+    private static PsiElement findFirstMatchingPsiElement(@Nullable PsiElement startElement,
+                                                          @NotNull Function<PsiElement, PsiElement> nextElement,
+                                                          @NotNull Predicate<PsiElement> matchCondition) {
         PsiElement e = startElement;
-        while (e != null && !clazz.isAssignableFrom(e.getClass())) {
+        while (e != null && !matchCondition.test(e)) {
             e = nextElement.apply(e);
         }
-        return clazz.cast(e);
+        return e;
     }
 }

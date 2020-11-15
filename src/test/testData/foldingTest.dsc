@@ -13,16 +13,16 @@ Vcs-Browser: https://salsa.debian.org/debian/debhelper
 Vcs-Git: https://salsa.debian.org/debian/debhelper.git
 Testsuite: autopkgtest-pkg-perl
 Build-Depends: dpkg-dev (>= 1.18.0~), perl:any, po4a, man-db <pkg.debhelper.ci>, libtest-pod-perl <pkg.debhelper.ci>
-Package-List:
- <fold text='debhelper deb devel optional arch=all {...}'>debhelper deb devel optional arch=all
+Package-List:<fold text=' debhelper deb devel optional arch=all {...}'>
+ debhelper deb devel optional arch=all
  dh-systemd deb oldlibs optional arch=all
  libdebhelper-perl deb perl optional arch=all</fold>
-Checksums-Sha1:
- 3cc7d0220cc05657f138880a3a500c398f983d39 541428 debhelper_13.2.1.tar.xz
-Checksums-Sha256:
- 3f2f4e085ab8f3389f6e8bf1610bc196c363cd7d08d15c791c04451490868eba 541428 debhelper_13.2.1.tar.xz
-Files:
- 3bded8140c6c290c555e43722cd03f3b 541428 debhelper_13.2.1.tar.xz
+Checksums-Sha1:<fold text=' 3cc7d0220cc05657f138880a3a500c398f983d39 541428 debhelper_13.2.1.tar.xz'>
+ 3cc7d0220cc05657f138880a3a500c398f983d39 541428 debhelper_13.2.1.tar.xz</fold>
+Checksums-Sha256:<fold text=' 3f2f4e085ab8f3389f6e8bf1610bc196c363cd7d08d15c791c04451490868eba 541428 debhelper_13.2.1.tar.xz'>
+ 3f2f4e085ab8f3389f6e8bf1610bc196c363cd7d08d15c791c04451490868eba 541428 debhelper_13.2.1.tar.xz</fold>
+Files:<fold text=' 3bded8140c6c290c555e43722cd03f3b 541428 debhelper_13.2.1.tar.xz'>
+ 3bded8140c6c290c555e43722cd03f3b 541428 debhelper_13.2.1.tar.xz</fold>
 
 <fold text='-----BEGIN PGP SIGNATURE-----'>-----BEGIN PGP SIGNATURE-----
 

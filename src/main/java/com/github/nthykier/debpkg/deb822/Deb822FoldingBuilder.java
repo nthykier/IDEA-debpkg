@@ -2,6 +2,7 @@ package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.psi.*;
+import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilderEx;
 import com.intellij.lang.folding.FoldingDescriptor;
@@ -9,6 +10,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.LeafElement;
@@ -70,18 +72,35 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
             String placeholderText = null;
             ASTNode node;
             boolean foldedByDefault;
+            ASTNode separatorNode;
+            PsiElement firstElementAfter;
+            int end;
+
             /* We only need a FoldingDescriptor if it is a multi-line field */
-            if (valueParts == null || !valueParts.textContains('\n')) {
+            if (valueParts == null || !fieldValuePair.textContains('\n')) {
                 continue;
             }
             foldedByDefault = knownField != null && knownField.isFoldedByDefault();
-            node = valueParts.getNode();
+            node = fieldValuePair.getNode();
+            separatorNode = node.findChildByType(Deb822Types.SEPARATOR);
+            assert separatorNode != null;
             if (foldedByDefault || !quick) {
                 placeholderText = getPlaceholderText(node);
             }
+            firstElementAfter = Deb822PsiImplUtil.getNextSiblingMatchingCondition(
+                    fieldValuePair.getNextSibling(),
+                    e -> !(e instanceof PsiWhiteSpace)
+            );
+
+            if (firstElementAfter != null) {
+                /* -1 for the newline at the end of the previous */
+                end = firstElementAfter.getNode().getStartOffset() - 1;
+            } else {
+                end = fieldValuePair.getContainingFile().getTextLength() - 1;
+            }
             descriptors.add(new FoldingDescriptor(
                     node,
-                    valueParts.getTextRange(),
+                    new TextRange(separatorNode.getStartOffset() + 1, end),
                     null,
                     Collections.emptySet(),
                     false,
@@ -105,27 +124,31 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
             /* should not happen, but it avoids logical corner cases of returning "..." when there is nothing */
             return "";
         }
-        if (node.getElementType() == Deb822Types.VALUE_PARTS) {
-            final StringBuilder b = new StringBuilder();
+        if (node.getElementType() == Deb822Types.FIELD_VALUE_PAIR) {
+            final StringBuilder placeholderBuilder = new StringBuilder(" ");
+            TreeElementVisitor visitor = buildVisitor(placeholderBuilder);
+            ASTNode partsNode = node.findChildByType(Deb822Types.VALUE_PARTS);
             ASTNode currentChild;
-            ASTNode nextChild = node.getFirstChildNode();
-            TreeElementVisitor visitor = buildVisitor(b);
+            ASTNode nextChild = partsNode != null ? partsNode.getFirstChildNode() : null;
+            final int initialSize = placeholderBuilder.length();
+
             while (nextChild != null) {
                 currentChild = nextChild;
                 nextChild = nextChild.getTreeNext();
-                if (b.length() == 0) {
+                if (placeholderBuilder.length() == initialSize) {
                     if (currentChild.getElementType() != TokenType.WHITE_SPACE) {
-                        addText(b, visitor, currentChild);
+                        addText(placeholderBuilder, visitor, currentChild);
                     }
                 } else if (currentChild.textContains('\n')) {
                     /* We add an ellipsis when there is (or might be) some hidden text */
-                    b.append(" {...}");
+                    placeholderBuilder.append(" {...}");
                     break;
                 } else {
-                    addText(b, visitor, currentChild);
+                    addText(placeholderBuilder, visitor, currentChild);
                 }
             }
-            retTxt = b.toString();
+
+            retTxt = placeholderBuilder.toString();
         }
         return retTxt;
     }
