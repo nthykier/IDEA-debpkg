@@ -38,7 +38,7 @@ fields:
     onlyInParagraphType: "Header"
 
   - canonicalName: Files-Excluded
-    valueType: FREE_TEXT_VALUE
+    valueType: SPACE_SEPARATED_VALUE_LIST
     description: |
       No offline documentation available.
 
