@@ -9,6 +9,7 @@ import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -21,14 +22,12 @@ public abstract class AbstractDeb822ParserDefinition implements ParserDefinition
 
     public static final TokenSet COMMENTS = TokenSet.create(Deb822Types.COMMENT);
 
-    private final Language language;
-    private final FileType fileType;
+    private final LanguageFileType fileType;
     private final IFileElementType fileElementType;
 
-    protected AbstractDeb822ParserDefinition(Language language, FileType fileType) {
-        this.language = language;
+    protected AbstractDeb822ParserDefinition(LanguageFileType fileType) {
         this.fileType = fileType;
-        this.fileElementType = new IFileElementType(language);
+        this.fileElementType = new IFileElementType(fileType.getLanguage());
     }
 
     @Override
@@ -63,6 +62,6 @@ public abstract class AbstractDeb822ParserDefinition implements ParserDefinition
 
     @Override
     public PsiFile createFile(FileViewProvider viewProvider) {
-        return new Deb822File(viewProvider, this.language, this.fileType);
+        return new Deb822File(viewProvider, this.fileType);
     }
 }
