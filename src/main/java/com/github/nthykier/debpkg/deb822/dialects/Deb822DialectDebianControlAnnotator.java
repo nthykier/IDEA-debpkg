@@ -205,24 +205,19 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
                 || field.getFieldValueType() == Deb822KnownFieldValueType.SINGLE_TRIVIAL_VALUE) {
             int i = 0;
             final int size = valueTokens.size();
-            boolean bad = false;
             for (; i < size ; i++) {
                 ASTNode e = valueTokens.get(i);
-                if (!bad) {
-                    IElementType et = e.getElementType();
-                    if (SPACE_OR_COMMA.contains(et)) {
-                        /* not a single value then */
-                        bad = true;
-                    }
-                }
-                if (bad) {
-                    holder.newAnnotation(HighlightSeverity.ERROR, Deb822Bundle.message("deb822.files.annotator.fields.field-is-single-value-field"))
+                IElementType et = e.getElementType();
+                if (SPACE_OR_COMMA.contains(et)) {
+                    /* not a single value then */
+                    holder.newAnnotation(
+                            HighlightSeverity.ERROR,
+                            Deb822Bundle.message("deb822.files.annotator.fields.field-is-single-value-field")
+                    )
                             .range(e)
                             .create();
+                    return;
                 }
-            }
-            if (bad) {
-                return;
             }
         }
         /* Not a known keyword - forgive substvars through */
