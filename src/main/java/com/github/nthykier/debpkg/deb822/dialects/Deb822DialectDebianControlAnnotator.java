@@ -54,14 +54,11 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         arch = archValueParts.getText().trim();
         multiarchValue = multiarchValueParts.getText().trim();
         if (arch.equals("all") && multiarchValue.equals("same")) {
-            Deb822FieldValuePair pair = fieldMap.get("multi-arch");
             Function<String, Deb822TypeSafeLocalQuickFix<Deb822ValueParts>> quickfixer =
                     AnnotatorUtil.replacementQuickFixer(
                             (Project p) -> Deb822ElementFactory.createValuePartsFromText(p, "Multi-Arch: foreign")
                     );
 
-            /* pair and pair.getValueParts() cannot be null if we are here; help IntelliJ realise that */
-            assert pair != null && pair.getValueParts() != null;
             AnnotatorUtil.createAnnotationWithQuickFix(
                     holder,
                     HighlightSeverity.ERROR,
