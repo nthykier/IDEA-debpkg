@@ -5,7 +5,9 @@ import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlAnno
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
-import com.intellij.codeInspection.*;
+import com.intellij.codeInspection.LocalInspectionTool;
+import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +28,7 @@ public class DCtrlMissingRulesRequiresRootInspection extends LocalInspectionTool
         return new Deb822Visitor() {
             public void visitParagraph(@NotNull Deb822Paragraph deb822Paragraph) {
                 super.visitParagraph(deb822Paragraph);
-                if (Deb822DialectDebianControlAnnotator.guessParagraphType(deb822Paragraph).equals(Deb822DialectDebianControlAnnotator.PARAGRAPH_TYPE_SOURCE)) {
+                if (deb822Paragraph.classifyParagraph().equals(Deb822DialectDebianControlLanguage.PARAGRAPH_TYPE_SOURCE)) {
                     checkSourceParagraph(holder, deb822Paragraph);
                 }
             }

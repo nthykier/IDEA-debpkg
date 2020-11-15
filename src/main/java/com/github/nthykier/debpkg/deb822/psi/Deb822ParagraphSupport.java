@@ -1,5 +1,8 @@
 package com.github.nthykier.debpkg.deb822.psi;
 
+import com.github.nthykier.debpkg.deb822.Deb822LanguageSupport;
+import com.github.nthykier.debpkg.deb822.Deb822ParagraphClassifier;
+import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,4 +42,18 @@ public interface Deb822ParagraphSupport extends PsiElement {
    * @return true if this paragraph is the first paragraph in the file.
    */
   boolean isFirstParagraph();
+
+  /**
+   * Classify the paragraph according to the Deb822 language variant
+   *
+   * @return A language specific classification of the paragraph or Deb822ParagraphClassifier.UNCLASSIFIED
+   */
+  @NotNull
+  default String classifyParagraph() {
+    Language language = getContainingFile().getLanguage();
+    if (language instanceof Deb822LanguageSupport) {
+      return ((Deb822LanguageSupport) language).getParagraphClassifier().classifyParagraph(this);
+    }
+    return Deb822ParagraphClassifier.UNCLASSIFIED;
+  }
 }
