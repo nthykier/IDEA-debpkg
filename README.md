@@ -43,6 +43,7 @@ Plus the features listed for Generic deb822 files.
  * Completion of field names of common known fields.
  * Documentation for some known fields ("CTRL + mouse-over")
  * Folding of long field values with `License` and `Copyright` folded by default.
+ * Check fields are placed in a paragraph where it makes sense.
 
 Plus the features listed for Generic deb822 files.
 

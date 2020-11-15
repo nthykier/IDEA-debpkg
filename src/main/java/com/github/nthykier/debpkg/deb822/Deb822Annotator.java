@@ -1,30 +1,20 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
-import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
 import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
-import com.github.nthykier.debpkg.deb822.psi.*;
+import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
-import com.github.nthykier.debpkg.util.Deb822TypeSafeLocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 public class Deb822Annotator implements Annotator {
 
@@ -36,12 +26,16 @@ public class Deb822Annotator implements Annotator {
 
     private void checkParagraph(@NotNull AnnotationHolder holder, @NotNull Deb822Paragraph paragraph) {
         /* We use getFieldValuePairList here because we want to see duplicates and getFieldMap cannot help with
-         *  that
+         * that
          */
         Map<String, Deb822FieldValuePair> seen = new HashMap<>();
+        Deb822LanguageSupport deb822LanguageSupport = Deb822LanguageSupport.fromDeb822Language(paragraph.getContainingFile().getLanguage());
+        KnownFieldTable knownFieldTable = deb822LanguageSupport.getKnownFieldTable();
+        String paragraphType = paragraph.classifyParagraph();
         for (Deb822FieldValuePair pair : paragraph.getFieldValuePairList()) {
             String fieldName = pair.getField().getFieldName();
             Deb822FieldValuePair existingValue = seen.get(fieldName);
+            Deb822KnownField knownField = knownFieldTable.getField(fieldName);
             seen.putIfAbsent(fieldName, pair);
             if (existingValue != null) {
                 holder.newAnnotation(HighlightSeverity.ERROR,
@@ -49,6 +43,16 @@ public class Deb822Annotator implements Annotator {
                 )
                     .range(pair)
                     .create();
+            } else if (knownField != null && !knownField.isSupportedInParagraphType(paragraphType)) {
+                AnnotatorUtil.createAnnotationWithQuickFix(
+                        holder,
+                        HighlightSeverity.ERROR,
+                        AnnotatorUtil.elementRemovalQuickfixer(Deb822FieldValuePair.class),
+                        "field-does-not-belong-in-paragraph",
+                        pair,
+                        ProblemHighlightType.ERROR,
+                        knownField.getCanonicalFieldName(), paragraphType
+                );
             }
         }
     }

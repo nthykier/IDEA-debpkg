@@ -46,14 +46,11 @@ public interface Deb822ParagraphSupport extends PsiElement {
   /**
    * Classify the paragraph according to the Deb822 language variant
    *
-   * @return A language specific classification of the paragraph or Deb822ParagraphClassifier.UNCLASSIFIED
+   * @return A language specific classification of the paragraph or {@link Deb822ParagraphClassifier#UNCLASSIFIED)
    */
   @NotNull
   default String classifyParagraph() {
-    Language language = getContainingFile().getLanguage();
-    if (language instanceof Deb822LanguageSupport) {
-      return ((Deb822LanguageSupport) language).getParagraphClassifier().classifyParagraph(this);
-    }
-    return Deb822ParagraphClassifier.UNCLASSIFIED;
+    return Deb822LanguageSupport.fromDeb822Language(getContainingFile().getLanguage()).getParagraphClassifier().classifyParagraph(this);
+
   }
 }
