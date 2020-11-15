@@ -1,0 +1,8 @@
+Source: foo
+
+Package: bar
+Architecture: any
+Multi-Arch: foreign
+<error descr="Duplicate field name Package">Package: this-is-wrong</error>
+
+Package: this-is-ok

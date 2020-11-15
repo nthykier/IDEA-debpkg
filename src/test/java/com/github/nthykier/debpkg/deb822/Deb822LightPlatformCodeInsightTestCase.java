@@ -9,7 +9,24 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Deb822CompletionContributorTest extends LightPlatformCodeInsightFixture4TestCase {
+public class Deb822LightPlatformCodeInsightTestCase extends LightPlatformCodeInsightFixture4TestCase {
+
+    @Override
+    protected String getTestDataPath() {
+        return "src/test/testData";
+    }
+
+    @Test
+    public void testFolding() {
+        myFixture.testFolding(getTestDataPath() + "/foldingTest.dsc");
+    }
+
+    @Test
+    public void testAnnotator() {
+        myFixture.configureByFile("duplicateFields.deb822");
+        myFixture.checkHighlighting(false, false, true, true);
+    }
+
     @Test
     public void completionItems() {
         myFixture.configureByText(Deb822DialectDebianControlFileType.INSTANCE, "");

@@ -70,7 +70,8 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
             String placeholderText = null;
             ASTNode node;
             boolean foldedByDefault;
-            if (valueParts == null) {
+            /* We only need a FoldingDescriptor if it is a multi-line field */
+            if (valueParts == null || !valueParts.textContains('\n')) {
                 continue;
             }
             foldedByDefault = knownField != null && knownField.isFoldedByDefault();
