@@ -69,7 +69,7 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
         for (final Deb822FieldValuePair fieldValuePair : fieldValuePairs) {
             Deb822KnownField knownField = fieldValuePair.getField().getDeb822KnownField();
             Deb822ValueParts valueParts = fieldValuePair.getValueParts();
-            String placeholderText = null;
+            String placeholderText;
             ASTNode node;
             boolean foldedByDefault;
             ASTNode separatorNode;
@@ -84,13 +84,16 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
             node = fieldValuePair.getNode();
             separatorNode = node.findChildByType(Deb822Types.SEPARATOR);
             assert separatorNode != null;
-            if (foldedByDefault || !quick) {
-                placeholderText = getPlaceholderText(node);
-            }
+            placeholderText = getPlaceholderText(node);
             firstElementAfter = Deb822PsiImplUtil.getNextSiblingMatchingCondition(
                     fieldValuePair.getNextSibling(),
                     e -> !(e instanceof PsiWhiteSpace)
             );
+
+            /* Always fold single line fields that with an empty bit */
+            if (!foldedByDefault && placeholderText != null && !placeholderText.endsWith(" {...}")) {
+                foldedByDefault = true;
+            }
 
             if (firstElementAfter != null) {
                 /* -1 for the newline at the end of the previous */
