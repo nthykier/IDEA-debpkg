@@ -14,12 +14,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class KnownFieldTableImpl implements KnownFieldTable {
-    private final Language language;
     private final Map<String, Deb822KnownField> knownFieldMap;
     private final List<String> knownFieldNames;
 
-    public KnownFieldTableImpl(@NotNull Language language, @NotNull Map<String, Deb822KnownField> knownFieldMap) {
-        this.language = language;
+    public KnownFieldTableImpl(@NotNull Map<String, Deb822KnownField> knownFieldMap) {
         this.knownFieldMap = Collections.unmodifiableMap(knownFieldMap);
         // When 1.10 can be assumed; use ".collect(Collectors.toUnmodifiableList())"
         this.knownFieldNames = Collections.unmodifiableList(knownFieldMap.values()
@@ -28,11 +26,6 @@ public class KnownFieldTableImpl implements KnownFieldTable {
                 .sorted(String::compareToIgnoreCase)
                 .collect(Collectors.toList())
         );
-    }
-
-    @Override
-    public @NotNull Language getLanguage() {
-        return this.language;
     }
 
     @Override

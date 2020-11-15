@@ -67,7 +67,7 @@ public class DependencyLanguageAnnotator implements Annotator {
         if (languageDefinition == null) {
             return null;
         }
-        knownField = Deb822KnownFieldsAndValues.getKnownFieldsFor(Deb822DialectDebianControlLanguage.INSTANCE).getField(languageDefinition.getText());
+        knownField = Deb822DialectDebianControlLanguage.INSTANCE.getKnownFieldTable().getField(languageDefinition.getText());
         if (knownField == null || knownField.getFieldValueLanguage().getLanguage() != DependencyLanguage.INSTANCE) {
             return null;
         }

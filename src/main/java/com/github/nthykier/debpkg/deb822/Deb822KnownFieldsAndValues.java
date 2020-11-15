@@ -38,11 +38,11 @@ public class Deb822KnownFieldsAndValues {
                 return knownFieldTable;
             }
             if (language.is(Deb822DialectDebianControlLanguage.INSTANCE)) {
-                knownFieldTable = new KnownFieldTableImpl(language, DCTRL_KNOWN_FIELDS);
+                knownFieldTable = new KnownFieldTableImpl(DCTRL_KNOWN_FIELDS);
             } else if (language.is(Deb822DialectDebianCopyrightLanguage.INSTANCE)) {
-                knownFieldTable = new KnownFieldTableImpl(language, DCOPY_KNOWN_FIELDS);
+                knownFieldTable = new KnownFieldTableImpl(DCOPY_KNOWN_FIELDS);
             } else if (language.isKindOf(Deb822Language.INSTANCE)) {
-                knownFieldTable = new KnownFieldTableImpl(language, Collections.emptyMap());
+                knownFieldTable = KnownFieldTable.NULL_TABLE;
             }
             if (knownFieldTable != null) {
                 LANGUAGE2KNOWN_FIELDS.put(language, knownFieldTable);

@@ -29,7 +29,9 @@ public class Deb822CodeCompletionContributor extends CompletionContributor imple
                                                @NotNull ProcessingContext context,
                                                @NotNull CompletionResultSet resultSet) {
                         PsiElement fieldValue = parameters.getPosition();
-                        KnownFieldTable knownFieldTable = Deb822KnownFieldsAndValues.getKnownFieldsFor(fieldValue.getContainingFile().getLanguage());
+                        KnownFieldTable knownFieldTable = Deb822LanguageSupport.getKnownFieldTableForLanguage(
+                                fieldValue.getContainingFile().getLanguage()
+                        );
                         Collection<String> knownValues = knownFieldTable.getAllFieldNames();
                         List<LookupElement> completions = new ArrayList<>(knownValues.size());
                         for (String name : knownValues) {

@@ -1,6 +1,8 @@
 package com.github.nthykier.debpkg.deb822.psi.impl;
 
+import com.github.nthykier.debpkg.deb822.Deb822LanguageSupport;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
+import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.field.KnownFields;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldBase;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
@@ -12,14 +14,13 @@ import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static com.github.nthykier.debpkg.deb822.Deb822KnownFieldsAndValues.getKnownFieldsFor;
-
 public class AbstractDeb822Field extends ASTWrapperPsiElement implements Deb822FieldBase {
 
     private static final TokenSet FIELD_NAME_TOKEN_SET = TokenSet.create(Deb822Types.FIELD_NAME);
 
     /* We use NULL_FIELD as a dummy value for "not-set/recompute" because "null" is a valid return value */
     private Deb822KnownField knownField = KnownFields.NULL_FIELD;
+    private KnownFieldTable knownFields = null;
     private String fieldName;
     public AbstractDeb822Field(@NotNull ASTNode node) {
         super(node);
@@ -29,6 +30,7 @@ public class AbstractDeb822Field extends ASTWrapperPsiElement implements Deb822F
     public void subtreeChanged() {
         super.subtreeChanged();
         this.knownField = KnownFields.NULL_FIELD;
+        this.knownFields = null;
         this.fieldName = null;
     }
 
@@ -48,10 +50,17 @@ public class AbstractDeb822Field extends ASTWrapperPsiElement implements Deb822F
         return this.getText();
     }
 
+    private KnownFieldTable getKnownFields() {
+        if (this.knownFields == null) {
+            this.knownFields = Deb822LanguageSupport.getKnownFieldTableForLanguage(this.getContainingFile().getLanguage());
+        }
+        return this.knownFields;
+    }
+
     @Nullable
     public Deb822KnownField getDeb822KnownField() {
         if (knownField == KnownFields.NULL_FIELD) {
-            knownField = getKnownFieldsFor(this.getContainingFile().getLanguage()).getField(this.getFieldName());
+            knownField = getKnownFields().getField(this.getFieldName());
         }
         return knownField;
     }

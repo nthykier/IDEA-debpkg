@@ -88,7 +88,7 @@ public class Deb822KnownSubstvars {
         Yaml y = new Yaml();
         Map<String, Object> data = y.load(s);
         List<Map<String, Object>> fieldDefinitions = getList(data, "substvars");
-        KnownFieldTable knownFieldTable = Deb822KnownFieldsAndValues.getKnownFieldsFor(Deb822DialectDebianControlLanguage.INSTANCE);
+        KnownFieldTable knownFieldTable = Deb822DialectDebianControlLanguage.INSTANCE.getKnownFieldTable();
         for (Map<String, Object> fieldDefinition : fieldDefinitions) {
             for (Deb822KnownSubstvar field : parseKnownSubstvarDefinition(fieldDefinition, knownFieldTable)) {
                 checkedAddSubstvar(field);

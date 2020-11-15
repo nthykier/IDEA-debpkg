@@ -66,7 +66,7 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
 
     private void checkParagraph(@NotNull AnnotationHolder holder, @NotNull Deb822Paragraph paragraph) {
         Map<String, Deb822FieldValuePair> field2pair = new HashMap<>();
-        KnownFieldTable knownFieldTable = getKnownFieldTable();
+        KnownFieldTable knownFieldTable = Deb822DialectDebianControlLanguage.INSTANCE.getKnownFieldTable();
         String paragraphType = paragraph.isFirstParagraph() ? "Source" : "Package";
         Map<String, Deb822FieldValuePair> fieldMap = paragraph.getFieldMap();
         for (Deb822FieldValuePair pair : fieldMap.values()) {
@@ -81,10 +81,6 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
                     .range(paragraph)
                     .create();
         }
-    }
-
-    protected KnownFieldTable getKnownFieldTable() {
-        return Deb822KnownFieldsAndValues.getKnownFieldsFor(Deb822DialectDebianControlLanguage.INSTANCE);
     }
 
     private void checkFieldValuePair(@NotNull KnownFieldTable knownFieldTable,

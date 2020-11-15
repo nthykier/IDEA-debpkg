@@ -1,16 +1,15 @@
 package com.github.nthykier.debpkg.deb822.field;
 
-import com.intellij.lang.Language;
-import org.jetbrains.annotations.Contract;
+import com.github.nthykier.debpkg.deb822.field.impl.KnownFieldTableImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public interface KnownFieldTable {
 
-    @NotNull
-    Language getLanguage();
+    KnownFieldTable NULL_TABLE = new KnownFieldTableImpl(Collections.emptyMap());
 
     @Nullable
     Deb822KnownField getField(@NotNull String fieldName);
