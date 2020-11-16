@@ -112,6 +112,7 @@ public class Deb822KnownFieldsAndValues {
         boolean supportsSubstvars = getBool(fieldDef, "supportsSubstvars", true);
         boolean warnIfDefault = getBool(fieldDef, "warnIfDefault", false);
         boolean isFoldedByDefault = getBool(fieldDef, "foldedByDefault", false);
+        boolean spellcheckField = getBool(fieldDef, "spellcheckValue", false);
         Set<String> supportedParagraphTypes = parseStringOrListAsList(fieldDef,
                 "onlyInParagraphType",
                 Deb822KnownFieldsAndValues::parseSupportedParagraphTypes,
@@ -170,6 +171,10 @@ public class Deb822KnownFieldsAndValues {
             if (supportedVersionOperators == null) {
                 supportedVersionOperators = KNOWN_VERSION_OPERATORS;
             }
+            if (spellcheckField) {
+                throw new IllegalArgumentException("Field " + canonicalName + " has spellcheckValue enabled but is"
+                        + " a dependency field (i.e. no free form text).");
+            }
 
             return new Deb822KnownRelationFieldImpl(canonicalName, valueType, fieldValueLanguage, allKeywordsKnown, keywordMap, docs,
                     supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault,
@@ -186,7 +191,8 @@ public class Deb822KnownFieldsAndValues {
             }
 
             return new Deb822KnownFieldImpl(canonicalName, valueType, fieldValueLanguage, allKeywordsKnown, keywordMap, docs,
-                    supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault);
+                    supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault,
+                    spellcheckField);
         }
     }
 

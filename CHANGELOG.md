@@ -16,6 +16,10 @@
 - Folding works better with "fake" single line fields by (a la `Foo:\n value`) where now it folds away the
   leading whitespace (and newline) but keeps the value visible.
 - Use title-case for the plugin name.
+- Rewrite how the plugin determines whether a field should be spellchecked.  It now relies on a list of
+  known fields that are worth spellchecking.  For formats where the plugin does not recognise the fields, it
+  falls back to using the name for guessing whether the field should be spellchecked.  Notably `Comment`,
+  `Description` and `Disclaimer` will have spellchecking enabled in generic deb822 files.
 
 ### Deprecated
 

@@ -76,4 +76,6 @@ public interface Deb822KnownField {
     }
 
     boolean isFoldedByDefault();
+
+    boolean isSpellcheckForValueEnabled();
 }

@@ -21,7 +21,7 @@ public class Deb822KnownRelationFieldImpl extends Deb822KnownFieldImpl implement
                                         @NotNull Set<String> supportedVersionOperators, boolean supportsBuildProfileRestriction
     ) {
         super(canonicalFieldName, fieldValueType, fieldValueLanguage, areAllKeywordsKnown, allKnownKeywords, docs,
-              supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault);
+              supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault, false);
         this.supportedVersionOperators = supportedVersionOperators;
         this.supportsBuildProfileRestriction = supportsBuildProfileRestriction;
     }

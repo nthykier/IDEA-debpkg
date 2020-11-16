@@ -16,11 +16,9 @@ import java.util.Set;
 
 public class Deb822SpellcheckingStrategy extends SpellcheckingStrategy {
 
-    private static final Set<String> SKIP_SPELL_CHECK = new HashSet<>(Arrays.asList(
-            "package", "architecture", "depends", "recommends", "suggests", "breaks", "replaces",
-            "pre-depends", "build-depends", "build-depends-indep", "build-depends-arch", "provides", "section",
-            "testsuite", "maintainer", "uploaders", "source"
-            ));
+    private static final Set<String> SPELL_CHECK_UNKNOWN_FIELDS_BY_NAME = new HashSet<>(Arrays.asList(
+            "description", "comment", "disclaimer"
+    ));
 
     @NotNull
     public Tokenizer<?> getTokenizer(PsiElement element) {
@@ -29,20 +27,14 @@ public class Deb822SpellcheckingStrategy extends SpellcheckingStrategy {
              if (parent != null) {
                 Deb822Field field = parent.getField();
                 Deb822KnownField knownField = field.getDeb822KnownField();
-                if (knownField != null) {
-                    String name;
-                    /*
-                     * In such a case, it seems awkward to have a spell-check highlight the value when the user cannot
-                     * change the actual value (as it is mandated else where and "correcting" the spelling will cause
-                     * a hard error).
-                     */
-                    if (knownField.hasKnownValues() && knownField.areAllKeywordsKnown()) {
-                        return EMPTY_TOKENIZER;
+                if (knownField == null) {
+                    if (SPELL_CHECK_UNKNOWN_FIELDS_BY_NAME.contains(field.getFieldName().toLowerCase())) {
+                        return TEXT_TOKENIZER;
                     }
-                    name = field.getFieldName();
-                    if (SKIP_SPELL_CHECK.contains(name.toLowerCase())) {
-                        return EMPTY_TOKENIZER;
-                    }
+                    return EMPTY_TOKENIZER;
+                }
+                if (!knownField.isSpellcheckForValueEnabled()) {
+                    return EMPTY_TOKENIZER;
                 }
             }
             return TEXT_TOKENIZER;

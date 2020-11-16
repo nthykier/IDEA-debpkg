@@ -28,6 +28,7 @@ fields:
 
       Source: <a href="https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field">https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field</a>
     onlyInParagraphType: "Header"
+    spellcheckValue: true
 
   - canonicalName: Disclaimer
     valueType: FREE_TEXT_VALUE
@@ -36,6 +37,7 @@ fields:
 
       Source: <a href="https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field">https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/#files-field</a>
     onlyInParagraphType: "Header"
+    spellcheckValue: true
 
   - canonicalName: Files-Excluded
     valueType: SPACE_SEPARATED_VALUE_LIST
@@ -53,6 +55,7 @@ fields:
     valueType: FREE_TEXT_VALUE
     description: |
       Free-text comment field
+    spellcheckValue: true
 
   - canonicalName: Files
     description: |
@@ -111,6 +114,9 @@ fields:
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
     foldedByDefault: true
+    # Usually this is "Copyright 2020 Some name" where the spellchecker does not know the name.  So we deliberately
+    # skip checking here.
+    spellcheckValue: false
 
   - canonicalName: License
     description: |
@@ -122,3 +128,5 @@ fields:
       - "Header"
     supportsSubstvars: false
     foldedByDefault: true
+    # Copy-waste of legal text and you are not allowed to change the terms.  Not much we can do here.
+    spellcheckValue: false

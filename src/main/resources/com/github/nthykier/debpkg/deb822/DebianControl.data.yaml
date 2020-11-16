@@ -87,7 +87,6 @@ fields:
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
 
-
   - canonicalName: Vcs-Browser
     onlyInParagraphType: "Source"
     description: |
@@ -791,6 +790,7 @@ fields:
       <p>Please see <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#description">https://www.debian.org/doc/debian-policy/ch-controlfields.html#description</a> for more details about the description field and suggestions for how to write it.</a>
     valueType: FREE_TEXT_VALUE
     foldedByDefault: true
+    spellcheckValue: true
 
 substvars:
   - name: "${Arch}"
