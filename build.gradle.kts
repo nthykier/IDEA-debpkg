@@ -34,6 +34,12 @@ repositories {
 }
 dependencies {
     implementation("org.yaml:snakeyaml:1.24")
+
+    compileOnly("org.projectlombok:lombok:1.18.16")
+    annotationProcessor("org.projectlombok:lombok:1.18.16")
+
+    testCompileOnly("org.projectlombok:lombok:1.18.16")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.16")
 }
 
 // Configure gradle-intellij-plugin plugin.

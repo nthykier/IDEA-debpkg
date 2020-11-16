@@ -1,7 +1,6 @@
 package com.github.nthykier.debpkg.deb822.deplang;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
-import com.github.nthykier.debpkg.deb822.Deb822KnownFieldsAndValues;
 import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvar;
 import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvars;
 import com.github.nthykier.debpkg.deb822.deplang.psi.*;
@@ -78,7 +77,7 @@ public class DependencyLanguageAnnotator implements Annotator {
     private void checkDependeny(@NotNull AnnotationHolder holder, @NotNull DepLangDependency element) {
         if (element.getBuildProfileRestrictionPart() != null) {
             Deb822KnownRelationField knownRelationField = lookupContainingDeb822KnownField(element);
-            if (knownRelationField != null && !knownRelationField.supportsBuildProfileRestriction()) {
+            if (knownRelationField != null && !knownRelationField.isBuildProfileRestrictionSupported()) {
                 holder.newAnnotation(HighlightSeverity.ERROR,
                         Deb822Bundle.message("deb822.files.annotator.fields.dependency-field-does-not-support-build-profile", knownRelationField.getCanonicalFieldName())
                 )
@@ -205,8 +204,8 @@ public class DependencyLanguageAnnotator implements Annotator {
 
         }
         if (knownField != null) {
-            if (!knownField.supportedVersionOperators().contains(operator)) {
-                String supportedOperators = knownField.supportedVersionOperators().stream().map(it -> "\"" + it + "\"").collect(Collectors.joining(", "));
+            if (!knownField.getSupportedVersionOperators().contains(operator)) {
+                String supportedOperators = knownField.getSupportedVersionOperators().stream().map(it -> "\"" + it + "\"").collect(Collectors.joining(", "));
                 holder.newAnnotation(HighlightSeverity.ERROR,
                         Deb822Bundle.message("deb822.files.annotator.fields.unsupported-version-operator-in-field",
                                 operator, knownField.getCanonicalFieldName(), supportedOperators)

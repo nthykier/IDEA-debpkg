@@ -1,7 +1,5 @@
-// This is a generated file. Not intended for manual editing.
 package com.github.nthykier.debpkg.deb822.psi.impl;
 
-import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;

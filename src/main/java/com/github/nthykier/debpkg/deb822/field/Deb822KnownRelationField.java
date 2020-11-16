@@ -6,8 +6,8 @@ import java.util.Set;
 
 public interface Deb822KnownRelationField extends Deb822KnownField {
 
-    @NotNull Set<String> supportedVersionOperators();
+    @NotNull Set<String> getSupportedVersionOperators();
 
-    boolean supportsBuildProfileRestriction();
+    boolean isBuildProfileRestrictionSupported();
 
 }

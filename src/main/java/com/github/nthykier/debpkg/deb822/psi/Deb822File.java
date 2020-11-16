@@ -4,8 +4,10 @@ import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.psi.FileViewProvider;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+@Getter
 public class Deb822File extends PsiFileBase {
 
     private final FileType fileType;
@@ -13,12 +15,6 @@ public class Deb822File extends PsiFileBase {
     public Deb822File(@NotNull FileViewProvider viewProvider, LanguageFileType fileType) {
         super(viewProvider, fileType.getLanguage());
         this.fileType = fileType;
-    }
-
-    @Override
-    @NotNull
-    public FileType getFileType() {
-        return fileType;
     }
 
     @Override

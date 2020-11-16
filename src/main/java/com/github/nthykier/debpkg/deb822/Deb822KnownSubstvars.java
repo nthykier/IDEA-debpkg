@@ -3,6 +3,8 @@ package com.github.nthykier.debpkg.deb822;
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,37 +52,12 @@ public class Deb822KnownSubstvars {
         assert existing == null : "Substvar " + existing.getName() + " is declared twice";
     }
 
+    @RequiredArgsConstructor
+    @Getter
     public static class Deb822KnownSubstvarImpl implements Deb822KnownSubstvar {
         private final String name;
         private final String predefinedValue;
-        private final String docs;
-
-        public Deb822KnownSubstvarImpl(@NotNull String name,
-                                    String predefinedValue,
-                                    String docs) {
-            this.name = name;
-            this.predefinedValue = predefinedValue;
-            this.docs = docs;
-        }
-
-        @NotNull
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Nullable
-        @Override
-        public String getPredefinedValue() {
-            return this.predefinedValue;
-        }
-
-        @Nullable
-        @Override
-        public String getDescription() {
-            return this.docs;
-        }
-
+        private final String description;
     }
 
     private static void loadKnownSubstvarDefinitions() {
