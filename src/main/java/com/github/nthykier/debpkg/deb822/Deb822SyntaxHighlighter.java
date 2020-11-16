@@ -20,6 +20,9 @@ public class Deb822SyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey VALUE_KEYWORD =
             TextAttributesKey.createTextAttributesKey("DEB822.VALUE_KEYWORD", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL);
 
+    public static final TextAttributesKey WILDCARD_CHARACTER =
+            TextAttributesKey.createTextAttributesKey("DEB822.WILDCARD_CHARACTER", DefaultLanguageHighlighterColors.LABEL);
+
     private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
     private static final Map<IElementType, TextAttributesKey[]> TOKEN_TYPE2TEXT_ATTR_KEYS = new HashMap<>();

@@ -44,6 +44,7 @@ Plus the features listed for Generic deb822 files.
  * Documentation for some known fields ("CTRL + mouse-over")
  * Folding of long field values with `License` and `Copyright` folded by default.
  * Check fields are placed in a paragraph where it makes sense.
+ * Basic verification of patterns in the `Files` field (wildcards are currently not supported).
 
 Plus the features listed for Generic deb822 files.
 

@@ -52,6 +52,8 @@
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
         <annotator language="DebianControl" id="DEBIAN_CONTROL_SCANNER" order="after DEB822_BASIC_SCANNER"
                    implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlAnnotator" />
+        <annotator language="DebianCopyright" id="DEBIAN_COPYRIGHT_SCANNER" order="after DEB822_BASIC_SCANNER"
+                   implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianCopyrightAnnotator" />
         <spellchecker.support language="Deb822" id="deb822SpellcheckingStrategy"
                               implementationClass="com.github.nthykier.debpkg.deb822.Deb822SpellcheckingStrategy" />
         <spellchecker.bundledDictionaryProvider implementation="com.github.nthykier.debpkg.deb822.Deb822BundledDictionaryProvider" />
