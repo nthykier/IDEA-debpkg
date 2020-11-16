@@ -27,7 +27,7 @@ commonly used formats in Debian packaging.
  * Basic (incomplete) validation of field values.
  * Completion of field names, known values for fields and known substitution variables.
  * Documentation for fields, known values in fields and known substitution variables ("CTRL + mouse-over")
- * Spellchecking of field values with exception for some known fields.
+ * Spellchecking of relevant fields (e.g. `Description`).
  * Check fields are placed in a paragraph where it makes sense.
  * Folding of long field values with `Description` folded by default.
  * Validate dependency fields for use of unsupported version operators (e.g. in `Provides`) or build profile
@@ -45,6 +45,7 @@ Plus the features listed for Generic deb822 files.
  * Folding of long field values with `License` and `Copyright` folded by default.
  * Check fields are placed in a paragraph where it makes sense.
  * Basic verification of patterns in the `Files` field (wildcards are currently not supported).
+ * Spellchecking of relevant fields (e.g. `Comment`, `Disclaimer` and `Source`).
 
 Plus the features listed for Generic deb822 files.
 
@@ -58,6 +59,8 @@ Plus the features listed for Generic deb822 files.
    false-positive spelling mistakes.
  * Folding support to hide GPG signatures.  There is no logic to determine whether the given file permits the
    GPG signature.
+ * Spellchecking in selected fields guessed from their names, where the specific subformat does not provide
+   a more reliable selection.
 
 ## Getting started
 
