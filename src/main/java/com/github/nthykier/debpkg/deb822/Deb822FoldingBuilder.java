@@ -3,6 +3,7 @@ package com.github.nthykier.debpkg.deb822;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
+import com.github.nthykier.debpkg.util.ASTNodeStringConverter;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilderEx;
 import com.intellij.lang.folding.FoldingDescriptor;
@@ -129,7 +130,7 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
         }
         if (node.getElementType() == Deb822Types.FIELD_VALUE_PAIR) {
             final StringBuilder placeholderBuilder = new StringBuilder(" ");
-            TreeElementVisitor visitor = buildVisitor(placeholderBuilder);
+            ASTNodeStringConverter converter = new ASTNodeStringConverter(placeholderBuilder);
             ASTNode partsNode = node.findChildByType(Deb822Types.VALUE_PARTS);
             ASTNode currentChild;
             ASTNode nextChild = partsNode != null ? partsNode.getFirstChildNode() : null;
@@ -140,44 +141,20 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
                 nextChild = nextChild.getTreeNext();
                 if (placeholderBuilder.length() == initialSize) {
                     if (currentChild.getElementType() != TokenType.WHITE_SPACE) {
-                        addText(placeholderBuilder, visitor, currentChild);
+                        converter.readTextFromNode(currentChild);
                     }
                 } else if (currentChild.textContains('\n')) {
                     /* We add an ellipsis when there is (or might be) some hidden text */
                     placeholderBuilder.append(" {...}");
                     break;
                 } else {
-                    addText(placeholderBuilder, visitor, currentChild);
+                    converter.readTextFromNode(currentChild);
                 }
             }
 
             retTxt = placeholderBuilder.toString();
         }
         return retTxt;
-    }
-
-    private void addText(StringBuilder b, TreeElementVisitor visitor, ASTNode node) {
-        if (node instanceof TreeElement) {
-            ((TreeElement)node).acceptTree(visitor);
-        } else {
-            b.append(node.getText());
-        }
-    }
-
-    private static TreeElementVisitor buildVisitor(final StringBuilder b) {
-        return new TreeElementVisitor(){
-            public void visitComposite(CompositeElement compositeElement){
-                TreeElement e = compositeElement.getFirstChildNode();
-                while (e != null) {
-                    /* DFS */
-                    e.acceptTree(this);
-                    e = e.getTreeNext();
-                }
-            }
-            public void visitLeaf(LeafElement leaf) {
-                b.append(leaf.getChars());
-            }
-        };
     }
 
     @Override
