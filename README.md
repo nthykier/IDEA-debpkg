@@ -44,10 +44,13 @@ Plus the features listed for Generic deb822 files.
  * Documentation for some known fields ("CTRL + mouse-over")
  * Folding of long field values with `License` and `Copyright` folded by default.
  * Check fields are placed in a paragraph where it makes sense.
- * Basic verification of patterns in the `Files` field (wildcards are currently not supported).
+ * Basic verification of patterns in the `Files` field.  The plugin only partly supports wildcards
+   and will err on the side of assuming a wildcard matches when in doubt.
  * Spellchecking of relevant fields (e.g. `Comment`, `Disclaimer` and `Source`).
 
 Plus the features listed for Generic deb822 files.
+
+Notably missing features for `debian/copyright`.  The License fields are *not* validated.
 
 ### Generic deb822 files (*.deb822, *.dsc, *_\*\_\*.buildinfo, *\_\*\_\*.changes)
 
