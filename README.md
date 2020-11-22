@@ -38,8 +38,8 @@ Plus the features listed for Generic deb822 files.
 ### debian/copyright
 
  * Conditional detection as a Deb822 file based on the presence of the `Format:` field.  The matching is
-   conditional as `debian/copyright` to avoid false-positives for projects that do not use the machine-
-   readable Debian copyright format (also known as DEP-5).
+   conditional as `debian/copyright` to avoid false-positives for projects that do not use the
+   machine-readable Debian copyright format (also known as DEP-5).
  * Completion of field names of common known fields.
  * Documentation for some known fields ("CTRL + mouse-over")
  * Folding of long field values with `License` and `Copyright` folded by default.
