@@ -21,13 +21,6 @@
   falls back to using the name for guessing whether the field should be spellchecked.  Notably `Comment`,
   `Description` and `Disclaimer` will have spellchecking enabled in generic deb822 files.
 
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 ## [0.0.5]
 ### Added
 - Automatically recognise `.dsc` files as a generic deb822 file.
