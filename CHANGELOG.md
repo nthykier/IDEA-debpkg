@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [0.0.6]
+### Added
 - Recognition of `.buildinfo` and `.changes` file.  To avoid false-positives, debpkg will only auto-detect the format
   when the basename appear to follow the `PACKAGE_VERSION_ARCH.EXTENSION` pattern.
 - Auto-detect `debian/copyright` as a deb822 file provided it has a `Format:` field with a value of
