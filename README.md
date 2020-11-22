@@ -64,6 +64,7 @@ Notably missing features for `debian/copyright`.  The License fields are *not* v
    GPG signature.
  * Spellchecking in selected fields guessed from their names, where the specific subformat does not provide
    a more reliable selection.
+ * Quick fix for some syntactical issues with continuation lines.
 
 ## Getting started
 

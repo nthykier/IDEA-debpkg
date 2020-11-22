@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface Deb822ValueParts extends PsiElement {
 
   @NotNull
+  List<Deb822HangingContValue> getHangingContValueList();
+
+  @NotNull
   List<Deb822Substvar> getSubstvarList();
 
   @NotNull

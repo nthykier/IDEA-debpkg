@@ -4,24 +4,33 @@ import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
+import com.github.nthykier.debpkg.deb822.psi.Deb822HangingContValue;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
+import com.github.nthykier.debpkg.util.Deb822ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Deb822Annotator implements Annotator {
+public class Deb822Annotator implements Annotator, DumbAware {
 
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
         if (element instanceof Deb822Paragraph) {
             checkParagraph(holder, (Deb822Paragraph)element);
+        } else if (element instanceof Deb822HangingContValue) {
+            handleBrokenContinuation(holder, (Deb822HangingContValue)element);
         }
+    }
+
+    private void handleBrokenContinuation(@NotNull AnnotationHolder holder, @NotNull Deb822HangingContValue hangingContValue) {
+        AnnotatorUtil.createAnnotationWithQuickFixForBrokenContinuationLine(holder, hangingContValue);
     }
 
     private void checkParagraph(@NotNull AnnotationHolder holder, @NotNull Deb822Paragraph paragraph) {

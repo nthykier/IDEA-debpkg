@@ -18,9 +18,16 @@ public class Deb822ProblemDescriptor extends ProblemDescriptorBase implements Pr
                                    @NotNull String baseName,
                                    @NotNull PsiElement element,
                                    @NotNull ProblemHighlightType highlightType) {
+        this(new LocalQuickFix[]{fixer}, baseName, element, highlightType);
+    }
+
+    Deb822ProblemDescriptor(@NotNull LocalQuickFix[] fixes,
+                                   @NotNull String baseName,
+                                   @NotNull PsiElement element,
+                                   @NotNull ProblemHighlightType highlightType) {
         super(element, element,
                 Deb822Bundle.message("deb822.files.quickfix.fields."  + baseName +".description"),
-                new LocalQuickFix[]{fixer}, highlightType, false,
+                fixes, highlightType, false,
                 null, true, false
         );
         this.baseName = baseName;

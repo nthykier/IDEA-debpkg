@@ -52,9 +52,11 @@ field ::= FIELD_NAME {
   extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822Field"
   implements="com.github.nthykier.debpkg.deb822.psi.Deb822FieldBase"
 }
-value_parts ::= COMMENT* (value|COMMA|substvar) (COMMENT|value|COMMA|substvar)* {
+value_parts ::= COMMENT* hanging_cont_value? (value|COMMA|substvar) (hanging_cont_value|COMMENT|value|COMMA|substvar)* {
   extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822ValueParts"
 }
+
+hanging_cont_value ::= HANGING_CONT_VALUE_TOKEN+
 
 value ::= VALUE_TOKEN {
   methods=[getReference]

@@ -8,39 +8,22 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.nthykier.debpkg.deb822.psi.Deb822Types.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.deb822.psi.*;
 
-public class Deb822ValuePartsImpl extends AbstractDeb822ValueParts implements Deb822ValueParts {
+public class Deb822HangingContValueImpl extends ASTWrapperPsiElement implements Deb822HangingContValue {
 
-  public Deb822ValuePartsImpl(@NotNull ASTNode node) {
+  public Deb822HangingContValueImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull Deb822Visitor visitor) {
-    visitor.visitValueParts(this);
+    visitor.visitHangingContValue(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof Deb822Visitor) accept((Deb822Visitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @NotNull
-  public List<Deb822HangingContValue> getHangingContValueList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822HangingContValue.class);
-  }
-
-  @Override
-  @NotNull
-  public List<Deb822Substvar> getSubstvarList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822Substvar.class);
-  }
-
-  @Override
-  @NotNull
-  public List<Deb822Value> getValueList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822Value.class);
   }
 
 }

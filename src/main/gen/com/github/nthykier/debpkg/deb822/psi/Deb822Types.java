@@ -13,6 +13,7 @@ public interface Deb822Types {
   IElementType FIELD_VALUE_PAIR = new Deb822ElementType("FIELD_VALUE_PAIR");
   IElementType GPG_SIGNATURE = new Deb822ElementType("GPG_SIGNATURE");
   IElementType GPG_SIGNED = new Deb822ElementType("GPG_SIGNED");
+  IElementType HANGING_CONT_VALUE = new Deb822ElementType("HANGING_CONT_VALUE");
   IElementType PARAGRAPH = new Deb822ElementType("PARAGRAPH");
   IElementType SUBSTVAR = new Deb822ElementType("SUBSTVAR");
   IElementType VALUE = new Deb822ElementType("VALUE");
@@ -27,6 +28,7 @@ public interface Deb822Types {
   IElementType GPG_BEGIN_SIGNED_MESSAGE = new Deb822TokenType("GPG_BEGIN_SIGNED_MESSAGE");
   IElementType GPG_END_SIGNATURE = new Deb822TokenType("GPG_END_SIGNATURE");
   IElementType GPG_SIGNATURE_BLOB_PART = new Deb822TokenType("GPG_SIGNATURE_BLOB_PART");
+  IElementType HANGING_CONT_VALUE_TOKEN = new Deb822TokenType("HANGING_CONT_VALUE_TOKEN");
   IElementType PARAGRAPH_FINISH = new Deb822TokenType("PARAGRAPH_FINISH");
   IElementType SEPARATOR = new Deb822TokenType("SEPARATOR");
   IElementType SUBSTVAR_TOKEN = new Deb822TokenType("SUBSTVAR_TOKEN");
@@ -49,6 +51,9 @@ public interface Deb822Types {
       }
       else if (type == GPG_SIGNED) {
         return new Deb822GpgSignedImpl(node);
+      }
+      else if (type == HANGING_CONT_VALUE) {
+        return new Deb822HangingContValueImpl(node);
       }
       else if (type == PARAGRAPH) {
         return new Deb822ParagraphImpl(node);

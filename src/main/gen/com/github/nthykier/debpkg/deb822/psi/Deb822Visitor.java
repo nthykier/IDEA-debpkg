@@ -27,6 +27,10 @@ public class Deb822Visitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitHangingContValue(@NotNull Deb822HangingContValue o) {
+    visitPsiElement(o);
+  }
+
   public void visitParagraph(@NotNull Deb822Paragraph o) {
     visitParagraphSupport(o);
   }

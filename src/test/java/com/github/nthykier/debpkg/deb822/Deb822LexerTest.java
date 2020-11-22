@@ -1,7 +1,6 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
-import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import junit.framework.TestCase;
@@ -97,7 +96,6 @@ public class Deb822LexerTest extends TestCase {
         runLexerText(lexer, content, expected);
     }
 
-
     public void testSimpleDscFile() throws IOException {
         String content = "-----BEGIN PGP SIGNED MESSAGE-----\n" +
                 "Hash: SHA512\n" +
@@ -191,6 +189,37 @@ public class Deb822LexerTest extends TestCase {
                 Deb822Types.GPG_SIGNATURE_BLOB_PART, Deb822Types.GPG_SIGNATURE_BLOB_PART,
                 Deb822Types.GPG_END_SIGNATURE
 
+        );
+        runLexerText(lexer, content, expected);
+    }
+
+    public void testHangingContLine() throws IOException {
+        String content = "Package: dh-systemd\n" +
+                "Section: oldlibs\n" +
+                "Architecture: all\n" +
+                "Multi-Arch: foreign\n" +
+                "Depends: debhelper (>= 9.20160709),\n" +
+                "  \n" + /* <-- invalid and should be parsed as a hanging continuation value */
+                "         ${misc:Depends},\n" +
+                "Description: debhelper add-on ...\n" +
+                " This package ...\n";
+        Deb822Lexer lexer = new Deb822Lexer(null);
+        List<IElementType> expected = Arrays.asList(
+                /* Field Package */
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,
+                /* Field Section */
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,
+                /* Field Architecture */
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,
+                /* Field Multi-Arch */
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,
+                /* Field Depends */
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN,
+                /* cont */ Deb822Types.VALUE_TOKEN, Deb822Types.COMMA,
+                /* cont */ Deb822Types.HANGING_CONT_VALUE_TOKEN, Deb822Types.SUBSTVAR_TOKEN, Deb822Types.COMMA,
+                /* Field Description */
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN,
+                /* cont */ Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN
         );
         runLexerText(lexer, content, expected);
     }

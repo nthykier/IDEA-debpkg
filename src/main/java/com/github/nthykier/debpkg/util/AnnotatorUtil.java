@@ -1,24 +1,25 @@
 package com.github.nthykier.debpkg.util;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
-import com.github.nthykier.debpkg.deb822.psi.Deb822ElementFactory;
-import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
+import com.github.nthykier.debpkg.deb822.psi.*;
 import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
+import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +27,18 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class AnnotatorUtil {
+
+    private static final Deb822TypeSafeLocalQuickFix<Deb822HangingContValue> INSERT_SPACE_DOT_CONTINUATION_LINE_FIXER = incorrectContinuationLineFixer(
+            "whitespace-only-continuation-line-insert-dotspace",
+            " .\n "
+    );
+    private static final Deb822TypeSafeLocalQuickFix<Deb822HangingContValue> REMOVE_INCORRECT_CONTINUATION_LINE_FIXER = incorrectContinuationLineFixer(
+            "whitespace-only-continuation-line-remove",
+            " "
+    );
+
+    private static final LocalQuickFix[] CONT_LINE_FIXES_REMOVE_ONLY = new LocalQuickFix[]{REMOVE_INCORRECT_CONTINUATION_LINE_FIXER};
+    private static final LocalQuickFix[] CONT_LINE_FIXES_ALL = new LocalQuickFix[]{INSERT_SPACE_DOT_CONTINUATION_LINE_FIXER, REMOVE_INCORRECT_CONTINUATION_LINE_FIXER};
 
     public static <T extends PsiElement> void createAnnotationWithQuickFix(
             @NotNull AnnotationHolder annoHolder,
@@ -44,6 +57,30 @@ public class AnnotatorUtil {
                 .create();
     }
 
+    public static void createAnnotationWithQuickFixForBrokenContinuationLine(
+            @NotNull AnnotationHolder annoHolder,
+            @NotNull Deb822HangingContValue elementToFix) {
+        Deb822FieldValuePair fieldValuePair = Deb822PsiImplUtil.getAncestorOfType(elementToFix, Deb822FieldValuePair.class);
+        assert fieldValuePair != null;
+        Deb822KnownField knownField = fieldValuePair.getField().getDeb822KnownField();
+        LocalQuickFix[] fixes = CONT_LINE_FIXES_REMOVE_ONLY;
+        ProblemDescriptor problemDescriptor;
+        AnnotationBuilder annotationBuilder;
+        final String basename = "whitespace-only-continuation-line";
+        if (knownField == null || knownField.getFieldValueType() == Deb822KnownFieldValueType.FREE_TEXT_VALUE) {
+            fixes = CONT_LINE_FIXES_ALL;
+        }
+        problemDescriptor = new Deb822ProblemDescriptor(fixes, basename, elementToFix, ProblemHighlightType.ERROR);
+        annotationBuilder = annoHolder.newAnnotation(HighlightSeverity.ERROR, getAnnotationText(basename))
+                .range(elementToFix);
+        for (LocalQuickFix localQuickFix : fixes) {
+            annotationBuilder = annotationBuilder
+                    .newLocalQuickFix(localQuickFix, problemDescriptor)
+                    .registerFix();
+        }
+        annotationBuilder.create();
+    }
+
     @NotNull
     public static <T extends PsiElement> Function<String, Deb822TypeSafeLocalQuickFix<T>> replacementQuickFixer(final Function<Project, T> factoryMethod) {
         return (String s) -> psiReplacement(s, factoryMethod);
@@ -57,6 +94,35 @@ public class AnnotatorUtil {
     @NotNull
     public static <T extends Deb822FieldValuePair> Function<String, Deb822TypeSafeLocalQuickFix<T>> fieldInsertionQuickFix(final Function<Project, T> factoryMethod, String... insertRelativeTo) {
         return (String s) -> insertField(s, factoryMethod, insertRelativeTo);
+    }
+
+    private static Deb822TypeSafeLocalQuickFix<Deb822HangingContValue> incorrectContinuationLineFixer(String baseName, String replacementText) {
+        return new Deb822TypeSafeLocalQuickFixImpl<>(baseName, (project, problemDescriptor) -> {
+            /*
+             * Currently it is easier just to rewrite the entire Deb822FieldValuePair rather than just replacing the
+             * element(s) with "repaired" elements.  Therefore we basically stringify the entire Deb822FieldValuePair,
+             * find the broken continuation part and replace it with " .\n ".  The new string is then parsed as a
+             * (new) Deb822FieldValuePair, which replaces the old Deb822FieldValuePair.
+             */
+            PsiElement hangingContElement = problemDescriptor.getPsiElement();
+            Deb822FieldValuePair fieldValuePair = Deb822PsiImplUtil.getAncestorOfType(hangingContElement, Deb822FieldValuePair.class);
+
+            StringBuilder builder = new StringBuilder();
+            ASTNodeStringConverter stringConverter = new ASTNodeStringConverter(builder);
+            int offset;
+            TextRange rangeOfElement = hangingContElement.getTextRange();
+            Deb822FieldValuePair replacement;
+            assert fieldValuePair != null;
+
+            stringConverter.readTextFromNode(fieldValuePair.getNode());
+
+            offset = rangeOfElement.getStartOffset() - fieldValuePair.getTextOffset();
+
+            builder.replace(offset, offset + rangeOfElement.getLength(), replacementText);
+
+            replacement = Deb822ElementFactory.createFieldValuePairFromText(project, builder.toString());
+            fieldValuePair.replace(replacement);
+        });
     }
 
     @NotNull

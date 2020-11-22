@@ -40,7 +40,7 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 ^{FIRST_FIELD_CHARACTER}{FIELD_CHARACTER}*                                                                           { yybegin(WAITING_FOR_SEPATOR); return Deb822Types.FIELD_NAME; }
 ^{GPG_DASHES}BEGIN{SINGLE_SPACE}PGP{SINGLE_SPACE}SIGNED{SINGLE_SPACE}MESSAGE{GPG_DASHES}{GPG_WHITESPACE}*{NEWLINE}   { yybegin(GPG_PARSE_ARMORED_HEADERS); return Deb822Types.GPG_BEGIN_SIGNED_MESSAGE; }
 ^{GPG_DASHES}BEGIN{SINGLE_SPACE}PGP{SINGLE_SPACE}SIGNATURE{GPG_DASHES}{GPG_WHITESPACE}*{NEWLINE}                     { yybegin(GPG_BEGIN_SIGNATURE_ARMORED_HEADERS); return Deb822Types.GPG_BEGIN_SIGNATURE; }
-{WHITE_SPACE}+                                                                                                       { return TokenType.WHITE_SPACE; }
+^{WHITE_SPACE}+{NEWLINE}+                                                                                            { return TokenType.WHITE_SPACE; }
 {NEWLINE}+                                                                                                           { return TokenType.WHITE_SPACE; }
 }
 
@@ -107,7 +107,7 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 {SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR_TOKEN; }
 [$][{][}]                                                        { return Deb822Types.SUBSTVAR_TOKEN; }
 [$]                                                              { return Deb822Types.VALUE_TOKEN; }
-[,]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA; }
+[,]                                                              { return Deb822Types.COMMA; }
 [^$ ,\r\n]+                                                      { return Deb822Types.VALUE_TOKEN; }
 {WHITE_SPACE}+                                                   { return TokenType.WHITE_SPACE; }
 }
@@ -117,16 +117,20 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 {SUBSTVAR}                                                       { return Deb822Types.SUBSTVAR_TOKEN; }
 [$][{][}]                                                        { return Deb822Types.SUBSTVAR_TOKEN; }
 [$]                                                              { return Deb822Types.VALUE_TOKEN; }
-[,]                                                              { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA; }
+[,]                                                              { return Deb822Types.COMMA; }
 [^ $,\r\n]+                                                      { return Deb822Types.VALUE_TOKEN; }
 {WHITE_SPACE}+                                                   { return TokenType.WHITE_SPACE; }
 }
 
 <MAYBE_CONT_VALUE>{
-{END_OF_LINE_COMMENT}{NEWLINE}                           { return Deb822Types.COMMENT; }
-^{SINGLE_SPACE}                                          { yybegin(PARSING_CONT_VALUE); return TokenType.WHITE_SPACE;}
-^{FIRST_FIELD_CHARACTER}{FIELD_CHARACTER}*               { yybegin(WAITING_FOR_SEPATOR); return Deb822Types.FIELD_NAME; }
-{NEWLINE}                                                { yybegin(YYINITIAL); return Deb822Types.PARAGRAPH_FINISH; }
+{END_OF_LINE_COMMENT}{NEWLINE}                                                     { return Deb822Types.COMMENT; }
+/* Cope with some common missing " ." patterns */
+^{NEWLINE}?({WHITE_SPACE}*{NEWLINE})?{WHITE_SPACE}*{NEWLINE}{SINGLE_SPACE}          { yybegin(PARSING_CONT_VALUE); return Deb822Types.HANGING_CONT_VALUE_TOKEN; }
+//^{NEWLINE}?{WHITE_SPACE}*{NEWLINE}?{SINGLE_SPACE}                                   { yybegin(PARSING_CONT_VALUE); return Deb822Types.HANGING_CONT_VALUE_TOKEN; }
+
+^{SINGLE_SPACE}                                                                    { yybegin(PARSING_CONT_VALUE); return TokenType.WHITE_SPACE; }
+^{FIRST_FIELD_CHARACTER}{FIELD_CHARACTER}*                                         { yybegin(WAITING_FOR_SEPATOR); return Deb822Types.FIELD_NAME; }
+{NEWLINE}                                                                          { yybegin(YYINITIAL); return Deb822Types.PARAGRAPH_FINISH; }
 }
 
 [^]                                              { return TokenType.BAD_CHARACTER; }
