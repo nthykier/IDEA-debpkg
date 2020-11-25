@@ -32,4 +32,9 @@ public class Deb822DialectDebianCopyrightFileTypeDetector implements FileTypeReg
         }
         return Deb822DialectDebianCopyrightFileType.INSTANCE;
     }
+
+    @Override
+    public int getVersion() {
+        return 0;
+    }
 }

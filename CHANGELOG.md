@@ -12,6 +12,7 @@
 ### Removed
 
 ### Fixed
+- Fixed compatibility with IDEA 2020.1.4.
 
 ### Security
 ## [0.0.6]
