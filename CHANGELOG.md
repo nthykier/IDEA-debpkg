@@ -6,6 +6,7 @@
 ### Added
 
 ### Changed
+- Parse `[ Name ]:` as an alternative to `[ Name ]` token in debian/changelog.
 
 ### Deprecated
 

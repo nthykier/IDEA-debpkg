@@ -64,7 +64,7 @@ DASH=[\-]
 }
 
 <CHANGE_ENTRY>{
-\[[^\]\n]+\]{WHITE_SPACE}*                       { return DchTypes.CHANGE_RESPONSIBLE; }
+\[[^\]\n]+\]:?{WHITE_SPACE}*                     { return DchTypes.CHANGE_RESPONSIBLE; }
 [^\n]+                                           { return DchTypes.CHANGE_DETAILS; }
 }
 
