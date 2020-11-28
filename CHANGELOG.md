@@ -4,9 +4,13 @@
 
 ## [Unreleased]
 ### Added
+- More packaging terms to the built-in dictionary.
+- Custom exclusion rules for the `debian/changelog` Spellchecker.  It will
+  now attempt to exclude patterns like `override_dh_VALUE` and other common
+  filename patterns (e.g. "*.c").
 
 ### Changed
-- Parse `[ Name ]:` as an alternative to `[ Name ]` token in debian/changelog.
+- Parse `[ Name ]:` as an alternative to `[ Name ]` token in `debian/changelog`.
 
 ### Deprecated
 
