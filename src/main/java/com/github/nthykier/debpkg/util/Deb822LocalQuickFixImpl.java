@@ -25,4 +25,8 @@ public class Deb822LocalQuickFixImpl implements Deb822LocalQuickFix {
         fixCode.accept(project, descriptor);
     }
 
+
+    static Deb822LocalQuickFixImpl of(String baseName, BiConsumer<Project, ProblemDescriptor> fixCode) {
+        return new Deb822LocalQuickFixImpl(baseName, fixCode);
+    }
 }

@@ -7,6 +7,10 @@ import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 import com.github.nthykier.debpkg.util.ASTNodeStringConverter;
+import com.github.nthykier.debpkg.util.AnnotatorUtil;
+import com.github.nthykier.debpkg.util.TriConsumer;
+import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
@@ -83,7 +87,7 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
             }
 
             pathParts = parsePathIntoParts(word, range, holder);
-            checkPathParts(rootDir, word, pathParts, range, holder);
+            checkPathParts(filesField, rootDir, word, pathParts, range, holder);
         }
     }
 
@@ -114,18 +118,28 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
         return builder.toString();
     }
 
-    private static void checkPathParts(VirtualFile rootDir, String fullPath, PathPart[] pathParts, TextRange fullRange, @NotNull AnnotationHolder holder) {
+    private static boolean isStarWildcardOrEndsWithSlashStarWildCard(PathPart[] parts) {
+        if (parts.length == 1 && parts[0].getPathType() == PathType.WILDCARD_STAR) {
+            return true;
+        }
+        if (parts.length < 3 || parts[parts.length - 1].getPathType() != PathType.WILDCARD_STAR) {
+            return false;
+        }
+        return parts[parts.length - 2].getPathType() == PathType.DIRECTORY_SEPARATOR;
+    }
+
+    private static void checkPathParts(Deb822FieldValuePair affectedField, VirtualFile rootDir, String fullPath, PathPart[] pathParts, TextRange fullRange, @NotNull AnnotationHolder holder) {
         VirtualFile currentDir = rootDir;
-        int length = pathParts.length;
+        int length;
         PathPart finalPartWildcard = null;
 
         /* Special-case ".../*" and "*", which are very common patterns */
-        if (length > 0 && pathParts[length - 1].getPathType() == PathType.WILDCARD_STAR) {
-            if (length == 1 || (length > 2 && pathParts[length - 2].getPathType() == PathType.DIRECTORY_SEPARATOR)) {
-                --length;
-                finalPartWildcard = pathParts[length];
-                checkWildcard(finalPartWildcard, holder);
-            }
+        if (isStarWildcardOrEndsWithSlashStarWildCard(pathParts)) {
+            length = pathParts.length - 1;
+            finalPartWildcard = pathParts[length];
+            checkWildcard(finalPartWildcard, holder);
+        } else {
+            length = pathParts.length;
         }
 
         for (int i = 0 ; i < length ; i++) {
@@ -200,12 +214,26 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
 
         /* It must not end on a directory though (though account for our special casing of ".../*") */
         if (currentDir != null && currentDir.isDirectory() && finalPartWildcard == null) {
-            holder.newAnnotation(
+            TriConsumer<ProblemDescriptor, Deb822FieldValuePair, StringBuilder> contextReplacer = (pd, pair, builder) -> {
+                int offset = fullRange.getEndOffset() - pair.getTextOffset();
+                PathPart lastPath = pathParts[length - 1];
+                /* Insert "*" (if it ends with a slash already) or "/*" (otherwise) */
+                if (lastPath.getPathType().isDirectorySeparator()) {
+                    builder.insert(offset, "*");
+                } else {
+                    builder.insert(offset, "/*");
+                }
+            };
+            AnnotatorUtil.createAnnotationWithQuickFixWithoutTypeSafety(
+                    holder,
                     HighlightSeverity.WARNING,
-                    Deb822Bundle.message("deb822.files.annotator.fields.paths-in-files-field-must-match-files", fullPath)
-            )
-                    .range(fullRange)
-                    .create();
+                    AnnotatorUtil.fieldValueReplacementFix(contextReplacer),
+                    "paths-in-files-field-must-match-files",
+                    affectedField,
+                    fullRange,
+                    ProblemHighlightType.WARNING,
+                    fullPath
+            );
         } else if (currentDir == null) {
             /* If we do _not_ have a complete match, then highlight the path */
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
