@@ -10,6 +10,7 @@
   filename patterns (e.g. "*.c").
 - A quick fix to the Deb822 copyright format that converts directories into
   a directory + wildcard as directories themselves match nothing.
+- Support for IDEA 2020.3.
 
 ### Changed
 - Parse `[ Name ]:` as an alternative to `[ Name ]` token in `debian/changelog`.
