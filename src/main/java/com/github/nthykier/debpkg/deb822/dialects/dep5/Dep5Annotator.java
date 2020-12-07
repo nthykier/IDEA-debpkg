@@ -1,7 +1,8 @@
-package com.github.nthykier.debpkg.deb822.dialects;
+package com.github.nthykier.debpkg.deb822.dialects.dep5;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighter;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianCopyrightLanguage;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.psi.*;
@@ -25,12 +26,13 @@ import com.intellij.psi.PsiFile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
+public class Dep5Annotator implements Annotator {
 
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
         if (element instanceof Deb822File) {
@@ -91,6 +93,7 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
         }
     }
 
+
     private static void checkWildcard(PathPart part, @NotNull AnnotationHolder holder) {
         String wildcardText = part.getPath();
 
@@ -118,7 +121,7 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
         return builder.toString();
     }
 
-    private static boolean isStarWildcardOrEndsWithSlashStarWildCard(PathPart[] parts) {
+    static boolean isStarWildcardOrEndsWithSlashStarWildCard(PathPart[] parts) {
         if (parts.length == 1 && parts[0].getPathType() == PathType.WILDCARD_STAR) {
             return true;
         }
@@ -191,7 +194,7 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
                                 .create();
                     }
                     if (currentDir != null && !currentDir.isDirectory()) {
-                        TextRange badRange = new TextRange(pathPart.textRange.getStartOffset(), fullRange.getEndOffset());
+                        TextRange badRange = new TextRange(pathPart.getTextRange().getStartOffset(), fullRange.getEndOffset());
                         String text = partsToString(pathParts, 0, i);
                         String message = Deb822Bundle.message("deb822.files.annotator.fields.path-in-files-field-used-as-dir-but-is-not",
                                 fullPath,
@@ -243,7 +246,7 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
         }
     }
 
-    private static PathPart[] parsePathIntoParts(String path, TextRange pathRange, @NotNull AnnotationHolder holder) {
+    static PathPart[] parsePathIntoParts(String path, TextRange pathRange, @Nullable AnnotationHolder holder) {
         final int length = path.length();
         char lastChar = 0;
         PathBuilder pathBuilder = PathBuilder.of(pathRange);
@@ -253,6 +256,12 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
             if (c == '/') {
                 pathBuilder.currentPathType(PathType.DIRECTORY_SEPARATOR);
                 pathBuilder.addChar(c);
+
+                if (lastChar == '\\' && holder != null) {
+                    // The sequence "\\/" is also an invalid escape sequence
+                    highlightWildcardOrEscapeSequence(pathRange, i - 1, 2, holder, false);
+                }
+
                 lastChar = c;
                 continue;
             }
@@ -270,8 +279,11 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
                         break;
                 }
                 pathBuilder.addChar(c);
-                highlightWildcardOrEscapeSequence(pathRange, i - 1, 2, holder, valid);
-                lastChar = c;
+                if (holder != null) {
+                    highlightWildcardOrEscapeSequence(pathRange, i - 1, 2, holder, valid);
+                }
+                // we need it to "not" be '\\' to avoid flagging the "\\x" in "\\\\x" as invalid.
+                lastChar = '\0';
                 continue;
             }
 
@@ -294,7 +306,7 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
             }
             lastChar = c;
         }
-        if (lastChar == '\\') {
+        if (lastChar == '\\' && holder != null) {
             highlightWildcardOrEscapeSequence(pathRange, length - 1, 1, holder, false);
         }
 
@@ -302,7 +314,7 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
         return pathBuilder.getPathParts();
     }
 
-    private static void highlightSequence(AnnotationBuilder annotationBuilder, TextAttributesKey attributesKey, TextRange pathRange, int offset, int len) {
+    private static void highlightSequence(@NotNull AnnotationBuilder annotationBuilder, TextAttributesKey attributesKey, TextRange pathRange, int offset, int len) {
         TextRange newRange = TextRange.from(pathRange.getStartOffset() + offset, len);
         if (attributesKey != null) {
             annotationBuilder = annotationBuilder.textAttributes(attributesKey);
@@ -311,7 +323,7 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
                 .create();
     }
 
-    private static void highlightWildcardOrEscapeSequence(TextRange pathRange, int offset, int len, AnnotationHolder holder, boolean isValid) {
+    private static void highlightWildcardOrEscapeSequence(TextRange pathRange, int offset, int len, @NotNull AnnotationHolder holder, boolean isValid) {
         if (isValid) {
             highlightSequence(holder.newSilentAnnotation(HighlightSeverity.INFORMATION),
                     DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE,
@@ -326,15 +338,19 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
         }
     }
 
-    private static VirtualFile getRootDir(PsiFile file) {
-        VirtualFile debianDirectory = file.getVirtualFile().getParent();
-        if (debianDirectory == null) {
+    static VirtualFile getRootDir(PsiFile file) {
+        VirtualFile path = file.getVirtualFile();
+        if (path == null) {
             return null;
         }
-        return debianDirectory.getParent();
+        path = path.getParent();
+        if (path == null) {
+            return null;
+        }
+        return path.getParent();
     }
 
-    private static String asString(ASTNodeStringConverter converter, List<ASTNode> wordParts) {
+    static String asString(ASTNodeStringConverter converter, List<ASTNode> wordParts) {
         converter.getStringBuilder().setLength(0);
         for (ASTNode node : wordParts) {
             converter.readTextFromNode(node);
@@ -342,36 +358,26 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
         return converter.getStringBuilder().toString();
     }
 
-    private static TextRange rangeOfWordParts(List<ASTNode> wordParts) {
+    static TextRange rangeOfWordParts(List<ASTNode> wordParts) {
+        return rangeOfWordParts(wordParts, false, 0);
+    }
+
+    static TextRange rangeOfWordParts(List<ASTNode> wordParts, boolean relativeToParent, int offset) {
         if (wordParts.size() == 1) {
-            return wordParts.get(0).getTextRange();
+            ASTNode node = wordParts.get(0);
+            return relativeToParent
+                    ? TextRange.from(node.getStartOffsetInParent() + offset, node.getTextLength())
+                    : node.getTextRange();
         } else {
             ASTNode first = wordParts.get(0);
             ASTNode last = wordParts.get(wordParts.size() - 1);
-            int startOffset = first.getStartOffset();
+            int startOffset = relativeToParent ? first.getStartOffsetInParent() + offset : first.getStartOffset();
             int len = last.getStartOffsetInParent() + last.getTextLength();
             return TextRange.from(startOffset, len);
         }
     }
 
-    private enum PathType {
-        NAME_PART,
-        DIRECTORY_SEPARATOR,
-        WILDCARD_STAR,
-        WILDCARD_QUESTION_MARK;
 
-        public boolean isWildcard() {
-            return this == WILDCARD_QUESTION_MARK || this == WILDCARD_STAR;
-        }
-
-        public boolean isNamePart() {
-            return this == NAME_PART;
-        }
-
-        public boolean isDirectorySeparator() {
-            return this == DIRECTORY_SEPARATOR;
-        }
-    }
 
     @RequiredArgsConstructor(staticName = "of")
     private static class PathBuilder {
@@ -420,11 +426,4 @@ public class Deb822DialectDebianCopyrightAnnotator implements Annotator {
         }
     }
 
-    @RequiredArgsConstructor(staticName = "of")
-    @Getter
-    private static class PathPart {
-        private final PathType pathType;
-        private final String path;
-        private final TextRange textRange;
-    }
 }

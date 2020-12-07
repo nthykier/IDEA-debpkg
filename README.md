@@ -47,6 +47,8 @@ Plus the features listed for Generic deb822 files.
  * Basic verification of patterns in the `Files` field.  The plugin only partly supports wildcards
    and will err on the side of assuming a wildcard matches when in doubt.
  * Spellchecking of relevant fields (e.g. `Comment`, `Disclaimer` and `Source`).
+ * Valid paths without wildcards in the `Files` fields are turned into references,
+   which in turn enables other features such as "jump to" and Refactor support.
 
 Plus the features listed for Generic deb822 files.
 

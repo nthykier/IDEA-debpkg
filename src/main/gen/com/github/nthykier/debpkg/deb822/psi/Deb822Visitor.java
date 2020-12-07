@@ -4,6 +4,7 @@ package com.github.nthykier.debpkg.deb822.psi;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ContributedReferenceHost;
 
 public class Deb822Visitor extends PsiElementVisitor {
 
@@ -16,7 +17,7 @@ public class Deb822Visitor extends PsiElementVisitor {
   }
 
   public void visitFieldValuePair(@NotNull Deb822FieldValuePair o) {
-    visitPsiElement(o);
+    visitContributedReferenceHost(o);
   }
 
   public void visitGpgSignature(@NotNull Deb822GpgSignature o) {
@@ -57,6 +58,10 @@ public class Deb822Visitor extends PsiElementVisitor {
 
   public void visitSubstvarBase(@NotNull Deb822SubstvarBase o) {
     visitPsiElement(o);
+  }
+
+  public void visitContributedReferenceHost(@NotNull ContributedReferenceHost o) {
+    visitElement(o);
   }
 
   public void visitPsiElement(@NotNull PsiElement o) {

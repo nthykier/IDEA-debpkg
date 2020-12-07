@@ -8,6 +8,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +39,12 @@ public class Deb822PsiImplUtil {
             }
         }
         return null;
+    }
+
+    public static @Nullable PsiReference @NotNull [] getReferences(@NotNull Deb822FieldValuePair fieldValuePair) {
+        PsiReference[] res = ReferenceProvidersRegistry.getReferencesFromProviders(fieldValuePair);
+        System.out.checkError();
+        return res;
     }
 
     @NotNull

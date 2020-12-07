@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.nthykier.debpkg.deb822.psi.Deb822Types.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.deb822.psi.*;
+import com.intellij.psi.PsiReference;
 
 public class Deb822FieldValuePairImpl extends ASTWrapperPsiElement implements Deb822FieldValuePair {
 
@@ -21,6 +22,7 @@ public class Deb822FieldValuePairImpl extends ASTWrapperPsiElement implements De
     visitor.visitFieldValuePair(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof Deb822Visitor) accept((Deb822Visitor)visitor);
     else super.accept(visitor);
@@ -36,6 +38,11 @@ public class Deb822FieldValuePairImpl extends ASTWrapperPsiElement implements De
   @Nullable
   public Deb822ValueParts getValueParts() {
     return findChildByClass(Deb822ValueParts.class);
+  }
+
+  @Override
+  public @Nullable PsiReference @NotNull [] getReferences() {
+    return Deb822PsiImplUtil.getReferences(this);
   }
 
 }

@@ -8,7 +8,6 @@ import com.intellij.psi.PsiReference;
 
 public interface Deb822Value extends PsiElement {
 
-  @Nullable
-  PsiReference getReference();
+  @Nullable PsiReference getReference();
 
 }

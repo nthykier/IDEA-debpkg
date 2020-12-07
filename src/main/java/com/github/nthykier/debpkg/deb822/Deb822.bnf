@@ -42,10 +42,11 @@ private gpg_signature_blob ::= GPG_SIGNATURE_BLOB_PART*
 
 field_value_pair ::= field SEPARATOR value_parts {
   pin=2
-/*  extends="com.github.nthykier.debpkg.deb822.psi.impl.Deb822FieldValueElementImpl"
-  implements="com.github.nthykier.debpkg.deb822.psi.Deb822FieldValueElement"*/
+/*  extends="com.github.nthykier.debpkg.deb822.psi.impl.Deb822FieldValueElementImpl" */
+  implements="com.intellij.psi.ContributedReferenceHost"
   recoverWhile=recover_property
   //methods=[getFieldName getFieldValue getName setName getNameIdentifier getPresentation]
+    methods=[getReferences]
 }
 
 field ::= FIELD_NAME {

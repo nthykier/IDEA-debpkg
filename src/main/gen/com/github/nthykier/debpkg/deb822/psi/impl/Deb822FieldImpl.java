@@ -20,6 +20,7 @@ public class Deb822FieldImpl extends AbstractDeb822Field implements Deb822Field 
     visitor.visitField(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof Deb822Visitor) accept((Deb822Visitor)visitor);
     else super.accept(visitor);

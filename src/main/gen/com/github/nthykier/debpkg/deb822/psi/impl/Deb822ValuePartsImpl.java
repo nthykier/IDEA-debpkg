@@ -20,6 +20,7 @@ public class Deb822ValuePartsImpl extends AbstractDeb822ValueParts implements De
     visitor.visitValueParts(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof Deb822Visitor) accept((Deb822Visitor)visitor);
     else super.accept(visitor);

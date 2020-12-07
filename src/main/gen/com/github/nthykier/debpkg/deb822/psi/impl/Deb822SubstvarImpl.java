@@ -22,6 +22,7 @@ public class Deb822SubstvarImpl extends ASTWrapperPsiElement implements Deb822Su
     visitor.visitSubstvar(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof Deb822Visitor) accept((Deb822Visitor)visitor);
     else super.accept(visitor);

@@ -186,7 +186,7 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
     r = r && consumeToken(b, SEPARATOR);
     p = r; // pin = 2
     r = r && value_parts(b, l + 1);
-    exit_section_(b, l, m, r, p, recover_property_parser_);
+    exit_section_(b, l, m, r, p, Deb822Parser::recover_property);
     return r || p;
   }
 
@@ -201,7 +201,7 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
     r = r && report_error_(b, armor_headers(b, l + 1));
     r = p && report_error_(b, gpg_signature_blob(b, l + 1)) && r;
     r = p && consumeToken(b, GPG_END_SIGNATURE) && r;
-    exit_section_(b, l, m, r, p, recover_signature_parser_);
+    exit_section_(b, l, m, r, p, Deb822Parser::recover_signature);
     return r || p;
   }
 
@@ -441,14 +441,4 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  static final Parser recover_property_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recover_property(b, l + 1);
-    }
-  };
-  static final Parser recover_signature_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recover_signature(b, l + 1);
-    }
-  };
 }

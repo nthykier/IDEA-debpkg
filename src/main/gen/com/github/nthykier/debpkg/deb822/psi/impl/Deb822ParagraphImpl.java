@@ -20,6 +20,7 @@ public class Deb822ParagraphImpl extends AbstractDeb822Paragraph implements Deb8
     visitor.visitParagraph(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof Deb822Visitor) accept((Deb822Visitor)visitor);
     else super.accept(visitor);

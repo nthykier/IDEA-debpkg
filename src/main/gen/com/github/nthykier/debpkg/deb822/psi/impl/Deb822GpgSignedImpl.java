@@ -21,6 +21,7 @@ public class Deb822GpgSignedImpl extends ASTWrapperPsiElement implements Deb822G
     visitor.visitGpgSigned(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof Deb822Visitor) accept((Deb822Visitor)visitor);
     else super.accept(visitor);

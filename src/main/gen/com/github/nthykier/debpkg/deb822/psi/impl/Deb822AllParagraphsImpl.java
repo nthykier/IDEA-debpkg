@@ -21,6 +21,7 @@ public class Deb822AllParagraphsImpl extends ASTWrapperPsiElement implements Deb
     visitor.visitAllParagraphs(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof Deb822Visitor) accept((Deb822Visitor)visitor);
     else super.accept(visitor);

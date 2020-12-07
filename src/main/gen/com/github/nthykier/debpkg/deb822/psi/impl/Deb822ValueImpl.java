@@ -22,14 +22,14 @@ public class Deb822ValueImpl extends ASTWrapperPsiElement implements Deb822Value
     visitor.visitValue(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof Deb822Visitor) accept((Deb822Visitor)visitor);
     else super.accept(visitor);
   }
 
   @Override
-  @Nullable
-  public PsiReference getReference() {
+  public @Nullable PsiReference getReference() {
     return Deb822PsiImplUtil.getReference(this);
   }
 
