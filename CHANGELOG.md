@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [0.0.7]
+### Added
 - More packaging terms to the built-in dictionary.
 - Custom exclusion rules for the `debian/changelog` Spellchecker.  It will
   now attempt to exclude patterns like `override_dh_VALUE` and other common
