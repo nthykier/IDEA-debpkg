@@ -17,14 +17,9 @@
 ### Changed
 - Parse `[ Name ]:` as an alternative to `[ Name ]` token in `debian/changelog`.
 
-### Deprecated
-
-### Removed
-
 ### Fixed
 - Fixed compatibility with IDEA 2020.1.4.
 
-### Security
 ## [0.0.6]
 ### Added
 - Recognition of `.buildinfo` and `.changes` file.  To avoid false-positives, debpkg will only auto-detect the format
