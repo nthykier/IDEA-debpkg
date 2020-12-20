@@ -9,12 +9,19 @@
   still referenced from `debian/control`.
 
 ### Changed
+- The `debian/control` support will now make a reference of each part of the
+  path in the `Files` fields.  This works better with the built-in refactoring
+  support (but still has rough edges around moving things between directories).
 
 ### Deprecated
 
 ### Removed
 
 ### Fixed
+- Fixed a bug where renaming a directory via refactoring would remove the
+  trailing slash after the directory in the `Files`-field in
+  `debian/copyright`.  Now refactoring will correctly preserve the directory
+  separators.
 
 ### Security
 ## [0.0.7]

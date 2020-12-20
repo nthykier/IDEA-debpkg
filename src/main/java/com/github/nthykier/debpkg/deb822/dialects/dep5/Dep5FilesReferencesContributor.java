@@ -13,7 +13,9 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Dep5FilesReferencesContributor extends PsiReferenceContributor {
@@ -63,7 +65,7 @@ public class Dep5FilesReferencesContributor extends PsiReferenceContributor {
                                         .anyMatch(p -> p.getPathType().isWildcard())) {
                                     continue;
                                 }
-                                detectPathReferences(rootDir, pathParts, range, psiManager, fieldValuePair, references);
+                                detectPathReferences(rootDir, pathParts, psiManager, fieldValuePair, references);
                             }
 
                             return references.toArray(PsiReference.EMPTY_ARRAY);
@@ -73,12 +75,14 @@ public class Dep5FilesReferencesContributor extends PsiReferenceContributor {
                 });
     }
 
-    private void detectPathReferences(@NotNull VirtualFile rootDir, PathPart[] pathParts, TextRange fullRange, PsiManager psiManager,
+    private void detectPathReferences(@NotNull VirtualFile rootDir, PathPart[] pathParts, PsiManager psiManager,
                                       PsiElement psiElement, List<PsiReference> references) {
         VirtualFile currentPath = rootDir;
         int length;
-        int parsedLength = 0;
-        PsiFileSystemItem psiFileSystemItem;
+        int startOffset;
+        List<TextRange> ranges = new ArrayList<>();
+        Dep5FileReferenceSet referenceSet;
+        StringBuilder finalPath = new StringBuilder();
 
         /* Special-case ".../*" and "*", which are very common patterns */
         if (Dep5Annotator.isStarWildcardOrEndsWithSlashStarWildCard(pathParts)) {
@@ -86,16 +90,21 @@ public class Dep5FilesReferencesContributor extends PsiReferenceContributor {
         } else {
             length = pathParts.length;
         }
+        if (length < 1) {
+            return;
+        }
+        startOffset = pathParts[0].getTextRange().getStartOffset();
 
         for (int i = 0 ; i < length ; i++) {
             PathPart pathPart = pathParts[i];
-            parsedLength += pathPart.getTextRange().getLength();
+            finalPath.append(pathPart.getPath());
             switch (pathPart.getPathType()) {
                 case NAME_PART:
                     currentPath = currentPath.findChild(pathPart.getPath());
                     if (currentPath == null) {
                         return;
                     }
+                    ranges.add(pathPart.getTextRange());
                     break;
                 case DIRECTORY_SEPARATOR:
                     if (!currentPath.isDirectory()) {
@@ -109,12 +118,16 @@ public class Dep5FilesReferencesContributor extends PsiReferenceContributor {
             }
         }
 
-        psiFileSystemItem = currentPath.isDirectory()
-                ? psiManager.findDirectory(currentPath)
-                : psiManager.findFile(currentPath);
-        if (psiFileSystemItem != null) {
-            TextRange range = TextRange.from(fullRange.getStartOffset(), parsedLength);
-            references.add(new Dep5FileReference(psiElement, range, psiFileSystemItem));
+        if (ranges.isEmpty()) {
+            return;
         }
+        referenceSet = new Dep5FileReferenceSet(
+                finalPath.toString(),
+                psiElement,
+                startOffset,
+                ranges,
+                Collections.singletonList(psiManager.findDirectory(rootDir))
+        );
+        Collections.addAll(references, referenceSet.getAllReferences());
     }
 }
