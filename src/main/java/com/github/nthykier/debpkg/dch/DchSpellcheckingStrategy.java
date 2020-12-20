@@ -21,7 +21,7 @@ public class DchSpellcheckingStrategy extends SpellcheckingStrategy {
     private static final Tokenizer<?> CHANGELOG_TOKENIZER = new TokenizerBase<>(new ChangelogSplitter());
     private static final Pattern IGNORE_PATTERN = Pattern.compile(
             "(?: (?:override_|execute_(?:after|before)_)?dh_ | dh-sequence- | dpkg-) \\S++" /* commands */
-                   + " | \\S+ [.] (?:[ch](?:pp)?|in |p[ylm]|sh|txt) (?:\\s|[.,:;\")]|$)" /* common file extensions*/
+                   + " | \\S+ [.] (?:[ch](?:pp)?|in|p[ylm]|sh|txt) (?:\\s|[.,:;\")]|$)" /* common file extensions*/
                    + " | \\s -- \\S+"  /* long command line options */
                       /* e.g. -DCMAKE_INSTALL_LIBDIR or ${DEB_HOST_MULTIARCH} */
                    + " | (?:--?|[$][{]?)? ([A-Z]{3,}+([_] [A-Z]++)*+ | [A-Z]++([_] [A-Z]++)++) (?:=\\S++)? [}]?"
