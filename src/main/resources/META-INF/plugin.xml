@@ -69,6 +69,9 @@
         <lang.elementManipulator forClass="com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair"
                                  implementationClass="com.github.nthykier.debpkg.deb822.psi.impl.Deb822FieldValuePairElementManipulator"/>
 
+        <lang.findUsagesProvider language="DebianCopyright"
+                                 implementationClass="com.github.nthykier.debpkg.deb822.dialects.dep5.Dep5FindUsagesProvider"/>
+
         <!-- Deb822 Dependency language -->
 
         <languageInjector implementation="com.github.nthykier.debpkg.deb822.Deb822DependencyLanguageInjector" />
