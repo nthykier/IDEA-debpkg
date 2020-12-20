@@ -67,6 +67,10 @@ tasks {
         targetCompatibility = "1.8"
     }
 
+    runIde {
+        autoReloadPlugins = true
+    }
+
     patchPluginXml {
         version(pluginVersion)
         sinceBuild(pluginSinceBuild)
