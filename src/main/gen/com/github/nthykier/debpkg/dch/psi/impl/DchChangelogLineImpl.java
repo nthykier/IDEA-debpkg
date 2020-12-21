@@ -1,12 +1,17 @@
 // This is a generated file. Not intended for manual editing.
 package com.github.nthykier.debpkg.dch.psi.impl;
 
+import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.util.PsiTreeUtil;
+import static com.github.nthykier.debpkg.dch.psi.DchTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.dch.psi.*;
 
-public class DchChangelogLineImpl extends AbstractDchChangelogEntry implements DchChangelogLine {
+public class DchChangelogLineImpl extends ASTWrapperPsiElement implements DchChangelogLine {
 
   public DchChangelogLineImpl(@NotNull ASTNode node) {
     super(node);
@@ -16,9 +21,16 @@ public class DchChangelogLineImpl extends AbstractDchChangelogEntry implements D
     visitor.visitChangelogLine(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof DchVisitor) accept((DchVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @Nullable
+  public DchChangeDescription getChangeDescription() {
+    return findChildByClass(DchChangeDescription.class);
   }
 
 }

@@ -21,6 +21,7 @@ public class DchSignoffImpl extends ASTWrapperPsiElement implements DchSignoff {
     visitor.visitSignoff(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof DchVisitor) accept((DchVisitor)visitor);
     else super.accept(visitor);

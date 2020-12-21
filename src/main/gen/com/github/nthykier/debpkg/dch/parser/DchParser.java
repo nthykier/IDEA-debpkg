@@ -36,6 +36,41 @@ public class DchParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // CHANGE_BULLET_POINT? CHANGE_DETAILS+
+  public static boolean change_description(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "change_description")) return false;
+    if (!nextTokenIs(b, "<change description>", CHANGE_BULLET_POINT, CHANGE_DETAILS)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, CHANGE_DESCRIPTION, "<change description>");
+    r = change_description_0(b, l + 1);
+    r = r && change_description_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // CHANGE_BULLET_POINT?
+  private static boolean change_description_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "change_description_0")) return false;
+    consumeToken(b, CHANGE_BULLET_POINT);
+    return true;
+  }
+
+  // CHANGE_DETAILS+
+  private static boolean change_description_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "change_description_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, CHANGE_DETAILS);
+    while (r) {
+      int c = current_position_(b);
+      if (!consumeToken(b, CHANGE_DETAILS)) break;
+      if (!empty_element_parsed_guard_(b, "change_description_1", c)) break;
+    }
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // version_line changelog_line+ signoff {
   // //  recoverWhile=recover_property
   // }
@@ -75,14 +110,14 @@ public class DchParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // CHANGE_DETAILS|CHANGE_RESPONSIBLE
+  // change_description|CHANGE_RESPONSIBLE
   public static boolean changelog_line(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "changelog_line")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, CHANGELOG_LINE, "<changelog line>");
-    r = consumeToken(b, CHANGE_DETAILS);
+    r = change_description(b, l + 1);
     if (!r) r = consumeToken(b, CHANGE_RESPONSIBLE);
-    exit_section_(b, l, m, r, false, recover_top_level_parser_);
+    exit_section_(b, l, m, r, false, DchParser::recover_top_level);
     return r;
   }
 
@@ -111,7 +146,7 @@ public class DchParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_);
     r = consumeTokens(b, 1, LESS_THAN, MAINTAINER_EMAIL, GREATER_THAN);
     p = r; // pin = 1
-    exit_section_(b, l, m, r, p, recover_maintainer_email_parser_);
+    exit_section_(b, l, m, r, p, DchParser::recover_maintainer_email);
     return r || p;
   }
 
@@ -165,7 +200,7 @@ public class DchParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !(SOURCE_NAME|SIGNOFF_STARTER|CHANGE_DETAILS|CHANGE_RESPONSIBLE|DISTRIBUTION_NAME|SEMI_COLON|KEYVALUE_PAIR)
+  // !(CHANGE_BULLET_POINT|SOURCE_NAME|SIGNOFF_STARTER|CHANGE_DETAILS|CHANGE_RESPONSIBLE|DISTRIBUTION_NAME|SEMI_COLON|KEYVALUE_PAIR)
   static boolean recover_top_level(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recover_top_level")) return false;
     boolean r;
@@ -175,11 +210,12 @@ public class DchParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // SOURCE_NAME|SIGNOFF_STARTER|CHANGE_DETAILS|CHANGE_RESPONSIBLE|DISTRIBUTION_NAME|SEMI_COLON|KEYVALUE_PAIR
+  // CHANGE_BULLET_POINT|SOURCE_NAME|SIGNOFF_STARTER|CHANGE_DETAILS|CHANGE_RESPONSIBLE|DISTRIBUTION_NAME|SEMI_COLON|KEYVALUE_PAIR
   private static boolean recover_top_level_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recover_top_level_0")) return false;
     boolean r;
-    r = consumeToken(b, SOURCE_NAME);
+    r = consumeToken(b, CHANGE_BULLET_POINT);
+    if (!r) r = consumeToken(b, SOURCE_NAME);
     if (!r) r = consumeToken(b, SIGNOFF_STARTER);
     if (!r) r = consumeToken(b, CHANGE_DETAILS);
     if (!r) r = consumeToken(b, CHANGE_RESPONSIBLE);
@@ -199,7 +235,7 @@ public class DchParser implements PsiParser, LightPsiParser {
     p = r; // pin = 2
     r = r && report_error_(b, maintainer_email(b, l + 1));
     r = p && report_error_(b, consumeTokens(b, -1, DOUBLE_SPACE, SIGNOFF_DATE)) && r;
-    exit_section_(b, l, m, r, p, recover_signoff_parser_);
+    exit_section_(b, l, m, r, p, DchParser::recover_signoff);
     return r || p;
   }
 
@@ -227,7 +263,7 @@ public class DchParser implements PsiParser, LightPsiParser {
     r = r && version_line_2(b, l + 1);
     r = r && consumeToken(b, SEMI_COLON);
     r = r && version_line_4(b, l + 1);
-    exit_section_(b, l, m, r, false, recover_top_level_parser_);
+    exit_section_(b, l, m, r, false, DchParser::recover_top_level);
     return r;
   }
 
@@ -261,19 +297,4 @@ public class DchParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  static final Parser recover_maintainer_email_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recover_maintainer_email(b, l + 1);
-    }
-  };
-  static final Parser recover_signoff_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recover_signoff(b, l + 1);
-    }
-  };
-  static final Parser recover_top_level_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recover_top_level(b, l + 1);
-    }
-  };
 }

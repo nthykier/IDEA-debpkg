@@ -21,6 +21,7 @@ public class DchChangelogEntryImpl extends ASTWrapperPsiElement implements DchCh
     visitor.visitChangelogEntry(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof DchVisitor) accept((DchVisitor)visitor);
     else super.accept(visitor);

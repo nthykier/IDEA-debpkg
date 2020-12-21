@@ -1,5 +1,6 @@
 package com.github.nthykier.debpkg.dch;
 
+import com.github.nthykier.debpkg.dch.psi.DchChangeDescription;
 import com.github.nthykier.debpkg.dch.psi.DchChangelogLine;
 import com.github.nthykier.debpkg.dch.psi.impl.DchFileReference;
 import com.intellij.lang.annotation.AnnotationHolder;
@@ -13,14 +14,14 @@ import org.jetbrains.annotations.NotNull;
 public class DchAnnotator implements Annotator {
 
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
-        if (element instanceof DchChangelogLine) {
-            checkDchChangelogLine(holder, (DchChangelogLine)element);
+        if (element instanceof DchChangeDescription) {
+            checkDchChangelogLine(holder, (DchChangeDescription)element);
         }
     }
 
-    private void checkDchChangelogLine(AnnotationHolder holder, DchChangelogLine element) {
+    private void checkDchChangelogLine(AnnotationHolder holder, DchChangeDescription element) {
         PsiReference[] references = element.getReferences();
-        if (references != null && references.length > 0) {
+        if (references.length > 0) {
             for (PsiReference ref : references) {
                 if (ref instanceof DchFileReference) {
                     DchFileReference dchRef = (DchFileReference)ref;

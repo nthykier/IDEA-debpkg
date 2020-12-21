@@ -1,8 +1,8 @@
 package com.github.nthykier.debpkg.dch.psi.impl;
 
-import com.github.nthykier.debpkg.dch.psi.DchChangelogLine;
+import com.github.nthykier.debpkg.dch.psi.DchChangeDescription;
 import com.github.nthykier.debpkg.dch.psi.DchTypes;
-import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
+import com.github.nthykier.debpkg.util.ASTNodeStringConverter;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
@@ -13,13 +13,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public abstract class AbstractDchChangelogEntry extends ASTWrapperPsiElement implements DchChangelogLine {
-
-    private static final TokenSet DCH_LINE_TOKEN_SET = TokenSet.create(DchTypes.CHANGE_DETAILS, DchTypes.CHANGE_RESPONSIBLE);
+public abstract class AbstractDchChangeDescription extends ASTWrapperPsiElement implements DchChangeDescription {
 
     private String cachedText;
 
-    public AbstractDchChangelogEntry(@NotNull ASTNode node) {
+    public AbstractDchChangeDescription(@NotNull ASTNode node) {
         super(node);
     }
 
@@ -35,7 +33,7 @@ public abstract class AbstractDchChangelogEntry extends ASTWrapperPsiElement imp
          * text we want.  The default class structure does not and have to copy the text around, which is expensive.
          */
         if (cachedText == null) {
-            cachedText = Deb822PsiImplUtil.getTextFromCompositeWrappingAToken(this, DCH_LINE_TOKEN_SET);
+            cachedText = ASTNodeStringConverter.extractString(this.getNode());
         }
         return cachedText;
     }
@@ -94,7 +92,19 @@ public abstract class AbstractDchChangelogEntry extends ASTWrapperPsiElement imp
     @NotNull
     public PsiReference[] getReferences() {
         List<PsiReference> references = new SmartList<>();
-        String text = this.getText();
+        ASTNode node = this.getNode();
+        ASTNode firstChild = node.getFirstChildNode();
+        ASTNode secondChild;
+        String text;
+        if (firstChild == null || !firstChild.getElementType().equals(DchTypes.CHANGE_BULLET_POINT)) {
+            return PsiReference.EMPTY_ARRAY;
+        }
+        secondChild = firstChild.getTreeNext();
+        if (secondChild == null || !secondChild.getElementType().equals(DchTypes.CHANGE_DETAILS) || !secondChild.textContains(':')) {
+            return PsiReference.EMPTY_ARRAY;
+        }
+
+        text = this.getText();
         if (text.startsWith("* ")) {
             final int startOffset = 2;
             int spaceIndex = text.indexOf(' ', startOffset + 1);

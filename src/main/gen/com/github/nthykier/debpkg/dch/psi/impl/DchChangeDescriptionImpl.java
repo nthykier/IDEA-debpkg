@@ -8,17 +8,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.nthykier.debpkg.dch.psi.DchTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.dch.psi.*;
 
-public class DchVersionLineImpl extends ASTWrapperPsiElement implements DchVersionLine {
+public class DchChangeDescriptionImpl extends AbstractDchChangeDescription implements DchChangeDescription {
 
-  public DchVersionLineImpl(@NotNull ASTNode node) {
+  public DchChangeDescriptionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull DchVisitor visitor) {
-    visitor.visitVersionLine(this);
+    visitor.visitChangeDescription(this);
   }
 
   @Override

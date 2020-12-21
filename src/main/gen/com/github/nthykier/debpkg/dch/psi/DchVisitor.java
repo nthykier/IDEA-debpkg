@@ -7,6 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public class DchVisitor extends PsiElementVisitor {
 
+  public void visitChangeDescription(@NotNull DchChangeDescription o) {
+    visitPsiElement(o);
+  }
+
   public void visitChangelogEntry(@NotNull DchChangelogEntry o) {
     visitPsiElement(o);
   }

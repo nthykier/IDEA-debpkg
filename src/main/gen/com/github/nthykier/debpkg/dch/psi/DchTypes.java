@@ -10,9 +10,11 @@ public interface DchTypes {
 
   IElementType CHANGELOG_ENTRY = new DchElementType("CHANGELOG_ENTRY");
   IElementType CHANGELOG_LINE = new DchElementType("CHANGELOG_LINE");
+  IElementType CHANGE_DESCRIPTION = new DchElementType("CHANGE_DESCRIPTION");
   IElementType SIGNOFF = new DchElementType("SIGNOFF");
   IElementType VERSION_LINE = new DchElementType("VERSION_LINE");
 
+  IElementType CHANGE_BULLET_POINT = new DchTokenType("CHANGE_BULLET_POINT");
   IElementType CHANGE_DETAILS = new DchTokenType("CHANGE_DETAILS");
   IElementType CHANGE_RESPONSIBLE = new DchTokenType("CHANGE_RESPONSIBLE");
   IElementType DISTRIBUTION_NAME = new DchTokenType("DISTRIBUTION_NAME");
@@ -38,6 +40,9 @@ public interface DchTypes {
       }
       else if (type == CHANGELOG_LINE) {
         return new DchChangelogLineImpl(node);
+      }
+      else if (type == CHANGE_DESCRIPTION) {
+        return new DchChangeDescriptionImpl(node);
       }
       else if (type == SIGNOFF) {
         return new DchSignoffImpl(node);

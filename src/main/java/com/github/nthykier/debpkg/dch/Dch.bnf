@@ -30,12 +30,15 @@ private version ::= PARANTHESES_OPEN VERSION PARANTHESES_CLOSE {
   pin=1
 }
 
-changelog_line ::= (CHANGE_DETAILS|CHANGE_RESPONSIBLE) {
-  extends="com.github.nthykier.debpkg.dch.psi.impl.AbstractDchChangelogEntry"
+changelog_line ::= (change_description|CHANGE_RESPONSIBLE) {
   recoverWhile=recover_top_level
 }
 
-private recover_top_level ::= !(SOURCE_NAME|SIGNOFF_STARTER|CHANGE_DETAILS|CHANGE_RESPONSIBLE|DISTRIBUTION_NAME|SEMI_COLON|KEYVALUE_PAIR)
+change_description ::= CHANGE_BULLET_POINT? CHANGE_DETAILS+ {
+  extends="com.github.nthykier.debpkg.dch.psi.impl.AbstractDchChangeDescription"
+}
+
+private recover_top_level ::= !(CHANGE_BULLET_POINT|SOURCE_NAME|SIGNOFF_STARTER|CHANGE_DETAILS|CHANGE_RESPONSIBLE|DISTRIBUTION_NAME|SEMI_COLON|KEYVALUE_PAIR)
 
 signoff ::= SIGNOFF_STARTER MAINTAINER_NAME maintainer_email DOUBLE_SPACE SIGNOFF_DATE {
  pin=2

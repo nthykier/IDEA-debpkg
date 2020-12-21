@@ -1,55 +1,16 @@
 package com.github.nthykier.debpkg.deb822;
 
+import com.github.nthykier.debpkg.LexerTestUtil;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
-import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import junit.framework.TestCase;
 import org.intellij.sdk.language.Deb822Lexer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Deb822LexerTest extends TestCase {
-
-    private void runLexerText(Deb822Lexer lexer, String content, List<IElementType> expected) throws IOException  {
-        List<IElementType> tokens = new ArrayList<>();
-        IElementType token;
-        int tokenCount = 0;
-        boolean firstDiff = true;
-        lexer.reset(content, 0, content.length(), Deb822Lexer.YYINITIAL);
-        while ( (token = lexer.advance()) != null) {
-            CharSequence value = lexer.yytext();
-            IElementType expectedToken = null;
-            if (token == TokenType.WHITE_SPACE) {
-                continue;
-            }
-            tokens.add(token);
-            if (tokenCount < expected.size()) {
-                expectedToken = expected.get(tokenCount);
-            }
-
-            if (token != expectedToken && firstDiff) {
-                System.out.println("   --- DIFF ---");
-            }
-
-            System.out.println(token + " \"" + value.toString().replace("\n", "\\n") + "\" (state: " + lexer.yystate() + ")");
-
-
-            tokenCount++;
-
-            if (token == TokenType.BAD_CHARACTER) {
-                // Abort early on unexpected BAD_CHARACTER tokens as they tend to flood output
-                assertEquals(token, expectedToken);
-            } else if (token != expectedToken && firstDiff) {
-                System.out.println(" >> Expected " + expectedToken + " <<");
-                System.out.println("   --- END DIFF ---");
-                firstDiff = false;
-            }
-        }
-        assertEquals(expected, tokens);
-    }
 
     public void testSimpleDeb822File() throws IOException {
         String content = "Source: foo\n"
@@ -93,7 +54,7 @@ public class Deb822LexerTest extends TestCase {
 
                 /*No Deb822Types.PARAGRAPH_FINISH; there is an EOF instead */
         );
-        runLexerText(lexer, content, expected);
+        LexerTestUtil.runLexerText(lexer, Deb822Lexer.YYINITIAL, content, expected);
     }
 
     public void testSimpleDscFile() throws IOException {
@@ -190,7 +151,7 @@ public class Deb822LexerTest extends TestCase {
                 Deb822Types.GPG_END_SIGNATURE
 
         );
-        runLexerText(lexer, content, expected);
+        LexerTestUtil.runLexerText(lexer, Deb822Lexer.YYINITIAL, content, expected);
     }
 
     public void testHangingContLine() throws IOException {
@@ -221,6 +182,6 @@ public class Deb822LexerTest extends TestCase {
                 Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN,
                 /* cont */ Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN, Deb822Types.VALUE_TOKEN
         );
-        runLexerText(lexer, content, expected);
+        LexerTestUtil.runLexerText(lexer, Deb822Lexer.YYINITIAL, content, expected);
     }
 }

@@ -29,6 +29,7 @@ public class ASTNodeStringConverter {
     }
 
     public ASTNodeStringConverter readTextFromNode(ASTNode node) {
+        stringBuilder.ensureCapacity(stringBuilder.length() + node.getTextLength());
         if (node instanceof TreeElement) {
             ((TreeElement)node).acceptTree(treeElementVisitor);
         } else {
@@ -51,5 +52,9 @@ public class ASTNodeStringConverter {
         public void visitLeaf(LeafElement leaf) {
             stringBuilder.append(leaf.getChars());
         }
+    }
+
+    public static String extractString(ASTNode node) {
+        return new ASTNodeStringConverter().readTextFromNode(node).stringBuilder.toString();
     }
 }

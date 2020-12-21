@@ -1,5 +1,6 @@
 package com.github.nthykier.debpkg.dch;
 
+import com.github.nthykier.debpkg.dch.psi.DchChangeDescription;
 import com.github.nthykier.debpkg.dch.psi.DchTypes;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -36,7 +37,7 @@ public class DchSpellcheckingStrategy extends SpellcheckingStrategy {
 
     @NotNull
     public Tokenizer<?> getTokenizer(PsiElement element) {
-        if (DchTypes.CHANGE_DETAILS.equals(element.getNode().getElementType())) {
+        if (element instanceof DchChangeDescription) {
             return CHANGELOG_TOKENIZER;
         }
         return EMPTY_TOKENIZER;
