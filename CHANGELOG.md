@@ -15,6 +15,7 @@
 - [Internal] The `debian/changelog` parser now attempts to understand change
   entries as multiline entries.  This is supposed to be invisible to the user
   but can be an obvious source of regressions.
+- Tweak the `debian/changelog` spell check exclusion regular expressions.
 
 ### Deprecated
 

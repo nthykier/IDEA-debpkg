@@ -21,18 +21,22 @@ public class DchSpellcheckingStrategy extends SpellcheckingStrategy {
 
     private static final Tokenizer<?> CHANGELOG_TOKENIZER = new TokenizerBase<>(new ChangelogSplitter());
     private static final Pattern IGNORE_PATTERN = Pattern.compile(
-            "(?: (?:override_|execute_(?:after|before)_)?dh_ | dh-sequence- | dpkg-) \\S++" /* commands */
-                   + " | \\S+ [.] (?:[ch](?:pp)?|in|p[ylm]|sh|txt) (?:\\s|[.,:;\")]|$)" /* common file extensions*/
-                   + " | \\s -- \\S+"  /* long command line options */
+                     /* commands */
+            "(?: (?:override_|execute_(?:after|before)_)?dh_ | dh-sequence- | dpkg-) \\S++"
+                     /* common file extensions*/
+                   + " | \\S+ [.] (?:[ch](?:pp|xx)?|in|p[ylm]|(?:ba)?sh|txt|json|ya?ml) (?:\\s|[.,:;\")]|$)"
+                   + " | (?:\\s|[\"(]) -- \\S+"  /* long command line options */
                       /* e.g. -DCMAKE_INSTALL_LIBDIR or ${DEB_HOST_MULTIARCH} */
                    + " | (?:--?|[$][{]?)? ([A-Z]{3,}+([_] [A-Z]++)*+ | [A-Z]++([_] [A-Z]++)++) (?:=\\S++)? [}]?"
                      /* Common man page references - e.g. foo.1 or foo(1)*/
-                   + " | \\s \\S+ (?: [.]\\d++ | [(]\\d++[)]) (?:\\s|[.,:;\")]|$)"
+                   + " | (?:\\s|[\"(]) \\S+ (?: [.]\\d++ | [(]\\d++[)]) (?:\\s|[.,:;\")]|$)"
                       /* absolute paths */
-                   + " | (\\s|[\\[(])? [/](?: s?bin|boot|dev|etc|home|lib(?:32|64|x32)|mnt|opt|proc|root|run|srv|sys|tmp|usr|var) (?:/\\S++)?"
+                   + " | [/](?: s?bin|boot|dev|etc|home|lib(?:x?32|64)?|mnt|opt|proc|root|run|srv|sys|tmp|usr|var) (?:/\\S++)?"
                       /* paths relative to home or the debian directory */
-                   + " | \\s (?:[$]HOME|~|d(?:ebian)?) / (?:\\S++)?"
-            , Pattern.COMMENTS
+                   + " | (?:\\s|[\"(]) (?:[$]HOME|~|d(?:ebian)?) / (?:\\S++)?"
+                      /* Classic reference a la " * foo.c: Fixed stuff" or "   - foo.txt: Fixed stuff" */
+                   + " | ^ \\s*[*+-] \\s? [^\\s:]++:"
+            , Pattern.COMMENTS | Pattern.MULTILINE
     );
 
     @NotNull
