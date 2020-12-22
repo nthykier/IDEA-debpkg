@@ -7,6 +7,9 @@
 - The `debian/control` support now includes a find usage contributor for files
   and paths.  This enables the safe delete will pick up if you delete a file
   still referenced from `debian/control`.
+- The `debian/changelog` code can now identify web-addresses and turn them
+  into links.  Along with this, bug numbers mentioned after `Closes:` are now
+  linkified as well (provided they follow the Debian or Ubuntu bug patterns).
 
 ### Changed
 - The `debian/control` support will now make a reference of each part of the

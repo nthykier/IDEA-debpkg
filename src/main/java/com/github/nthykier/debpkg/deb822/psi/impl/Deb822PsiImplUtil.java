@@ -42,9 +42,7 @@ public class Deb822PsiImplUtil {
     }
 
     public static @Nullable PsiReference @NotNull [] getReferences(@NotNull Deb822FieldValuePair fieldValuePair) {
-        PsiReference[] res = ReferenceProvidersRegistry.getReferencesFromProviders(fieldValuePair);
-        System.out.checkError();
-        return res;
+        return ReferenceProvidersRegistry.getReferencesFromProviders(fieldValuePair);
     }
 
     @NotNull

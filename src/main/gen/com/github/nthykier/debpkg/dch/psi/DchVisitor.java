@@ -4,11 +4,12 @@ package com.github.nthykier.debpkg.dch.psi;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ContributedReferenceHost;
 
 public class DchVisitor extends PsiElementVisitor {
 
   public void visitChangeDescription(@NotNull DchChangeDescription o) {
-    visitPsiElement(o);
+    visitContributedReferenceHost(o);
   }
 
   public void visitChangelogEntry(@NotNull DchChangelogEntry o) {
@@ -25,6 +26,10 @@ public class DchVisitor extends PsiElementVisitor {
 
   public void visitVersionLine(@NotNull DchVersionLine o) {
     visitPsiElement(o);
+  }
+
+  public void visitContributedReferenceHost(@NotNull ContributedReferenceHost o) {
+    visitElement(o);
   }
 
   public void visitPsiElement(@NotNull PsiElement o) {

@@ -36,6 +36,7 @@ changelog_line ::= (change_description|CHANGE_RESPONSIBLE) {
 
 change_description ::= CHANGE_BULLET_POINT? CHANGE_DETAILS+ {
   extends="com.github.nthykier.debpkg.dch.psi.impl.AbstractDchChangeDescription"
+  implements="com.intellij.psi.ContributedReferenceHost"
 }
 
 private recover_top_level ::= !(CHANGE_BULLET_POINT|SOURCE_NAME|SIGNOFF_STARTER|CHANGE_DETAILS|CHANGE_RESPONSIBLE|DISTRIBUTION_NAME|SEMI_COLON|KEYVALUE_PAIR)
