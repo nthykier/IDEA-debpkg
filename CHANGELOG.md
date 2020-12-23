@@ -21,17 +21,12 @@
   an obvious source of regressions.
 - Tweak the `debian/changelog` spell check exclusion regular expressions.
 
-### Deprecated
-
-### Removed
-
 ### Fixed
 - Fixed a bug where renaming a directory via refactoring would remove the
   trailing slash after the directory in the `Files`-field in
   `debian/copyright`.  Now refactoring will correctly preserve the directory
   separators.
 
-### Security
 ## [0.0.7]
 ### Added
 - More packaging terms to the built-in dictionary.
