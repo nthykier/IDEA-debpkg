@@ -14,7 +14,7 @@
 
 ### Changed
 - The `debian/control` support will now make a reference of each part of the
-  path in the `Files` fields.  This works better with the built-in refactoring
+  path in the `Files` fields.  These work better with the built-in refactoring
   support (but still has rough edges around moving things between directories).
 - [Internal] The `debian/changelog` parser now attempts to understand change
   entries as multiline entries.  This is supposed to be invisible to the user
