@@ -33,7 +33,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    implementation("org.yaml:snakeyaml:1.24")
+    implementation("org.yaml:snakeyaml:1.27")
 
     compileOnly("org.projectlombok:lombok:1.18.16")
     annotationProcessor("org.projectlombok:lombok:1.18.16")
