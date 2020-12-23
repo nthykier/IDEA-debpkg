@@ -2,24 +2,22 @@ package com.github.nthykier.debpkg.dch.psi.impl;
 
 import com.github.nthykier.debpkg.dch.psi.DchChangeDescription;
 import com.github.nthykier.debpkg.util.ASTNodeStringConverter;
+import com.github.nthykier.debpkg.util.CommonPsiUtil;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.paths.WebReference;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
+import com.intellij.psi.PsiReferenceService;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class AbstractDchChangeDescription extends ASTWrapperPsiElement implements DchChangeDescription {
 
-    private static final Pattern URL_PATTERN = Pattern.compile("[a-z0-9+]++://\\S++");
     // Based heavily on the regex described in Debian Policy 4.4
     private static final Pattern CLOSES_PATTERN = Pattern.compile(
             "closes:\\s*+((?:bug|lp:\\s*+)?+[#]?+\\s?+\\d++(?:,\\s*+(?:bug|lp:)?+[#]?+\\s?+\\d++)*)",
@@ -44,9 +42,6 @@ public abstract class AbstractDchChangeDescription extends ASTWrapperPsiElement 
 
     @Override
     public String getText() {
-        /* Guide lookup and cache the field name; we know there is exactly one leaf beneath this node containing the
-         * text we want.  The default class structure does not and have to copy the text around, which is expensive.
-         */
         if (cachedText == null) {
             cachedText = ASTNodeStringConverter.extractString(this.getNode());
         }
@@ -106,12 +101,20 @@ public abstract class AbstractDchChangeDescription extends ASTWrapperPsiElement 
     @Override
     @NotNull
     public PsiReference @NotNull [] getReferences() {
-        List<PsiReference> references = null;
-        PsiReference[] providedReferences;
+        return getReferences(PsiReferenceService.Hints.NO_HINTS);
+    }
 
+        @Override
+    public boolean shouldAskParentForReferences(PsiReferenceService.@NotNull Hints hints) {
+        return false;
+    }
+
+
+    @Override
+    public PsiReference @NotNull [] getReferences(PsiReferenceService.@NotNull Hints hints) {
         if (this.internalReferences == null) {
             String text = this.getText();
-            references = new SmartList<>();
+            List<PsiReference> references = new SmartList<>();
             if (text.startsWith("* ")) {
                 final int startOffset = 2;
                 int spaceIndex = text.indexOf(' ', startOffset + 1);
@@ -130,9 +133,7 @@ public abstract class AbstractDchChangeDescription extends ASTWrapperPsiElement 
                     }
                 }
             }
-            if (text.contains("://")) {
-                findURLs(text, references);
-            }
+            CommonPsiUtil.addURLReferences(this, text, references);
             processClosesStatement(text, references);
             if (references.isEmpty()) {
                 this.internalReferences = PsiReference.EMPTY_ARRAY;
@@ -140,19 +141,7 @@ public abstract class AbstractDchChangeDescription extends ASTWrapperPsiElement 
                 this.internalReferences = references.toArray(PsiReference.EMPTY_ARRAY);
             }
         }
-        providedReferences = ReferenceProvidersRegistry.getReferencesFromProviders(this);
-        if (providedReferences.length == 0) {
-            return this.internalReferences;
-        }
-        if (this.internalReferences.length == 0) {
-            return providedReferences;
-        }
-        if (references == null) {
-            references = new ArrayList<>(this.internalReferences.length + providedReferences.length);
-            Collections.addAll(references, internalReferences);
-        }
-        Collections.addAll(references, providedReferences);
-        return references.toArray(PsiReference.EMPTY_ARRAY);
+        return this.internalReferences;
     }
 
     private void processClosesStatement(String text, List<PsiReference> references) {
@@ -216,24 +205,5 @@ public abstract class AbstractDchChangeDescription extends ASTWrapperPsiElement 
             url = "https://bugs.debian.org/" + text.substring(numberStart, currentOffset);
         }
         return new WebReference(this, new TextRange(startOffset, currentOffset), url);
-    }
-
-    private void findURLs(String text, List<PsiReference> references) {
-        Matcher matcher = URL_PATTERN.matcher(text);
-        while (matcher.find()) {
-            int matchOffset = matcher.start();
-            int matchEnd = trimLinkEnd(text, matcher.end());
-            TextRange range = new TextRange(matchOffset, matchEnd);
-            references.add(new WebReference(this, range));
-        }
-    }
-
-    private static int trimLinkEnd(String text, int end) {
-        char c = text.charAt(end - 1);
-        while (c == ')' || c == ',' || c ==  '.' || c == ':' || c == ';' || c == '>') {
-            end--;
-            c = text.charAt(end - 1);
-        }
-        return end;
     }
 }

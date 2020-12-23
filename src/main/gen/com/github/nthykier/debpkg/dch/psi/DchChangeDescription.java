@@ -4,8 +4,8 @@ package com.github.nthykier.debpkg.dch.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.ContributedReferenceHost;
+import com.intellij.psi.HintedReferenceHost;
 
-public interface DchChangeDescription extends ContributedReferenceHost {
+public interface DchChangeDescription extends HintedReferenceHost {
 
 }
