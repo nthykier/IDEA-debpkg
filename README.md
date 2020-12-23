@@ -68,6 +68,7 @@ Notably missing features for `debian/copyright`.  The License fields are *not* v
  * Spellchecking in selected fields guessed from their names, where the specific subformat does not provide
    a more reliable selection.
  * Quick fix for some syntactical issues with continuation lines.
+ * URLs in field values are linkified.
 
 ## Getting started
 

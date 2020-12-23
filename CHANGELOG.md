@@ -10,6 +10,7 @@
 - The `debian/changelog` code can now identify web-addresses and turn them
   into links.  Along with this, bug numbers mentioned after `Closes:` are now
   linkified as well (provided they follow the Debian or Ubuntu bug patterns).
+- URLs in field values in deb822-based files are now turned into links.
 
 ### Changed
 - The `debian/control` support will now make a reference of each part of the

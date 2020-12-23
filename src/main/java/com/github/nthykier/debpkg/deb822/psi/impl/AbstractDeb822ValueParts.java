@@ -3,20 +3,65 @@ package com.github.nthykier.debpkg.deb822.psi.impl;
 import com.github.nthykier.debpkg.deb822.psi.Deb822ElementFactory;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
+import com.github.nthykier.debpkg.util.ASTNodeStringConverter;
+import com.github.nthykier.debpkg.util.CommonPsiUtil;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.LiteralTextEscaper;
 import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.CheckUtil;
+import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class AbstractDeb822ValueParts extends ASTWrapperPsiElement implements PsiLanguageInjectionHost {
 
     private final LiteralTextEscaper<AbstractDeb822ValueParts> escaper = new PassThroughLiteralTextEscaper<>(this);
+    private String cachedText;
+    private PsiReference[] internalReferences;
 
     public AbstractDeb822ValueParts(@NotNull ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public void subtreeChanged() {
+        super.subtreeChanged();
+        this.cachedText = null;
+        this.internalReferences = null;
+    }
+
+    @Override
+    public String getText() {
+        if (cachedText == null) {
+            cachedText = ASTNodeStringConverter.extractString(this.getNode());
+        }
+        return cachedText;
+    }
+
+    @Override
+    public PsiReference getReference() {
+        PsiReference[] references = this.getReferences();
+        return references.length > 0 ? references[0] : null;
+    }
+
+    @Override
+    public PsiReference @NotNull [] getReferences() {
+        if (internalReferences == null) {
+            List<PsiReference> references = new SmartList<>();
+
+            CommonPsiUtil.addURLReferences(this, getText(), references);
+
+            if (references.isEmpty()) {
+                this.internalReferences = PsiReference.EMPTY_ARRAY;
+            } else {
+                this.internalReferences = references.toArray(PsiReference.EMPTY_ARRAY);
+            }
+        }
+        return internalReferences;
     }
 
     @Override
