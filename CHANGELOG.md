@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [0.0.8]
+### Added
 - The `debian/control` support now includes a find usage contributor for files
   and paths.  This enables the safe delete will pick up if you delete a file
   still referenced from `debian/control`.
