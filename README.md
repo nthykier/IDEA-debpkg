@@ -33,6 +33,7 @@ commonly used formats in Debian packaging.
  * Folding of long field values with `Description` folded by default.
  * Validate dependency fields for use of unsupported version operators (e.g. in `Provides`) or build profile
    restrictions (in any binary package relation field).
+ * Warn if a field just duplicates the field of the source paragraph.
 
 Plus the features listed for Generic deb822 files.
 

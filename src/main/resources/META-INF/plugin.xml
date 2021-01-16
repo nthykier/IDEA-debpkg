@@ -48,6 +48,15 @@
                          level="WEAK WARNING"
                          implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlMissingRulesRequiresRootInspection"
         />
+        <localInspection language="DebianControl"
+                         groupPath="DebianControl"
+                         shortName="DCtrlFieldDuplicatesSourceParagraph"
+                         key="deb822.files.suggested-field.dctrl-field-duplicates-source-paragraph"
+                         groupKey="dctrl.inspection.group.display.name"
+                         enabledByDefault="true"
+                         level="WEAK WARNING"
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlFieldDuplicatesSourceParagraph"
+        />
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
         <annotator language="DebianControl" id="DEBIAN_CONTROL_SCANNER" order="after DEB822_BASIC_SCANNER"

@@ -8,6 +8,7 @@ import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,7 @@ public class DCtrlMissingRulesRequiresRootInspection extends LocalInspectionTool
         }
         return new Deb822Visitor() {
             public void visitParagraph(@NotNull Deb822Paragraph deb822Paragraph) {
-                super.visitParagraph(deb822Paragraph);
+                ProgressIndicatorProvider.checkCanceled();
                 if (deb822Paragraph.classifyParagraph().equals(Deb822DialectDebianControlLanguage.PARAGRAPH_TYPE_SOURCE)) {
                     checkSourceParagraph(holder, deb822Paragraph);
                 }
