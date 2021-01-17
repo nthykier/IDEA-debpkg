@@ -8,6 +8,9 @@
   in a `Package` paragraph of `debian/control`.
 
 ### Changed
+- Optimized the number of single character whitespace tokens emitted by the
+  lexer for `debian/changelog` in common cases.  This should reduce the
+  memory usage slightly for this file type.
 
 ### Deprecated
 
