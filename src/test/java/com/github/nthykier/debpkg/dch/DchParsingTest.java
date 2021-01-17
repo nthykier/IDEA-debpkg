@@ -1,11 +1,11 @@
-package com.github.nthykier.debpkg.deb822;
+package com.github.nthykier.debpkg.dch;
 
 import com.intellij.testFramework.ParsingTestCase;
 
-public class Deb822ParsingTest extends ParsingTestCase {
+public class DchParsingTest extends ParsingTestCase {
 
-    public Deb822ParsingTest() {
-        super("", "deb822", new Deb822ParserDefinition());
+    public DchParsingTest() {
+        super("", "dch", new DchParserDefinition());
     }
 
     public void testParsingTestData() {
@@ -14,7 +14,7 @@ public class Deb822ParsingTest extends ParsingTestCase {
 
     @Override
     protected String getTestDataPath() {
-        return "src/test/testData";
+        return "src/test/testData/dch";
     }
 
     @Override

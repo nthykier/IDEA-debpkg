@@ -1,6 +1,7 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlFileType;
+import com.intellij.codeInsight.generation.actions.CommentByLineCommentAction;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixture4TestCase;
 import org.junit.Test;
@@ -25,6 +26,16 @@ public class Deb822LightPlatformCodeInsightTestCase extends LightPlatformCodeIns
     public void testAnnotator() {
         myFixture.configureByFile("duplicateFields.deb822");
         myFixture.checkHighlighting(false, false, true, true);
+    }
+
+    @Test
+    public void testCommenter() {
+        myFixture.configureByText(Deb822FileType.INSTANCE, "<caret>Foo: bar");
+        CommentByLineCommentAction commentAction = new CommentByLineCommentAction();
+        commentAction.actionPerformedImpl(getProject(), myFixture.getEditor());
+        myFixture.checkResult("#Foo: bar");
+        commentAction.actionPerformedImpl(getProject(), myFixture.getEditor());
+        myFixture.checkResult("Foo: bar");
     }
 
     @Test
