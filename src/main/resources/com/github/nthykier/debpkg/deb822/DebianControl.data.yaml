@@ -469,15 +469,7 @@ fields:
 
       <p>see <a>https://packages.debian.org/unstable</a> for more details about the sections.</p>
     valueType: SINGLE_KEYWORD
-    keywordList: [
-        "admin", "cli-mono", "comm", "database", "debian-installer", "debug", "devel", "doc",
-        "editors", "education", "eletronics", "embedded", "fonts", "games", "gnome", "gnu-r", "gnustep",
-        "graphics", "hamradio", "haskell", "interpreters", "introspection", "java", "javascript", "kde",
-        "kernel", "libdevel", "libs", "lisp", "localization", "mail", "math", "metapackages", "misc",
-        "net", "news", "ocaml", "oldlibs", "otherosfs", "perl", "php", "python", "ruby", "rust", "science",
-        "shells", "sound", "tasks", "tex", "text", "utils", "vcs", "video", "virtual", "web", "x11",
-        "xfce", "zope"
-      ]
+    keywordListFromDataSet: "virtual/archive-sections-with-components"
 
   - canonicalName: Testsuite
     onlyInParagraphType: "Source"

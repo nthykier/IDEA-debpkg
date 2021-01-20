@@ -6,6 +6,8 @@
 ### Added
 - Add an inspection for duplicating the field value of the `Source` paragraph
   in a `Package` paragraph of `debian/control`.
+- Add component-prefixed versions of sections to the list of known keywords
+  for the `Section` field.
 
 ### Changed
 - Optimized the number of single character whitespace tokens emitted by the

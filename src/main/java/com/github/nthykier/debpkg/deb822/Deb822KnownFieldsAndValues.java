@@ -9,6 +9,7 @@ import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldKeywordImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownRelationFieldImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.KnownFieldTableImpl;
 import com.intellij.lang.Language;
+import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
@@ -23,6 +24,8 @@ public class Deb822KnownFieldsAndValues {
     private static final Map<Language, KnownFieldTable> LANGUAGE2KNOWN_FIELDS = new HashMap<>();
     private static final Map<String, Deb822KnownField> DCTRL_KNOWN_FIELDS = new HashMap<>();
     private static final Map<String, Deb822KnownField> DCOPY_KNOWN_FIELDS = new HashMap<>();
+
+    private static final KeywordInformation EMPTY_KEYWORD_INFORMATION = KeywordInformation.of(Collections.emptyMap(), false);
 
     private static final Set<String> KNOWN_VERSION_OPERATORS = new LinkedHashSet<>(Arrays.asList(
             ">>", ">=", "=", "<=", "<<"
@@ -96,6 +99,38 @@ public class Deb822KnownFieldsAndValues {
         return Collections.unmodifiableSet(new LinkedHashSet<>(valuesAsList));
     }
 
+    private static KeywordInformation getKeywordInformation(Map<String, Object> fieldDef,
+                                                            String canonicalName) {
+        List<?> keywordList = getList(fieldDef, "keywordList");
+        String keywordReference = getOptionalString(fieldDef, "keywordListFromDataSet", null);
+        Map<String, Deb822KnownFieldKeyword> keywordMap;
+        boolean allKeywordsKnown = false;
+        if (keywordReference != null) {
+            List<String> dataSet = Deb822DataSets.getDataList(keywordReference);
+            if (!keywordList.isEmpty()) {
+                throw new IllegalArgumentException("Field " + canonicalName
+                        + " has both keywordList and keywordListFromDataSet.  Please use at most one of them");
+            }
+            keywordList = dataSet;
+        }
+        if (!keywordList.isEmpty()) {
+            allKeywordsKnown = true;
+            if (keywordList.get(keywordList.size() - 1).equals("...")) {
+                allKeywordsKnown = false;
+                keywordList.remove(keywordList.size() - 1);
+            }
+            keywordMap = new HashMap<>(keywordList.size());
+            for (Object keywordDef : keywordList) {
+                Deb822KnownFieldKeyword keyword = parseKeyword(keywordDef);
+                Deb822KnownFieldKeyword existing = keywordMap.putIfAbsent(keyword.getValueName(), keyword);
+                assert existing == null : "Duplicate keyword " + keyword.getValueName() + " for field " + canonicalName;
+            }
+        } else {
+            return EMPTY_KEYWORD_INFORMATION;
+        }
+        return KeywordInformation.of(keywordMap, allKeywordsKnown);
+    }
+
     private static Deb822KnownField parseKnownFieldDefinition(Map<String, Object> fieldDef) {
         String canonicalName = getRequiredString(fieldDef, "canonicalName");
         Deb822KnownFieldValueType valueType = Deb822KnownFieldValueType.valueOf(
@@ -104,11 +139,10 @@ public class Deb822KnownFieldsAndValues {
         Deb822KnownFieldValueLanguage fieldValueLanguage = Deb822KnownFieldValueLanguage.valueOf(
                 getOptionalString(fieldDef, "valueLanguage", "REGULAR_FIELD_VALUE")
         );
-        List<Object> keywordList = getList(fieldDef, "keywordList");
+
         String docs = getOptionalString(fieldDef, "description", null);
         String defaultValue = getOptionalString(fieldDef, "defaultValue", null);
-        Map<String, Deb822KnownFieldKeyword> keywordMap;
-        boolean allKeywordsKnown = false;
+        KeywordInformation keywordInformation = getKeywordInformation(fieldDef, canonicalName);
         boolean supportsSubstvars = getBool(fieldDef, "supportsSubstvars", true);
         boolean warnIfDefault = getBool(fieldDef, "warnIfDefault", false);
         boolean isFoldedByDefault = getBool(fieldDef, "foldedByDefault", false);
@@ -124,13 +158,13 @@ public class Deb822KnownFieldsAndValues {
         boolean supportsBuildProfileRestriction = getBool(fieldDef, "supportsBuildProfileRestriction", false);
         switch (valueType) {
             case SINGLE_TRIVIAL_VALUE:
-                if (!keywordList.isEmpty()) {
+                if (!keywordInformation.keywordMap.isEmpty()) {
                     throw new IllegalArgumentException("Field " + canonicalName + " has keywords but is a SINGLE_VALUE"
                     + " (should it have been a SINGLE_KEYWORD instead?)");
                 }
                 break;
             case SINGLE_KEYWORD:
-                if (keywordList.isEmpty()) {
+                if (keywordInformation.keywordMap.isEmpty()) {
                     throw new IllegalArgumentException("Field " + canonicalName + " has no keywords but is a SINGLE_KEYWORD"
                             + " (should it have been a SINGLE_VALUE instead?)");
                 }
@@ -141,7 +175,7 @@ public class Deb822KnownFieldsAndValues {
                 /* OK with or without keywords */
                 break;
             case FREE_TEXT_VALUE:
-                if (!keywordList.isEmpty()) {
+                if (!keywordInformation.keywordMap.isEmpty()) {
                     throw new IllegalArgumentException("Field " + canonicalName + " has keywords but is a FREE_TEXT_VALUE");
                 }
                 if (defaultValue != null || warnIfDefault) {
@@ -152,21 +186,7 @@ public class Deb822KnownFieldsAndValues {
             default:
                 throw new AssertionError("Unsupported but declared valueType: " + valueType);
         }
-        if (!keywordList.isEmpty()) {
-            allKeywordsKnown = true;
-            if (keywordList.get(keywordList.size() - 1).equals("...")) {
-                allKeywordsKnown = false;
-                keywordList.remove(keywordList.size() - 1);
-            }
-            keywordMap = new HashMap<>(keywordList.size());
-            for (Object keywordDef : keywordList) {
-                Deb822KnownFieldKeyword keyword = parseKeyword(keywordDef);
-                Deb822KnownFieldKeyword existing = keywordMap.putIfAbsent(keyword.getValueName(), keyword);
-                assert existing == null : "Duplicate keyword " + keyword.getValueName() + " for field " + canonicalName;
-            }
-        } else {
-            keywordMap = Collections.emptyMap();
-        }
+
         if (fieldValueLanguage.getLanguage() == DependencyLanguage.INSTANCE) {
             if (supportedVersionOperators == null) {
                 supportedVersionOperators = KNOWN_VERSION_OPERATORS;
@@ -176,7 +196,8 @@ public class Deb822KnownFieldsAndValues {
                         + " a dependency field (i.e. no free form text).");
             }
 
-            return new Deb822KnownRelationFieldImpl(canonicalName, valueType, fieldValueLanguage, allKeywordsKnown, keywordMap, docs,
+            return new Deb822KnownRelationFieldImpl(canonicalName, valueType, fieldValueLanguage,
+                    keywordInformation.allKeywordsKnown, keywordInformation.keywordMap, docs,
                     supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault,
                     supportedVersionOperators, supportsBuildProfileRestriction
             );
@@ -190,7 +211,8 @@ public class Deb822KnownFieldsAndValues {
                         + " not a language field (valueLanguage)");
             }
 
-            return new Deb822KnownFieldImpl(canonicalName, valueType, fieldValueLanguage, allKeywordsKnown, keywordMap, docs,
+            return new Deb822KnownFieldImpl(canonicalName, valueType, fieldValueLanguage,
+                    keywordInformation.allKeywordsKnown, keywordInformation.keywordMap, docs,
                     supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault,
                     spellcheckField);
         }
@@ -212,6 +234,12 @@ public class Deb822KnownFieldsAndValues {
             throw new IllegalArgumentException("Do not know how parse keyword: " + keywordDefRaw);
         }
         return new Deb822KnownFieldKeywordImpl(valueName, docs, isExclusive);
+    }
+
+    @Data(staticConstructor = "of")
+    private static class KeywordInformation {
+        final Map<String, Deb822KnownFieldKeyword> keywordMap;
+        final boolean allKeywordsKnown;
     }
 
     static {
