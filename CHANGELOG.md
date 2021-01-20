@@ -8,6 +8,8 @@
   in a `Package` paragraph of `debian/control`.
 - Add component-prefixed versions of sections to the list of known keywords
   for the `Section` field.
+- Add inspection for the value of the `Section` starting with `main/` as
+  the main component is the default and is customarily omitted.
 
 ### Changed
 - Optimized the number of single character whitespace tokens emitted by the

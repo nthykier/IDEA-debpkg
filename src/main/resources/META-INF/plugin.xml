@@ -57,6 +57,15 @@
                          level="WEAK WARNING"
                          implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlFieldDuplicatesSourceParagraphInspection"
         />
+        <localInspection language="DebianControl"
+                         groupPath="DebianControl"
+                         shortName="DCtrlRedundantComponentInSection"
+                         key="deb822.files.inspection.dctrl-section-field-has-redundant-prefix"
+                         groupKey="dctrl.inspection.group.display.name"
+                         enabledByDefault="true"
+                         level="WEAK WARNING"
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlRedundantComponentInSectionInspection"
+        />
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
         <annotator language="DebianControl" id="DEBIAN_CONTROL_SCANNER" order="after DEB822_BASIC_SCANNER"
