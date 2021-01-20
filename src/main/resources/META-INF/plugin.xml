@@ -55,7 +55,7 @@
                          groupKey="dctrl.inspection.group.display.name"
                          enabledByDefault="true"
                          level="WEAK WARNING"
-                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlFieldDuplicatesSourceParagraph"
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlFieldDuplicatesSourceParagraphInspection"
         />
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
