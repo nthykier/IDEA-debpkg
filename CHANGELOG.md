@@ -23,6 +23,7 @@
 ### Fixed
 - Whitespace only lines in `debian/changelog` could trip parser errors.
   Note that tab characters are still considered syntax errors.
+- Fixed an assertion error if `debian/changelog` contained `* dir/:`.
 
 ### Security
 ## [0.0.8]

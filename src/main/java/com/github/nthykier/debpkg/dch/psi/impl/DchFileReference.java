@@ -25,6 +25,9 @@ public class DchFileReference extends PsiPolyVariantReferenceBase<PsiElement> {
 
     public DchFileReference(@NotNull PsiElement element, TextRange range, String fileName) {
         super(element, range, false);
+        if (fileName.endsWith("/")) {
+            throw new IllegalArgumentException("DchFileReference does not work with directories (so paths ending with \"/\" like \"" + fileName + "\" will not work)");
+        }
         this.basename = extractBasename(fileName);
         if (fileName.contains("/")) {
             dirParts = DIR_SEPARATOR_SPLITTER.split(fileName);
@@ -40,7 +43,7 @@ public class DchFileReference extends PsiPolyVariantReferenceBase<PsiElement> {
     }
 
     @Override
-    public @NotNull ResolveResult[] multiResolve(boolean incompleteCode) {
+    public @NotNull ResolveResult @NotNull [] multiResolve(boolean incompleteCode) {
         Project project = this.myElement.getProject();
         PsiFile[] results = FilenameIndex.getFilesByName(project, basename, GlobalSearchScope.allScope(project));
         Function<PsiFileSystemItem, PsiElement> wrapper;

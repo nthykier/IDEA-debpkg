@@ -122,13 +122,18 @@ public abstract class AbstractDchChangeDescription extends ASTWrapperPsiElement 
                 if (indexOfColon > -1 && (spaceIndex == -1 || indexOfColon < spaceIndex)) {
                     int commaIndex = text.lastIndexOf(',', indexOfColon - 1);
                     if (commaIndex == -1) {
+                        String match =  text.substring(2, indexOfColon);
                         /* Simple case; single file name with no spaces or commas */
-                        references.add(new DchFileReference(this, new TextRange(startOffset, indexOfColon),
-                                text.substring(2, indexOfColon)));
+                        if (!match.endsWith("/")) {
+                            references.add(new DchFileReference(this, new TextRange(startOffset, indexOfColon),
+                                    match));
+                        }
                     } else {
                         for (TextRange range : splitFilenames(text, startOffset, indexOfColon)) {
                             String match = text.substring(range.getStartOffset(), range.getEndOffset());
-                            references.add(new DchFileReference(this, range, match));
+                            if (!match.endsWith("/")) {
+                                references.add(new DchFileReference(this, range, match));
+                            }
                         }
                     }
                 }
