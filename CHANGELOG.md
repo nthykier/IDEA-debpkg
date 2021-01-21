@@ -15,6 +15,9 @@
 - Optimized the number of single character whitespace tokens emitted by the
   lexer for `debian/changelog` in common cases.  This should reduce the
   memory usage slightly for this file type.
+- The date parser for `debian/changelog` is now more forgiving about the
+  signoff dates.  It will now accept dates that are technically incorrect
+  according to the spec (but used/seen in practise).
 
 ### Deprecated
 

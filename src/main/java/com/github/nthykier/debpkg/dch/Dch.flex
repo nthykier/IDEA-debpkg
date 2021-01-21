@@ -81,8 +81,8 @@ DASH=[\-]
 }
 
 <SIGNOFF_EXPECTING_DATE>{
-{SPACE_CHAR}{SPACE_CHAR}                                            { return DchTypes.DOUBLE_SPACE; }
-\S+,[ ][ 0-9]\d{1}[ ]\S+[ ] \d{4}[ ]\d{2}:\d{2}:\d{2}[ ][+\-]\d{4}  { return DchTypes.SIGNOFF_DATE; }
+{SPACE_CHAR}{SPACE_CHAR}                                              { return DchTypes.DOUBLE_SPACE; }
+\S+,[ ][ 0-9]?\d[ ]\S+[ ] \d{4}[ ]\d\d?:\d\d?:\d\d?[ ][+\-]\d{4}      { return DchTypes.SIGNOFF_DATE; }
 }
 
 {NEWLINE}({SPACE_CHAR}*{NEWLINE})*                          { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
