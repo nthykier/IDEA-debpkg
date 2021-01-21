@@ -29,8 +29,10 @@ DASH=[\-]
 %%
 
 <YYINITIAL>{
-{SOURCE_NAME}                                  { yybegin(ENTRY_STARTER_EXPECTING_VERSION); return DchTypes.SOURCE_NAME; }
-{SPACE_CHAR}                                   { yybegin(START_OF_SOMETHING); return TokenType.WHITE_SPACE; }
+({SPACE_CHAR}*{NEWLINE})*{SOURCE_NAME}                   { yybegin(ENTRY_STARTER_EXPECTING_VERSION); return DchTypes.SOURCE_NAME; }
+({SPACE_CHAR}*{NEWLINE})*{SPACE_CHAR}                    { yybegin(START_OF_SOMETHING); return TokenType.WHITE_SPACE; }
+({SPACE_CHAR}*{NEWLINE})*{SPACE_CHAR}{SPACE_CHAR}        { yybegin(CHANGE_ENTRY); return TokenType.WHITE_SPACE; }
+^({SPACE_CHAR}*{NEWLINE})+                               { return TokenType.WHITE_SPACE; }
 }
 
 <START_OF_SOMETHING>{
@@ -83,10 +85,10 @@ DASH=[\-]
 \S+,[ ][ 0-9]\d{1}[ ]\S+[ ] \d{4}[ ]\d{2}:\d{2}:\d{2}[ ][+\-]\d{4}  { return DchTypes.SIGNOFF_DATE; }
 }
 
-{NEWLINE}+                                       { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+{NEWLINE}({SPACE_CHAR}*{NEWLINE})*                          { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 // Special-cases to reduce the number of whitespace tokens,
 // which in turn reduces memory usage.
-{NEWLINE}+{SPACE_CHAR}{SPACE_CHAR}               { yybegin(CHANGE_ENTRY); return TokenType.WHITE_SPACE; }
-{NEWLINE}+{SPACE_CHAR}                           { yybegin(START_OF_SOMETHING); return TokenType.WHITE_SPACE; }
+{NEWLINE}({SPACE_CHAR}*{NEWLINE})*{SPACE_CHAR}{SPACE_CHAR}  { yybegin(CHANGE_ENTRY); return TokenType.WHITE_SPACE; }
+{NEWLINE}({SPACE_CHAR}*{NEWLINE})*{SPACE_CHAR}              { yybegin(START_OF_SOMETHING); return TokenType.WHITE_SPACE; }
 
-[^]                                              { return TokenType.BAD_CHARACTER; }
+[^]                                                         { return TokenType.BAD_CHARACTER; }

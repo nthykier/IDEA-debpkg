@@ -21,6 +21,8 @@
 ### Removed
 
 ### Fixed
+- Whitespace only lines in `debian/changelog` could trip parser errors.
+  Note that tab characters are still considered syntax errors.
 
 ### Security
 ## [0.0.8]
