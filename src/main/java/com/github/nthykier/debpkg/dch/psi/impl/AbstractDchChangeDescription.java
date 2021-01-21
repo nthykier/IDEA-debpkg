@@ -150,19 +150,15 @@ public abstract class AbstractDchChangeDescription extends ASTWrapperPsiElement 
     }
 
     private void processClosesStatement(String text, List<PsiReference> references) {
-        // Patterns are not exactly fast, so use this prilimary scan to find the "Closes:" part.
-        // Scan backwards; Closes are often (but not always) near the end.
-        int i = text.lastIndexOf(':');
-        while (i >= CLOSES_LEN) {
-            // With the "lastIndexOf" finding "Closes:" then the cursor is between the "s" and the ":"
+        // Patterns are not exactly fast, so use this preliminary scan to find the "Closes:" part.
+        for (int i = text.indexOf(':', CLOSES_LEN - 1) ; i > -1 ; i = text.indexOf(':', i + 1)) {
+            // With the "indexOf" finding "Closes:" then the cursor is between the "s" and the ":"
             // Therefore we add 1 (to move past the column) and subtract CLOSES_LEN to move to the start of
             // word.
             int startOffset = i - CLOSES_LEN + 1;
             if (text.regionMatches(true, startOffset, "Closes:", 0, CLOSES_LEN)) {
                 linkifyCloses(text, startOffset, references);
-                break;
             }
-            i = text.lastIndexOf(':', i - 1);
         }
     }
 
@@ -180,8 +176,11 @@ public abstract class AbstractDchChangeDescription extends ASTWrapperPsiElement 
                 if (matchOffset+2 < matchEnd && text.charAt(matchOffset) == ',') {
                     matchOffset++;
                     // Move past spaces after the comma - it looks stupid if a leading space is part of the link
-                    while (matchOffset < matchEnd && Character.isSpaceChar(text.charAt(matchOffset))) {
-                        matchOffset++;
+                    for (; matchOffset < matchEnd ; matchOffset++) {
+                        char ch = text.charAt(matchOffset);
+                        if (ch == '#' || Character.isDigit(ch)) {
+                            break;
+                        }
                     }
                 }
             } while (matchOffset < matchEnd);
