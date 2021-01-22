@@ -24,7 +24,15 @@ public class DchVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitSignoffDate(@NotNull DchSignoffDate o) {
+    visitSignoffDateSupport(o);
+  }
+
   public void visitVersionLine(@NotNull DchVersionLine o) {
+    visitPsiElement(o);
+  }
+
+  public void visitSignoffDateSupport(@NotNull DchSignoffDateSupport o) {
     visitPsiElement(o);
   }
 

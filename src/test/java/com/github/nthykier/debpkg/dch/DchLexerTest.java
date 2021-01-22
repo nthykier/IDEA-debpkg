@@ -47,7 +47,7 @@ public class DchLexerTest extends TestCase {
                 /* Sign-off line*/
                 DchTypes.SIGNOFF_STARTER, DchTypes.MAINTAINER_NAME,
                 /* Continued */ DchTypes.LESS_THAN, DchTypes.MAINTAINER_EMAIL, DchTypes.GREATER_THAN,
-                /* Continued */ DchTypes.DOUBLE_SPACE, DchTypes.SIGNOFF_DATE,
+                /* Continued */ DchTypes.DOUBLE_SPACE, DchTypes.SIGNOFF_DATE_TOKEN,
                 /* Initial line of second entry */
                 DchTypes.SOURCE_NAME, DchTypes.PARANTHESES_OPEN, DchTypes.VERSION, DchTypes.PARANTHESES_CLOSE,
                 /* Continued */ DchTypes.DISTRIBUTION_NAME, DchTypes.SEMI_COLON, DchTypes.KEYVALUE_PAIR,
@@ -56,7 +56,7 @@ public class DchLexerTest extends TestCase {
                 /* Sign-off line*/
                 DchTypes.SIGNOFF_STARTER, DchTypes.MAINTAINER_NAME,
                 /* Continued */ DchTypes.LESS_THAN, DchTypes.MAINTAINER_EMAIL, DchTypes.GREATER_THAN,
-                /* Continued */ DchTypes.DOUBLE_SPACE, DchTypes.SIGNOFF_DATE
+                /* Continued */ DchTypes.DOUBLE_SPACE, DchTypes.SIGNOFF_DATE_TOKEN
         );
         LexerTestUtil.runLexerText(lexer, DchLexer.YYINITIAL, content, expected);
     }

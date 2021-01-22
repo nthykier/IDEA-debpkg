@@ -41,9 +41,14 @@ change_description ::= CHANGE_BULLET_POINT? CHANGE_DETAILS+ {
 
 private recover_top_level ::= !(CHANGE_BULLET_POINT|SOURCE_NAME|SIGNOFF_STARTER|CHANGE_DETAILS|CHANGE_RESPONSIBLE|DISTRIBUTION_NAME|SEMI_COLON|KEYVALUE_PAIR)
 
-signoff ::= SIGNOFF_STARTER MAINTAINER_NAME maintainer_email DOUBLE_SPACE SIGNOFF_DATE {
+signoff ::= SIGNOFF_STARTER MAINTAINER_NAME maintainer_email DOUBLE_SPACE signoff_date {
  pin=2
  recoverWhile=recover_signoff
+}
+
+signoff_date ::= SIGNOFF_DATE_TOKEN {
+  extends="com.github.nthykier.debpkg.dch.psi.impl.AbstractDchSignoffDate"
+  implements="com.github.nthykier.debpkg.dch.psi.DchSignoffDateSupport"
 }
 
 private recover_signoff ::= !(SOURCE_NAME|SIGNOFF_STARTER|MAINTAINER_NAME|MAINTAINER_EMAIL|GREATER_THAN|LESS_THAN|CHANGE_DETAILS|CHANGE_RESPONSIBLE)
@@ -53,6 +58,6 @@ private maintainer_email ::= LESS_THAN MAINTAINER_EMAIL GREATER_THAN {
   recoverWhile=recover_maintainer_email
 }
 
-private recover_maintainer_email ::= !(SOURCE_NAME|SIGNOFF_STARTER|GREATER_THAN|DOUBLE_SPACE|SIGNOFF_DATE)
+private recover_maintainer_email ::= !(SOURCE_NAME|SIGNOFF_STARTER|GREATER_THAN|DOUBLE_SPACE|SIGNOFF_DATE_TOKEN)
 
 //private recover_property ::= !(SOURCE_NAME|PARANTHESES_OPEN|VERSION|PARANTHESES_CLOSE|DISTRIBUTION_NAME|SEMI_COLON|KEYVALUE_PAIR|DOUBLE_SPACE|CHANGE_DETAILS|SIGNOFF_DATE|SIGNOFF_STARTER|LESS_THAN|GREATER_THAN|MAINTAINER_NAME|MAINTAINER_EMAIL)

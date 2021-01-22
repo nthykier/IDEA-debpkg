@@ -151,7 +151,7 @@ public class DchParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !(SOURCE_NAME|SIGNOFF_STARTER|GREATER_THAN|DOUBLE_SPACE|SIGNOFF_DATE)
+  // !(SOURCE_NAME|SIGNOFF_STARTER|GREATER_THAN|DOUBLE_SPACE|SIGNOFF_DATE_TOKEN)
   static boolean recover_maintainer_email(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recover_maintainer_email")) return false;
     boolean r;
@@ -161,7 +161,7 @@ public class DchParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // SOURCE_NAME|SIGNOFF_STARTER|GREATER_THAN|DOUBLE_SPACE|SIGNOFF_DATE
+  // SOURCE_NAME|SIGNOFF_STARTER|GREATER_THAN|DOUBLE_SPACE|SIGNOFF_DATE_TOKEN
   private static boolean recover_maintainer_email_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recover_maintainer_email_0")) return false;
     boolean r;
@@ -169,7 +169,7 @@ public class DchParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, SIGNOFF_STARTER);
     if (!r) r = consumeToken(b, GREATER_THAN);
     if (!r) r = consumeToken(b, DOUBLE_SPACE);
-    if (!r) r = consumeToken(b, SIGNOFF_DATE);
+    if (!r) r = consumeToken(b, SIGNOFF_DATE_TOKEN);
     return r;
   }
 
@@ -226,7 +226,7 @@ public class DchParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // SIGNOFF_STARTER MAINTAINER_NAME maintainer_email DOUBLE_SPACE SIGNOFF_DATE
+  // SIGNOFF_STARTER MAINTAINER_NAME maintainer_email DOUBLE_SPACE signoff_date
   public static boolean signoff(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "signoff")) return false;
     boolean r, p;
@@ -234,9 +234,22 @@ public class DchParser implements PsiParser, LightPsiParser {
     r = consumeTokens(b, 2, SIGNOFF_STARTER, MAINTAINER_NAME);
     p = r; // pin = 2
     r = r && report_error_(b, maintainer_email(b, l + 1));
-    r = p && report_error_(b, consumeTokens(b, -1, DOUBLE_SPACE, SIGNOFF_DATE)) && r;
+    r = p && report_error_(b, consumeToken(b, DOUBLE_SPACE)) && r;
+    r = p && signoff_date(b, l + 1) && r;
     exit_section_(b, l, m, r, p, DchParser::recover_signoff);
     return r || p;
+  }
+
+  /* ********************************************************** */
+  // SIGNOFF_DATE_TOKEN
+  public static boolean signoff_date(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "signoff_date")) return false;
+    if (!nextTokenIs(b, SIGNOFF_DATE_TOKEN)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, SIGNOFF_DATE_TOKEN);
+    exit_section_(b, m, SIGNOFF_DATE, r);
+    return r;
   }
 
   /* ********************************************************** */

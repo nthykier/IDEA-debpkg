@@ -1,0 +1,31 @@
+<html>
+<body>
+<p>Detects when the sign-off date is invalid or uses the wrong format.
+   The date format used in the Debian changelog format has a strict format based on RFC 822
+   (e.g. Fri, 22 Jan 2021 20:30:50 +0000).  This inspection detects sign-off dates does not
+   follow that format or where the date itself is invalid.
+</p>
+<!-- tooltip end -->
+<p><b>Example of invalid date that are detected</b></p>
+<br>
+<pre>
+ -- John Doe &lt;john@example.com&gt;  Thu, 04 Mar 2019 15:9:47 +0200
+</pre>
+<br>
+<p>The correct line would be:</p>
+<br>
+<pre>
+ -- John Doe &lt;john@example.com&gt;  Mon, 04 Mar 2019 15:09:47 +0200
+</pre>
+<br>
+<p>
+As noted there are two corrections. One, the minute is specified with two digits as
+required and two, the day name (Thu) is corrected to (Mon) as 2019-03-04 was a Monday.
+</p>
+<br>
+<b>Why are single digit dates not detected?</b>
+<p>This detection "forgives" single digit dates if that is the only issue in the date.  This is because
+that variant is prevalent in very old changelog entries (e.g. 2005 and earlier).  However, the quickfix
+(where available) always uses the two-digit dates - even when it is used to correct older dates.</p>
+</body>
+</html>

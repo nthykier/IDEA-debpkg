@@ -12,6 +12,7 @@ public interface DchTypes {
   IElementType CHANGELOG_LINE = new DchElementType("CHANGELOG_LINE");
   IElementType CHANGE_DESCRIPTION = new DchElementType("CHANGE_DESCRIPTION");
   IElementType SIGNOFF = new DchElementType("SIGNOFF");
+  IElementType SIGNOFF_DATE = new DchElementType("SIGNOFF_DATE");
   IElementType VERSION_LINE = new DchElementType("VERSION_LINE");
 
   IElementType CHANGE_BULLET_POINT = new DchTokenType("CHANGE_BULLET_POINT");
@@ -27,7 +28,7 @@ public interface DchTypes {
   IElementType PARANTHESES_CLOSE = new DchTokenType("PARANTHESES_CLOSE");
   IElementType PARANTHESES_OPEN = new DchTokenType("PARANTHESES_OPEN");
   IElementType SEMI_COLON = new DchTokenType("SEMI_COLON");
-  IElementType SIGNOFF_DATE = new DchTokenType("SIGNOFF_DATE");
+  IElementType SIGNOFF_DATE_TOKEN = new DchTokenType("SIGNOFF_DATE_TOKEN");
   IElementType SIGNOFF_STARTER = new DchTokenType("SIGNOFF_STARTER");
   IElementType SOURCE_NAME = new DchTokenType("SOURCE_NAME");
   IElementType VERSION = new DchTokenType("VERSION");
@@ -46,6 +47,9 @@ public interface DchTypes {
       }
       else if (type == SIGNOFF) {
         return new DchSignoffImpl(node);
+      }
+      else if (type == SIGNOFF_DATE) {
+        return new DchSignoffDateImpl(node);
       }
       else if (type == VERSION_LINE) {
         return new DchVersionLineImpl(node);

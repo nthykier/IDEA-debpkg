@@ -116,5 +116,15 @@
                               implementationClass="com.github.nthykier.debpkg.dch.DchSpellcheckingStrategy" />
         <annotator language="DebianChangelog"
                    implementationClass="com.github.nthykier.debpkg.dch.DchAnnotator" />
+        <localInspection language="DebianChangelog"
+                         groupPath="DebianControl"
+                         shortName="DchInvalidSignoffDate"
+                         key="dch.files.inspection.invalid-signoff-date-format"
+                         groupKey="dctrl.inspection.group.display.name"
+                         enabledByDefault="true"
+                         hasStaticDescription="true"
+                         level="ERROR"
+                         implementationClass="com.github.nthykier.debpkg.dch.DchInvalidSignoffDateInspection"
+        />
     </extensions>
 </idea-plugin>

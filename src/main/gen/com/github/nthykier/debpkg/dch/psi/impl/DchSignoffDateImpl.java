@@ -8,29 +8,22 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.nthykier.debpkg.dch.psi.DchTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.dch.psi.*;
 
-public class DchSignoffImpl extends ASTWrapperPsiElement implements DchSignoff {
+public class DchSignoffDateImpl extends AbstractDchSignoffDate implements DchSignoffDate {
 
-  public DchSignoffImpl(@NotNull ASTNode node) {
+  public DchSignoffDateImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull DchVisitor visitor) {
-    visitor.visitSignoff(this);
+    visitor.visitSignoffDate(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof DchVisitor) accept((DchVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public DchSignoffDate getSignoffDate() {
-    return findChildByClass(DchSignoffDate.class);
   }
 
 }
