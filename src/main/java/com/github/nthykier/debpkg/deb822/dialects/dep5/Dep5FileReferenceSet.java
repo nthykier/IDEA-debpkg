@@ -38,14 +38,22 @@ public class Dep5FileReferenceSet extends FileReferenceSet {
         return references;
     }
 
+    @Override
+    public boolean isSoft() {
+        return true;
+    }
+
+    @Override
     public boolean couldBeConvertedTo(final boolean relative) {
         return false;
     }
 
+    @Override
     public boolean absoluteUrlNeedsStartSlash() {
         return false;
     }
 
+    @Override
     public boolean isAbsolutePathReference() {
         return true;
     }

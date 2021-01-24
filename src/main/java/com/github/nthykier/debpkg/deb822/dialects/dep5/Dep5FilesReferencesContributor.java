@@ -67,7 +67,6 @@ public class Dep5FilesReferencesContributor extends PsiReferenceContributor {
 
     private void detectPathReferences(@NotNull VirtualFile rootDir, PathPart[] pathParts, PsiManager psiManager,
                                       PsiElement psiElement, List<PsiReference> references) {
-        VirtualFile currentPath = rootDir;
         int length;
         int startOffset;
         List<TextRange> ranges = new ArrayList<>();
@@ -90,16 +89,9 @@ public class Dep5FilesReferencesContributor extends PsiReferenceContributor {
             finalPath.append(pathPart.getPath());
             switch (pathPart.getPathType()) {
                 case NAME_PART:
-                    currentPath = currentPath.findChild(pathPart.getPath());
-                    if (currentPath == null) {
-                        return;
-                    }
                     ranges.add(pathPart.getTextRange());
                     break;
                 case DIRECTORY_SEPARATOR:
-                    if (!currentPath.isDirectory()) {
-                        return;
-                    }
                     break;
                 case WILDCARD_QUESTION_MARK:
                 case WILDCARD_STAR:

@@ -10,6 +10,7 @@
   for the `Section` field.
 - Add inspection for the value of the `Section` starting with `main/` as
   the main component is the default and is customarily omitted.
+- Add code completion of file names in DEP-5 copyright files.
 
 ### Changed
 - Optimized the number of single character whitespace tokens emitted by the

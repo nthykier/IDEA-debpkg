@@ -339,6 +339,10 @@ public class Dep5Annotator implements Annotator {
     static VirtualFile getRootDir(PsiFile file) {
         VirtualFile path = file.getVirtualFile();
         if (path == null) {
+            // This often happens if we are called during code completion.
+            path = file.getOriginalFile().getVirtualFile();
+        }
+        if (path == null) {
             return null;
         }
         path = path.getParent();
