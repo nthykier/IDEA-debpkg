@@ -52,7 +52,7 @@ public class AbstractDeb822Field extends ASTWrapperPsiElement implements Deb822F
 
     private KnownFieldTable getKnownFields() {
         if (this.knownFields == null) {
-            this.knownFields = Deb822LanguageSupport.getKnownFieldTableForLanguage(this.getContainingFile().getLanguage());
+            this.knownFields = Deb822LanguageSupport.fromDeb822Language(this.getContainingFile().getLanguage()).getKnownFieldTable();
         }
         return this.knownFields;
     }

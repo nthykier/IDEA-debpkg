@@ -38,7 +38,7 @@ public class Deb822Annotator implements Annotator, DumbAware {
          * that
          */
         Map<String, Deb822FieldValuePair> seen = new HashMap<>();
-        Deb822LanguageSupport deb822LanguageSupport = Deb822LanguageSupport.fromDeb822Language(paragraph.getContainingFile().getLanguage());
+        Deb822LanguageSupport deb822LanguageSupport = Deb822LanguageSupport.fromPsiElement(paragraph);
         KnownFieldTable knownFieldTable = deb822LanguageSupport.getKnownFieldTable();
         String paragraphType = paragraph.classifyParagraph();
         for (Deb822FieldValuePair pair : paragraph.getFieldValuePairList()) {
