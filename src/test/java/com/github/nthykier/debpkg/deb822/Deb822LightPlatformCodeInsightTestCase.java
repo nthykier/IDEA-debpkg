@@ -18,8 +18,13 @@ public class Deb822LightPlatformCodeInsightTestCase extends LightPlatformCodeIns
     }
 
     @Test
-    public void testFolding() {
+    public void testFoldingDsc() {
         myFixture.testFolding(getTestDataPath() + "/foldingTest.dsc");
+    }
+
+    @Test
+    public void testFoldingDctrl() {
+        myFixture.testFolding(getTestDataPath() + "/dctrlFoldingTest.deb822");
     }
 
     @Test

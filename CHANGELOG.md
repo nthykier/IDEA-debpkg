@@ -20,6 +20,8 @@
   the signoff dates.  It will now accept dates that are incorrectly
   formatted.  Invalid dates are instead detected by an inspection along
   with a quick fix (if the plugin recognises the date format).
+- Multiple lines of comments in deb822 files can now be folded and are
+  folded by default.
 
 ### Deprecated
 

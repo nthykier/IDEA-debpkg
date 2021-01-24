@@ -10,6 +10,7 @@ import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.TokenType;
@@ -21,22 +22,21 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware {
 
     @NotNull
     @Override
-    public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
+    public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
         List<FoldingDescriptor> descriptors = new ArrayList<>();
         Collection<Deb822FieldValuePair> fieldValuePairs =
                 PsiTreeUtil.findChildrenOfType(root, Deb822FieldValuePair.class);
 
         Collection<Deb822GpgSignature> signatures = PsiTreeUtil.findChildrenOfType(root, Deb822GpgSignature.class);
         Collection<Deb822GpgSigned> gpgSignedStatements = PsiTreeUtil.findChildrenOfType(root, Deb822GpgSigned.class);
+
+        processComments(root, descriptors);
 
         for (Deb822GpgSignature signature : signatures) {
             descriptors.add(new FoldingDescriptor(
@@ -161,5 +161,43 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
     public boolean isCollapsedByDefault(@NotNull ASTNode node) {
         /* We setup "Collapsed by default" in the FoldingDescriptors */
         return false;
+    }
+
+    private static void processComments(PsiElement root, List<FoldingDescriptor> descriptors) {
+        List<PsiComment> comments = new ArrayList<>();
+        PsiTreeUtil.processElements(root, PsiComment.class, comments::add);
+        PsiComment currentStart = null;
+        PsiComment currentComment = null;
+        for (PsiComment nextComment : comments) {
+            if (nextComment.getPrevSibling() == currentComment) {
+                currentComment = nextComment;
+            } else {
+                if (currentStart != currentComment) {
+                    descriptors.add(fromMultipleAdjacentComments(currentStart, currentComment));
+                }
+                currentComment = currentStart = nextComment;
+            }
+        }
+        if (currentStart != currentComment) {
+            descriptors.add(fromMultipleAdjacentComments(currentStart, currentComment));
+        }
+    }
+
+    private static FoldingDescriptor fromMultipleAdjacentComments(PsiComment startComment, PsiComment endComment) {
+        TextRange range = new TextRange(
+                startComment.getTextOffset(),
+                // Comments include EOL chars, but we want to keep the last one, so that folding
+                // will look "correct"
+                endComment.getTextRange().getEndOffset() - 1
+        );
+        return new FoldingDescriptor(
+                startComment.getParent().getNode(),
+                range,
+                null,
+                Collections.emptySet(),
+                false,
+                startComment.getText().trim() + " {...}",
+                true
+        );
     }
 }
