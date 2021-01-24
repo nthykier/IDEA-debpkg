@@ -56,7 +56,6 @@ public class Dep5Annotator implements Annotator {
         KnownFieldTable knownFieldTable = Deb822DialectDebianCopyrightLanguage.INSTANCE.getKnownFieldTable();
         String paragraphType = paragraph.classifyParagraph();
         Deb822FieldValuePair filesField;
-        List<List<ASTNode>> splitFieldValue;
         Deb822KnownField filesKnownField;
         Deb822ValueParts valueParts;
         if (!Deb822DialectDebianCopyrightLanguage.PARAGRAPH_TYPE_FILES.equals(paragraphType)) {
@@ -71,10 +70,9 @@ public class Dep5Annotator implements Annotator {
         }
         filesKnownField = knownFieldTable.getField("Files");
         assert filesKnownField != null : "Debian Copyright format must have \"Files\" as a known field";
-        splitFieldValue = filesKnownField.getFieldValueType().splitValue(valueParts);
-        for (List<ASTNode> wordParts : splitFieldValue) {
-            String word = asString(converter, wordParts);
-            TextRange range = rangeOfWordParts(wordParts);
+        for (Deb822Value deb822Value : valueParts.getValueList()) {
+            String word = deb822Value.getText();
+            TextRange range = deb822Value.getTextRange();
             PathPart[] pathParts;
 
             if (word.startsWith("/") || word.startsWith("./") || word.startsWith("../")) {

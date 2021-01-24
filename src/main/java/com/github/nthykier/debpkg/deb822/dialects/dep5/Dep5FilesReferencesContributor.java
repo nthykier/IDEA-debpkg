@@ -2,7 +2,9 @@ package com.github.nthykier.debpkg.deb822.dialects.dep5;
 
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Value;
 import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
+import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 import com.github.nthykier.debpkg.util.ASTNodeStringConverter;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
@@ -22,51 +24,39 @@ public class Dep5FilesReferencesContributor extends PsiReferenceContributor {
 
     @Override
     public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
-        registrar.registerReferenceProvider(PlatformPatterns.psiElement(Deb822FieldValuePair.class),
+        registrar.registerReferenceProvider(PlatformPatterns.psiElement(Deb822Value.class),
                 new PsiReferenceProvider() {
                     @NotNull
                     @Override
                     public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element,
                                                                            @NotNull ProcessingContext context) {
-                        Deb822FieldValuePair fieldValuePair = (Deb822FieldValuePair)element;
+                        Deb822Value value = (Deb822Value)element;
+                        Deb822FieldValuePair fieldValuePair = Deb822PsiImplUtil.getAncestorOfType(element, Deb822FieldValuePair.class);
+                        if (fieldValuePair == null) {
+                            return PsiReference.EMPTY_ARRAY;
+                        }
                         Deb822KnownField knownField = fieldValuePair.getField().getDeb822KnownField();
                         if (knownField == null || fieldValuePair.getValueParts() == null) {
                             return PsiReference.EMPTY_ARRAY;
                         }
                         if (knownField.getCanonicalFieldName().equals("Files")) {
-                            SmartList<PsiReference> references = new SmartList<>();
-                            ASTNodeStringConverter converter = new ASTNodeStringConverter();
-                            Deb822ValueParts valueParts = fieldValuePair.getValueParts();
-                            List<List<ASTNode>> splitFieldValue = knownField.getFieldValueType().splitValue(valueParts);
+                            SmartList<PsiReference> references;
+                            String word;
+                            TextRange range;
+                            PsiManager psiManager;
+                            PathPart[] pathParts;
                             VirtualFile rootDir = Dep5Annotator.getRootDir(fieldValuePair.getContainingFile());
-                            PsiManager psiManager = PsiManager.getInstance(element.getProject());
 
                             if (rootDir == null) {
                                 return PsiReference.EMPTY_ARRAY;
                             }
+                            word = value.getText();
+                            references = new SmartList<>();
+                            range = TextRange.create(0, word.length());
+                            psiManager = PsiManager.getInstance(element.getProject());
 
-                            for (List<ASTNode> wordParts : splitFieldValue) {
-                                String word = Dep5Annotator.asString(converter, wordParts);
-                                TextRange range = Dep5Annotator.rangeOfWordParts(wordParts, true,
-                                        valueParts.getStartOffsetInParent());
-                                PathPart[] pathParts = Dep5Annotator.parsePathIntoParts(word, range, null);
-                                int length;
-
-                                if (Dep5Annotator.isStarWildcardOrEndsWithSlashStarWildCard(pathParts)) {
-                                    if (pathParts.length == 1) {
-                                        continue;
-                                    }
-                                    length = pathParts.length - 1;
-                                } else {
-                                    length = pathParts.length;
-                                }
-
-                                if (Arrays.stream(pathParts, 0, length)
-                                        .anyMatch(p -> p.getPathType().isWildcard())) {
-                                    continue;
-                                }
-                                detectPathReferences(rootDir, pathParts, psiManager, fieldValuePair, references);
-                            }
+                            pathParts = Dep5Annotator.parsePathIntoParts(word, range, null);
+                            detectPathReferences(rootDir, pathParts, psiManager, element, references);
 
                             return references.toArray(PsiReference.EMPTY_ARRAY);
                         }
