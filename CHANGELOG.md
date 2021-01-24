@@ -30,8 +30,8 @@
   Note that tab characters are still considered syntax errors.
 - Fixed an assertion error if `debian/changelog` contained `* dir/:`.
 - The "linkification" of closed bugs in `debian/changelog` no longer
-  "misses" `Closes` clauses if there are more than one in the same entry.
-  This was mostly seen with sublists with per-item `Closes`.
+  "misses" `Closes` clauses if there are multiple of them in the same entry.
+  This was mostly seen with entries containing a sublist with per-item `Closes`.
 - The "linkification" of closed bugs in `debian/changelog` no longer
   includes leading whitespace in the link.  Previously, this could happen
   if the `Closes` spanned multiple lines.
