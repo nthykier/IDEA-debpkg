@@ -60,7 +60,7 @@ value_parts ::= COMMENT* hanging_cont_value? (value|COMMA|substvar) (hanging_con
 hanging_cont_value ::= HANGING_CONT_VALUE_TOKEN+
 
 value ::= VALUE_TOKEN {
-  methods=[getReference]
+  extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822Value"
 }
 
 substvar ::= SUBSTVAR_TOKEN {
