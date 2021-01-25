@@ -1,19 +1,19 @@
 package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
-import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlAnnotator;
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
-import com.github.nthykier.debpkg.deb822.psi.*;
-import com.github.nthykier.debpkg.util.AnnotatorUtil;
+import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
+import com.github.nthykier.debpkg.deb822.psi.Deb822File;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Visitor;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
+import static com.github.nthykier.debpkg.util.AnnotatorUtil.fieldInsertionQuickFix;
 
 public class DCtrlMissingRulesRequiresRootInspection extends LocalInspectionTool {
 
@@ -36,10 +36,6 @@ public class DCtrlMissingRulesRequiresRootInspection extends LocalInspectionTool
         };
     }
 
-    private static Function<Project, Deb822FieldValuePair> fieldGenerator(final String content) {
-        return (Project project) -> Deb822ElementFactory.createFieldValuePairFromText(project, content);
-    }
-
     private void checkSourceParagraph(@NotNull final ProblemsHolder holder, @NotNull Deb822Paragraph paragraph) {
         Deb822FieldValuePair src = paragraph.getFieldValuePair("source");
         Deb822FieldValuePair rrr = paragraph.getFieldValuePair("rules-requires-root");
@@ -50,8 +46,8 @@ public class DCtrlMissingRulesRequiresRootInspection extends LocalInspectionTool
                     "Testsuite",
             };
             LocalQuickFix[] fixes = new LocalQuickFix[] {
-                    AnnotatorUtil.fieldInsertionQuickFix(fieldGenerator("Rules-Requires-Root: no"), placeRelativeTo).apply("source-add-rules-requires-root-to-no"),
-                    AnnotatorUtil.fieldInsertionQuickFix(fieldGenerator("Rules-Requires-Root: binary-targets"), placeRelativeTo).apply("source-add-rules-requires-root-to-binary-targets"),
+                    fieldInsertionQuickFix("Rules-Requires-Root: no", placeRelativeTo),
+                    fieldInsertionQuickFix("Rules-Requires-Root: binary-targets", placeRelativeTo),
             };
             holder.registerProblem(src,
                     Deb822Bundle.message("deb822.files.suggested-field.source-missing-rules-requires-root"),

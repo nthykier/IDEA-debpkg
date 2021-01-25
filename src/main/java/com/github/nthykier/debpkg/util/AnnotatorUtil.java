@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -110,8 +111,8 @@ public class AnnotatorUtil {
     }
 
     @NotNull
-    public static <T extends Deb822FieldValuePair> Function<String, Deb822TypeSafeLocalQuickFix<T>> fieldInsertionQuickFix(final Function<Project, T> factoryMethod, String... insertRelativeTo) {
-        return (String s) -> insertField(s, factoryMethod, insertRelativeTo);
+    public static LocalQuickFix fieldInsertionQuickFix(@NotNull String content, @NotNull String @NotNull ... insertRelativeTo) {
+        return new Deb822InsertFieldQuickFix(content, Arrays.asList(insertRelativeTo));
     }
 
     private static Deb822LocalQuickFix incorrectContinuationLineFixer(String baseName, String replacementText) {
@@ -200,48 +201,4 @@ public class AnnotatorUtil {
         });
     }
 
-    private static void insertBefore(PsiElement paragraph, PsiElement anchorElement, PsiElement newField, PsiElement newline) {
-        paragraph.addBefore(newField, anchorElement);
-        paragraph.addBefore(newline, anchorElement);
-    }
-
-    private static <T extends Deb822FieldValuePair> Deb822TypeSafeLocalQuickFix<T> insertField(String baseName, Function<Project, T> newFieldGenerator, String ... beforeFields) {
-        return GenericTypeSafeQuickfix.of(baseName, newFieldGenerator, (project, descriptor, newField) -> {
-            Deb822Paragraph paragraph = Deb822PsiImplUtil.getAncestorOfType(descriptor.getPsiElement(), Deb822Paragraph.class);
-            // A Deb822FieldValuePair does not contain a trailing newline; force it in to avoid breaking the next field
-            // The "Foo: bar" part is only there to avoid a parser error from missing a field / paragraph.  Without it
-            // we get a Psi Error element rather than the newline whitespace element that we want.
-            PsiElement whitespace = Deb822ElementFactory.createFile(project, "\nFoo: bar\n").getFirstChild();
-            Deb822FieldValuePair insertRelativeTo = null;
-
-            if (paragraph == null) {
-                throw new IncorrectOperationException("Insertion failed; could not determine which paragraph should have the new field");
-            }
-
-            for (String fieldName : beforeFields) {
-                insertRelativeTo = paragraph.getFieldValuePair(fieldName);
-                if (insertRelativeTo != null) {
-                    break;
-                }
-            }
-
-            if (insertRelativeTo != null) {
-                insertBefore(paragraph, insertRelativeTo, newField, whitespace);
-            } else {
-                List<Deb822FieldValuePair> fieldPairs = paragraph.getFieldValuePairList();
-                Deb822FieldValuePair lastPair = fieldPairs.get(fieldPairs.size() - 1);
-                PsiElement lastChild = paragraph.getLastChild();
-                /* If the last element is not a PARAGRAPH_FINISH (happens at EOF) then this logic inserts the tokens
-                 * wrong.  Prefer insert it as the second last field instead of breaking the file.
-                 */
-                boolean canInsertAtEnd = lastChild.getNode().getElementType() == Deb822Types.PARAGRAPH_FINISH;
-                /* Prefer Description as the last field as it is conventionally in the end of d/control paragraphs */
-                if (!canInsertAtEnd || lastPair.getField().getFieldName().equalsIgnoreCase("description")) {
-                    insertBefore(paragraph, lastPair, newField, whitespace);
-                } else {
-                    insertBefore(paragraph, lastChild, newField, whitespace);
-                }
-            }
-        });
-    }
 }
