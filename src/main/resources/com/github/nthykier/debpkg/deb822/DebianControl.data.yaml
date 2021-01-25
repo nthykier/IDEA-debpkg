@@ -64,6 +64,53 @@ fields:
           Note that declaring a package to be "Essential: no" is the same as not having the field except the less
           wastes fewer bytes on everyones harddisk.
 
+  - canonicalName: Important
+    valueType: SINGLE_KEYWORD
+    onlyInParagraphType: "Package"
+    description: |
+      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em>
+
+      <b>Deprecated</b>. <em>You almost certainly want <em>Protected</em> instead of (or in addition to) this field.</b>
+
+      <p>The field works similar to <b>Protected</b> except that dpkg does not support the field.  On the plus side, it is supported in older releases (e.g. Debian buster and earlier) and can be useful for backwards compatibility with these releases.</p>
+    warnIfDefault: true
+    defaultValue: "no"
+    keywordList:
+      - value: "yes"
+        description: |
+          The package is protected and attempts to uninstall it will cause strong warnings to the user that they might be breaking the system.
+      - value: "no"
+        description: |
+          The package is a regular package.  This is the default and recommeded.
+
+          Note that declaring a package to be "Protected: no" is the same as not having the field except the less
+          wastes fewer bytes on everyones harddisk.
+
+  - canonicalName: Protected
+    valueType: SINGLE_KEYWORD
+    onlyInParagraphType: "Package"
+    description: |
+      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em>
+
+      <p>Whether packages the package should be considered Protected by dpkg and APT.</p>
+
+      <p>If a package is proteted, then both dpkg and APT will provide very strong warings to the user when they attempt to unstall the package.</p>
+
+      <p>This field is useful for the small subset of packages that are not essential but if installed tends to be very important for the system to function.  Examples include this is useful for packages such as init systems and boot loaders, where uninstalling it might break the system.  On the other hand, you can have "systems" (e.g. containers or chroots) that do not need a boot loader nor an init system, so they are not <em>Essential</em>.</p>
+    warnIfDefault: true
+    defaultValue: "no"
+    keywordList:
+      - value: "yes"
+        description: |
+          The package is protected and attempts to uninstall it will cause strong warnings to the user that they might be breaking the system.
+      - value: "no"
+        description: |
+          The package is a regular package.  This is the default and recommeded.
+
+          Note that declaring a package to be "Protected: no" is the same as not having the field except the less
+          wastes fewer bytes on everyones harddisk.
+
+
   - canonicalName: Standards-Version
     onlyInParagraphType: "Source"
     description: |

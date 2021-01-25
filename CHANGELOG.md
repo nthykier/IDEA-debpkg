@@ -11,6 +11,10 @@
 - Add inspection for the value of the `Section` starting with `main/` as
   the main component is the default and is customarily omitted.
 - Add code completion of file names in DEP-5 copyright files.
+- Add `Important` and `Protected` as known fields in `debian/control`.
+- Add inspection for using `Important` without `Protected`.  The latter
+  is also supported by dpkg and therefore provides better coverage provided
+  dpkg and APT is new enough.
 
 ### Changed
 - Optimized the number of single character whitespace tokens emitted by the
