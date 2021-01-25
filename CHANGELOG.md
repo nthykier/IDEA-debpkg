@@ -11,8 +11,8 @@
 - Add inspection for the value of the `Section` starting with `main/` as
   the main component is the default and is customarily omitted.
 - Add code completion of file names in DEP-5 copyright files.
-- Add `Important` and `Protected` as known fields in `debian/control`.
-- Add inspection for using `Important` without `Protected`.  The latter
+- Add `XB-Important` and `Protected` as known fields in `debian/control`.
+- Add inspection for using `XB-Important` without `Protected`.  The latter
   is also supported by dpkg and therefore provides better coverage provided
   dpkg and APT is new enough.
 
@@ -26,6 +26,8 @@
   with a quick fix (if the plugin recognises the date format).
 - Multiple lines of comments in deb822 files can now be folded and are
   folded by default.
+- Field lookups for known fields in `debian/control` now accounts for the
+  `X-` prefix (plus variants such as `XB-` and `XC-`).
 
 ### Deprecated
 

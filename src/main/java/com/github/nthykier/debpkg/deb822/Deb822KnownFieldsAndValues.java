@@ -41,7 +41,7 @@ public class Deb822KnownFieldsAndValues {
                 return knownFieldTable;
             }
             if (language.is(Deb822DialectDebianControlLanguage.INSTANCE)) {
-                knownFieldTable = new KnownFieldTableImpl(DCTRL_KNOWN_FIELDS);
+                knownFieldTable = new KnownFieldTableImpl(DCTRL_KNOWN_FIELDS, true);
             } else if (language.is(Deb822DialectDebianCopyrightLanguage.INSTANCE)) {
                 knownFieldTable = new KnownFieldTableImpl(DCOPY_KNOWN_FIELDS);
             } else if (language.isKindOf(Deb822Language.INSTANCE)) {
@@ -73,7 +73,13 @@ public class Deb822KnownFieldsAndValues {
         List<Map<String, Object>> fieldDefinitions = getList(data, "fields");
         for (Map<String, Object> fieldDefinition : fieldDefinitions) {
             Deb822KnownField field = parseKnownFieldDefinition(fieldDefinition);
-            checkedAddField(knownFieldMap, field.getCanonicalFieldName().toLowerCase().intern(), field);
+            String key = KnownFieldTable.withXPrefixStripped(field.getCanonicalFieldName());
+            if (key != null) {
+                key = "X-" + key;
+            } else {
+                key = field.getCanonicalFieldName();
+            }
+            checkedAddField(knownFieldMap, key.toLowerCase().intern(), field);
         }
     }
 

@@ -20,7 +20,6 @@ public class AbstractDeb822Field extends ASTWrapperPsiElement implements Deb822F
 
     /* We use NULL_FIELD as a dummy value for "not-set/recompute" because "null" is a valid return value */
     private Deb822KnownField knownField = KnownFields.NULL_FIELD;
-    private KnownFieldTable knownFields = null;
     private String fieldName;
     public AbstractDeb822Field(@NotNull ASTNode node) {
         super(node);
@@ -30,7 +29,6 @@ public class AbstractDeb822Field extends ASTWrapperPsiElement implements Deb822F
     public void subtreeChanged() {
         super.subtreeChanged();
         this.knownField = KnownFields.NULL_FIELD;
-        this.knownFields = null;
         this.fieldName = null;
     }
 
@@ -50,17 +48,11 @@ public class AbstractDeb822Field extends ASTWrapperPsiElement implements Deb822F
         return this.getText();
     }
 
-    private KnownFieldTable getKnownFields() {
-        if (this.knownFields == null) {
-            this.knownFields = Deb822LanguageSupport.fromDeb822Language(this.getContainingFile().getLanguage()).getKnownFieldTable();
-        }
-        return this.knownFields;
-    }
-
     @Nullable
     public Deb822KnownField getDeb822KnownField() {
         if (knownField == KnownFields.NULL_FIELD) {
-            knownField = getKnownFields().getField(this.getFieldName());
+            KnownFieldTable fieldTable = Deb822LanguageSupport.fromPsiElement(this).getKnownFieldTable();
+            knownField = fieldTable.getField(this.getFieldName());
         }
         return knownField;
     }

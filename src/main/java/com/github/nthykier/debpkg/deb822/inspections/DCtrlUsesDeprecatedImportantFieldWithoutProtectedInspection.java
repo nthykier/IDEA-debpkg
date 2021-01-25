@@ -37,7 +37,7 @@ public class DCtrlUsesDeprecatedImportantFieldWithoutProtectedInspection extends
     }
 
     private void checkParagraph(@NotNull final ProblemsHolder holder, @NotNull Deb822Paragraph paragraph) {
-        Deb822FieldValuePair importantField = paragraph.getFieldValuePair("Important");
+        Deb822FieldValuePair importantField = paragraph.getFieldValuePair("XB-Important");
         Deb822FieldValuePair protectedField;
         LocalQuickFix[] fixes;
         if (importantField == null) {
@@ -51,7 +51,7 @@ public class DCtrlUsesDeprecatedImportantFieldWithoutProtectedInspection extends
             return;
         }
         fixes = new LocalQuickFix[] {
-                fieldInsertionQuickFix("Protected: yes", "Important"),
+                fieldInsertionQuickFix("Protected: yes", "XB-Important"),
         };
         holder.registerProblem(importantField,
                 Deb822Bundle.message("deb822.files.inspection.dctrl-uses-deprecated-important-field-without-protected"),

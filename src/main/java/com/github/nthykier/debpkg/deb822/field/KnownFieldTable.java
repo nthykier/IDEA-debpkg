@@ -20,11 +20,25 @@ public interface KnownFieldTable {
     @NotNull
     Collection<Deb822KnownField> getAllFields();
 
-    default Deb822KnownField getField(@NotNull String fieldName, Deb822KnownField defaultValue) {
-        Deb822KnownField value = getField(fieldName);
-        if (value == null) {
-            return defaultValue;
+    boolean getAutoStripXPrefix();
+
+    static @Nullable String withXPrefixStripped(String fieldName) {
+        int firstDash = fieldName.indexOf('-');
+        char firstChar;
+        if (firstDash == -1 || firstDash > 5) {
+            return null;
         }
-        return value;
+        firstChar = fieldName.charAt(0);
+        if (firstChar != 'X' && firstChar != 'x') {
+            return null;
+        }
+
+        for (int i = 1 ; i < firstDash ; i++) {
+            char c = Character.toUpperCase(fieldName.charAt(i));
+            if (c != 'B' && c != 'C' && c != 'S') {
+                return null;
+            }
+        }
+        return fieldName.substring(firstDash + 1);
     }
 }

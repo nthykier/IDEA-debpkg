@@ -28,13 +28,14 @@ public interface Deb822ParagraphSupport extends PsiElement {
    * In case of errors, where the paragraph have duplicate fields (which is not permitted
    * in deb822 but the parser survives it), the first field is used.
    *
+   * This method will also handle stripping of "X-" (and similar prefixes) if this is a
+   * debian/control file.
+   *
    * @param fieldName Name of the field to look up.  The method handles lower-casing as necessary.
    * @return The Deb822FieldValuePair with the field of this name.
    */
   @Nullable
-  default Deb822FieldValuePair getFieldValuePair(@NotNull String fieldName) {
-     return getFieldMap().get(fieldName.toLowerCase());
-  }
+  Deb822FieldValuePair getFieldValuePair(@NotNull String fieldName);
 
   /**
    * Check if the paragraph is the first in the file

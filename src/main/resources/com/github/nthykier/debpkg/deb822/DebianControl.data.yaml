@@ -64,7 +64,7 @@ fields:
           Note that declaring a package to be "Essential: no" is the same as not having the field except the less
           wastes fewer bytes on everyones harddisk.
 
-  - canonicalName: Important
+  - canonicalName: XB-Important
     valueType: SINGLE_KEYWORD
     onlyInParagraphType: "Package"
     description: |
