@@ -37,6 +37,8 @@
 - The "linkification" of closed bugs in `debian/changelog` no longer
   includes leading whitespace in the link.  Previously, this could happen
   if the `Closes` spanned multiple lines.
+- The `debian/control` annotator was neutered due to a regression that is now
+  fixed.
 
 ### Security
 ## [0.0.8]

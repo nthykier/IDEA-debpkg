@@ -23,18 +23,21 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import static com.github.nthykier.debpkg.util.CommonPsiUtil.isCorrectFileLanguage;
 
 public class Dep5Annotator implements Annotator {
 
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
+        if (!isCorrectFileLanguage(element, Deb822DialectDebianCopyrightLanguage.INSTANCE)) {
+            return;
+        }
         if (element instanceof Deb822File) {
             Deb822AllParagraphs paragraphs = Deb822PsiImplUtil.getNextSiblingOfType(
                     element.getFirstChild(),

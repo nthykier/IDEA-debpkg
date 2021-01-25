@@ -68,9 +68,15 @@
         />
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
-        <annotator language="DebianControl" id="DEBIAN_CONTROL_SCANNER" order="after DEB822_BASIC_SCANNER"
+        <!-- Should have been DebianControl, but we have to work around IDEA, which uses the language of the element
+             rather than the file language (and we reuse all token types between Deb822 plus variants).
+          -->
+        <annotator language="Deb822" id="DEBIAN_CONTROL_SCANNER" order="after DEB822_BASIC_SCANNER"
                    implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlAnnotator" />
-        <annotator language="DebianCopyright" id="DEBIAN_COPYRIGHT_SCANNER" order="after DEB822_BASIC_SCANNER"
+        <!-- Should have been DebianCopyright, but we have to work around IDEA, which uses the language of the element
+             rather than the file language (and we reuse all token types between Deb822 plus variants).
+          -->
+        <annotator language="Deb822" id="DEBIAN_COPYRIGHT_SCANNER" order="after DEB822_BASIC_SCANNER"
                    implementationClass="com.github.nthykier.debpkg.deb822.dialects.dep5.Dep5Annotator" />
         <spellchecker.support language="Deb822" id="deb822SpellcheckingStrategy"
                               implementationClass="com.github.nthykier.debpkg.deb822.Deb822SpellcheckingStrategy" />

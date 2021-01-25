@@ -9,6 +9,7 @@ import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.github.nthykier.debpkg.util.Deb822TypeSafeLocalQuickFix;
 import com.intellij.codeInspection.*;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.Language;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
@@ -22,11 +23,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Function;
 
+import static com.github.nthykier.debpkg.util.CommonPsiUtil.isCorrectFileLanguage;
+
 public class Deb822DialectDebianControlAnnotator implements Annotator {
 
     private static final TokenSet SPACE_OR_COMMA = TokenSet.create(TokenType.WHITE_SPACE, Deb822Types.COMMA);
 
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
+        if (!isCorrectFileLanguage(element, Deb822DialectDebianControlLanguage.INSTANCE)) {
+            return;
+        }
         if (element instanceof Deb822Paragraph) {
             checkParagraph(holder, (Deb822Paragraph)element);
         }
