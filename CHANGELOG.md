@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [unspecified]
+### Added
 - Add an inspection for duplicating the field value of the `Source` paragraph
   in a `Package` paragraph of `debian/control`.
 - Add component-prefixed versions of sections to the list of known keywords
