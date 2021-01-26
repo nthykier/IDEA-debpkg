@@ -28,6 +28,8 @@
   folded by default.
 - Field lookups for known fields in `debian/control` now accounts for the
   `X-` prefix (plus variants such as `XB-` and `XC-`).
+- Renamed and reordered inspection settings so the are now under `Debian`.
+  Previously, they were under `DebianControl`.
 
 ### Deprecated
 
