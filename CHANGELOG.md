@@ -14,7 +14,7 @@
 ### Fixed
 
 ### Security
-## [unspecified]
+## [0.0.9]
 ### Added
 - Add an inspection for duplicating the field value of the `Source` paragraph
   in a `Package` paragraph of `debian/control`.
