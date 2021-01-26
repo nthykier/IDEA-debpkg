@@ -31,10 +31,6 @@
 - Renamed and reordered inspection settings so the are now under `Debian`.
   Previously, they were under `DebianControl`.
 
-### Deprecated
-
-### Removed
-
 ### Fixed
 - Whitespace only lines in `debian/changelog` could trip parser errors.
   Note that tab characters are still considered syntax errors.
@@ -48,7 +44,6 @@
 - The `debian/control` annotator was neutered due to a regression that is now
   fixed.
 
-### Security
 ## [0.0.8]
 ### Added
 - The `debian/control` support now includes a find usage contributor for files
