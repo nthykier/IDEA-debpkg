@@ -35,7 +35,7 @@ repositories {
 dependencies {
     implementation("org.yaml:snakeyaml:1.27")
 
-    compileOnly("org.projectlombok:lombok:1.18.16")
+    compileOnly("org.projectlombok:lombok:1.18.18")
     annotationProcessor("org.projectlombok:lombok:1.18.16")
 
     testCompileOnly("org.projectlombok:lombok:1.18.16")
