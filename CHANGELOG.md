@@ -2,18 +2,12 @@
 
 # debpkg Changelog
 
-## [Unreleased]
-### Added
-
+## [0.0.10]
 ### Changed
+- Bump the compat range for the IDE to support 2021.1, no code changes required.
+- Bump snakeyaml dependency to 1.28
+- Bump lombok dependency to 1.18.20
 
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 ## [0.0.9]
 ### Added
 - Add an inspection for duplicating the field value of the `Source` paragraph
