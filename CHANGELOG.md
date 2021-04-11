@@ -3,6 +3,7 @@
 # debpkg Changelog
 
 ## [Unreleased]
+## [0.0.11]
 ### Changed
 - Bump the compat range for the IDE to support 2021.1, no code changes required.
 - Bump snakeyaml dependency to 1.28
