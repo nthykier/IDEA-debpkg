@@ -3,6 +3,10 @@
 # debpkg Changelog
 
 ## [Unreleased]
+### Changed
+- Bump snakeyaml dependency to 1.29
+- Bump CI dependencies (actions/{cache,checkout,create-release,upload-release-asset, upload-artifact}, gradle/wrapper-validation-action)
+
 ## [0.0.11]
 ### Changed
 - Bump the compat range for the IDE to support 2021.1, no code changes required.
