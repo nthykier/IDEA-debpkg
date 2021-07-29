@@ -3,6 +3,7 @@
 # debpkg Changelog
 
 ## [Unreleased]
+## [0.0.12]
 ### Changed
 - Bump snakeyaml dependency to 1.29
 - Bump CI dependencies (actions/{cache,checkout,create-release,upload-release-asset, upload-artifact}, gradle/wrapper-validation-action)
