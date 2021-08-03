@@ -3,6 +3,14 @@
 # debpkg Changelog
 
 ## [Unreleased]
+### Fixed
+- Support multiple dependency profiles for a given dependency, which is permitted by the synxtax.
+  Previously, this would have tripped a parse error.
+
+### Changed
+- When dependency profiles are present in a dependency field where it is not permitted, flag the
+  profile(s) and not the entire dependency as problematic.
+
 ## [0.0.12]
 ### Changed
 - Bump snakeyaml dependency to 1.29

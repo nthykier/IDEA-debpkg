@@ -22,6 +22,7 @@ public class DepLangDependencyInfoImpl extends ASTWrapperPsiElement implements D
     visitor.visitDependencyInfo(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof DepLangVisitor) accept((DepLangVisitor)visitor);
     else super.accept(visitor);

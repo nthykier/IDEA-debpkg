@@ -22,6 +22,7 @@ public class DepLangVersionPartImpl extends ASTWrapperPsiElement implements DepL
     visitor.visitVersionPart(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof DepLangVisitor) accept((DepLangVisitor)visitor);
     else super.accept(visitor);

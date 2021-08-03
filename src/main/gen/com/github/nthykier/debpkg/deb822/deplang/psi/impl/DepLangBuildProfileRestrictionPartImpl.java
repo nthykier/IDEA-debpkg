@@ -22,6 +22,7 @@ public class DepLangBuildProfileRestrictionPartImpl extends ASTWrapperPsiElement
     visitor.visitBuildProfileRestrictionPart(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof DepLangVisitor) accept((DepLangVisitor)visitor);
     else super.accept(visitor);

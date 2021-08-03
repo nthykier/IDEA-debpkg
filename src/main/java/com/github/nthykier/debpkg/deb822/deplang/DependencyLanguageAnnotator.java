@@ -24,6 +24,7 @@ import org.jetbrains.annotations.PropertyKey;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -46,7 +47,7 @@ public class DependencyLanguageAnnotator implements Annotator {
         } else if (element instanceof Deb822SubstvarBase) {
             checkSubstvar(holder, (Deb822SubstvarBase)element);
         } else if (element instanceof DepLangDependency) {
-            checkDependeny(holder, (DepLangDependency)element);
+            checkDependency(holder, (DepLangDependency)element);
         }
     }
 
@@ -74,15 +75,18 @@ public class DependencyLanguageAnnotator implements Annotator {
     }
 
 
-    private void checkDependeny(@NotNull AnnotationHolder holder, @NotNull DepLangDependency element) {
-        if (element.getBuildProfileRestrictionPart() != null) {
+    private void checkDependency(@NotNull AnnotationHolder holder, @NotNull DepLangDependency element) {
+        List<DepLangBuildProfileRestrictionPart> profiles = element.getBuildProfileRestrictionPartList();
+        if (!profiles.isEmpty()) {
             Deb822KnownRelationField knownRelationField = lookupContainingDeb822KnownField(element);
             if (knownRelationField != null && !knownRelationField.isBuildProfileRestrictionSupported()) {
-                holder.newAnnotation(HighlightSeverity.ERROR,
-                        Deb822Bundle.message("deb822.files.annotator.fields.dependency-field-does-not-support-build-profile", knownRelationField.getCanonicalFieldName())
-                )
-                        .range(element)
-                        .create();
+                for (DepLangBuildProfileRestrictionPart profile : profiles) {
+                    holder.newAnnotation(HighlightSeverity.ERROR,
+                                    Deb822Bundle.message("deb822.files.annotator.fields.dependency-field-does-not-support-build-profile", knownRelationField.getCanonicalFieldName())
+                            )
+                            .range(profile)
+                            .create();
+                }
             }
         }
     }

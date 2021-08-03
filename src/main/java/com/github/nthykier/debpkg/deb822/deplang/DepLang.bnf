@@ -75,7 +75,7 @@ package_name ::= name_or_substvar
 version ::= name_or_substvar_as_version
 
 /* (arch_restriction_part)? (build_profile_restriction_part)? */
-dependency ::= package_name (version_part)? (arch_restriction_part)? (build_profile_restriction_part)? {
+dependency ::= package_name (version_part)? (arch_restriction_part)? (build_profile_restriction_part+)? {
   pin=1
 }
 

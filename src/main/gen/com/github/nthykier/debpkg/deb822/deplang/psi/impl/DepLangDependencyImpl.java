@@ -22,6 +22,7 @@ public class DepLangDependencyImpl extends ASTWrapperPsiElement implements DepLa
     visitor.visitDependency(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof DepLangVisitor) accept((DepLangVisitor)visitor);
     else super.accept(visitor);
@@ -34,9 +35,9 @@ public class DepLangDependencyImpl extends ASTWrapperPsiElement implements DepLa
   }
 
   @Override
-  @Nullable
-  public DepLangBuildProfileRestrictionPart getBuildProfileRestrictionPart() {
-    return findChildByClass(DepLangBuildProfileRestrictionPart.class);
+  @NotNull
+  public List<DepLangBuildProfileRestrictionPart> getBuildProfileRestrictionPartList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, DepLangBuildProfileRestrictionPart.class);
   }
 
   @Override

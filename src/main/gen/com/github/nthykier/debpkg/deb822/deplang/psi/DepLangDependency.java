@@ -10,8 +10,8 @@ public interface DepLangDependency extends PsiElement {
   @Nullable
   DepLangArchRestrictionPart getArchRestrictionPart();
 
-  @Nullable
-  DepLangBuildProfileRestrictionPart getBuildProfileRestrictionPart();
+  @NotNull
+  List<DepLangBuildProfileRestrictionPart> getBuildProfileRestrictionPartList();
 
   @NotNull
   DepLangPackageName getPackageName();

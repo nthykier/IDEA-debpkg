@@ -76,9 +76,9 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "and_dependency_clause")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, AND_DEPENDENCY_CLAUSE, "<and dependency clause>");
-    r = a_b_a_p(b, l + 1, or_dependency_clause_parser_, OPERATOR_AND_parser_);
+    r = a_b_a_p(b, l + 1, DependencyLanguageParser::or_dependency_clause, OPERATOR_AND_parser_);
     r = r && and_dependency_clause_1(b, l + 1);
-    exit_section_(b, l, m, r, false, recover_dependency_clauses_parser_);
+    exit_section_(b, l, m, r, false, DependencyLanguageParser::recover_dependency_clauses);
     return r;
   }
 
@@ -99,7 +99,7 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     p = r; // pin = 1
     r = r && report_error_(b, restriction_list(b, l + 1));
     r = p && consumeToken(b, BRACKETS_CLOSE) && r;
-    exit_section_(b, l, m, r, p, recover_until_closing_token_parser_);
+    exit_section_(b, l, m, r, p, DependencyLanguageParser::recover_until_closing_token);
     return r || p;
   }
 
@@ -113,12 +113,12 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     p = r; // pin = 1
     r = r && report_error_(b, restriction_list(b, l + 1));
     r = p && consumeToken(b, GREATER_THAN) && r;
-    exit_section_(b, l, m, r, p, recover_until_closing_token_parser_);
+    exit_section_(b, l, m, r, p, DependencyLanguageParser::recover_until_closing_token);
     return r || p;
   }
 
   /* ********************************************************** */
-  // package_name (version_part)? (arch_restriction_part)? (build_profile_restriction_part)?
+  // package_name (version_part)? (arch_restriction_part)? (build_profile_restriction_part+)?
   public static boolean dependency(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "dependency")) return false;
     if (!nextTokenIs(b, "<dependency>", SUBSTVAR_TOKEN, WORDISH)) return false;
@@ -167,19 +167,24 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (build_profile_restriction_part)?
+  // (build_profile_restriction_part+)?
   private static boolean dependency_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "dependency_3")) return false;
     dependency_3_0(b, l + 1);
     return true;
   }
 
-  // (build_profile_restriction_part)
+  // build_profile_restriction_part+
   private static boolean dependency_3_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "dependency_3_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = build_profile_restriction_part(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!build_profile_restriction_part(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "dependency_3_0", c)) break;
+    }
     exit_section_(b, m, null, r);
     return r;
   }
@@ -285,8 +290,8 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "or_dependency_clause")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, OR_DEPENDENCY_CLAUSE, "<or dependency clause>");
-    r = a_b_a_p(b, l + 1, dependency_parser_, OPERATOR_OR_parser_);
-    exit_section_(b, l, m, r, false, recover_dependency_clauses_parser_);
+    r = a_b_a_p(b, l + 1, DependencyLanguageParser::dependency, OPERATOR_OR_parser_);
+    exit_section_(b, l, m, r, false, DependencyLanguageParser::recover_dependency_clauses);
     return r;
   }
 
@@ -461,38 +466,10 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     r = r && report_error_(b, version_operator(b, l + 1));
     r = p && report_error_(b, version(b, l + 1)) && r;
     r = p && consumeToken(b, PARANTHESES_CLOSE) && r;
-    exit_section_(b, l, m, r, p, recover_until_closing_token_parser_);
+    exit_section_(b, l, m, r, p, DependencyLanguageParser::recover_until_closing_token);
     return r || p;
   }
 
-  static final Parser OPERATOR_AND_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return consumeToken(b, OPERATOR_AND);
-    }
-  };
-  static final Parser OPERATOR_OR_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return consumeToken(b, OPERATOR_OR);
-    }
-  };
-  static final Parser dependency_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return dependency(b, l + 1);
-    }
-  };
-  static final Parser or_dependency_clause_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return or_dependency_clause(b, l + 1);
-    }
-  };
-  static final Parser recover_dependency_clauses_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recover_dependency_clauses(b, l + 1);
-    }
-  };
-  static final Parser recover_until_closing_token_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recover_until_closing_token(b, l + 1);
-    }
-  };
+  static final Parser OPERATOR_AND_parser_ = (b, l) -> consumeToken(b, OPERATOR_AND);
+  static final Parser OPERATOR_OR_parser_ = (b, l) -> consumeToken(b, OPERATOR_OR);
 }
