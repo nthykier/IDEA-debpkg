@@ -10,6 +10,7 @@
 ### Fixed
 - Support multiple dependency profiles for a given dependency, which is permitted by the synxtax.
   Previously, this would have tripped a parse error.
+- Avoid using `Language` as a Map-key per https://plugins.jetbrains.com/docs/intellij/dynamic-plugins.html#code.
 
 ### Changed
 - When dependency profiles are present in a dependency field where it is not permitted, flag the

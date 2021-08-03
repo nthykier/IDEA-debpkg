@@ -21,7 +21,7 @@ import static com.github.nthykier.debpkg.deb822.field.KnownFields.ANY_PARAGRAPH_
 
 public class Deb822KnownFieldsAndValues {
 
-    private static final Map<Language, KnownFieldTable> LANGUAGE2KNOWN_FIELDS = new HashMap<>();
+    private static final Map<String, KnownFieldTable> LANGUAGE2KNOWN_FIELDS = new HashMap<>();
     private static final Map<String, Deb822KnownField> DCTRL_KNOWN_FIELDS = new HashMap<>();
     private static final Map<String, Deb822KnownField> DCOPY_KNOWN_FIELDS = new HashMap<>();
 
@@ -36,7 +36,7 @@ public class Deb822KnownFieldsAndValues {
     @NotNull
     public static KnownFieldTable getKnownFieldsFor(Language language) {
         synchronized (LANGUAGE2KNOWN_FIELDS) {
-            KnownFieldTable knownFieldTable = LANGUAGE2KNOWN_FIELDS.get(language);
+            KnownFieldTable knownFieldTable = LANGUAGE2KNOWN_FIELDS.get(language.getID());
             if (knownFieldTable != null) {
                 return knownFieldTable;
             }
@@ -48,7 +48,7 @@ public class Deb822KnownFieldsAndValues {
                 knownFieldTable = KnownFieldTable.NULL_TABLE;
             }
             if (knownFieldTable != null) {
-                LANGUAGE2KNOWN_FIELDS.put(language, knownFieldTable);
+                LANGUAGE2KNOWN_FIELDS.put(language.getID(), knownFieldTable);
                 return knownFieldTable;
             }
         }
