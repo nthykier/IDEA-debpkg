@@ -38,7 +38,7 @@ intellij {
     type = properties("platformType")
     downloadSources = properties("platformDownloadSources").toBoolean()
     updateSinceUntilBuild = true
-
+    setPlugins("name.kropp.intellij.makefile:212.4746.52")
 }
 
 changelog {

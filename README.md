@@ -71,6 +71,15 @@ Notably missing features for `debian/copyright`.  The License fields are *not* v
  * Quick fix for some syntactical issues with continuation lines.
  * URLs in field values are linkified.
 
+### debian/rules
+
+ * Automatically register it as a makefile using the [Makefile plugin].
+   - Please review [Makefile plugin issues] for known issues if you experience any issues with how your
+     `debian/rules` file is parsed.
+
+[Makefile plugin]: https://plugins.jetbrains.com/plugin/9333-makefile-language/
+[Makefile plugin issues]: https://youtrack.jetbrains.com/issues?q=tag:%20%7BMakefile%20language%20plug-in%7D
+
 ## Getting started
 
 After installing the plugin, it automatically detects relevant files

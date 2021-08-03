@@ -3,6 +3,10 @@
 # debpkg Changelog
 
 ## [Unreleased]
+### Added
+- Support for syntax highlighting in `debian/rules`.  The feature builds upon the `Makefile` plugin
+  from Jetbrains.  Please see https://youtrack.jetbrains.com/issues?q=tag:%20%7BMakefile%20language%20plug-in%7D
+  for known issues.
 ### Fixed
 - Support multiple dependency profiles for a given dependency, which is permitted by the synxtax.
   Previously, this would have tripped a parse error.
