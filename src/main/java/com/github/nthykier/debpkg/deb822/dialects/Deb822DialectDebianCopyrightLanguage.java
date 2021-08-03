@@ -6,6 +6,7 @@ import com.github.nthykier.debpkg.deb822.Deb822LanguageSupport;
 import com.github.nthykier.debpkg.deb822.Deb822ParagraphClassifier;
 import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.intellij.lang.Language;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -29,14 +30,12 @@ public class Deb822DialectDebianCopyrightLanguage extends Language implements De
         super(Deb822Language.INSTANCE, "DebianCopyright");
     }
 
+    @Getter(lazy=true)
+    private final KnownFieldTable knownFieldTable = Deb822KnownFieldsAndValues.getKnownFieldsFor(this);
 
     @Override
     public @NotNull Deb822ParagraphClassifier getParagraphClassifier() {
         return DEBIAN_COPYRIGHT_PARAGRAPH_CLASSIFIER;
     }
 
-    @Override
-    public @NotNull KnownFieldTable getKnownFieldTable() {
-        return Deb822KnownFieldsAndValues.getKnownFieldsFor(this);
-    }
 }
