@@ -15,6 +15,7 @@
 ### Changed
 - When dependency profiles are present in a dependency field where it is not permitted, flag the
   profile(s) and not the entire dependency as problematic.
+- Bump build time dependencies (org.jetbrains.intellij, org.jetbrains.changelog)
 
 ## [0.0.12]
 ### Changed

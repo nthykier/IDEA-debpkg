@@ -1,13 +1,12 @@
-import org.jetbrains.changelog.closure
 import org.jetbrains.changelog.markdownToHTML
 
 plugins {
     // Java support
     id("java")
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "0.7.3"
+    id("org.jetbrains.intellij") version "1.1.4"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-    id("org.jetbrains.changelog") version "1.1.2"
+    id("org.jetbrains.changelog") version "1.2.1"
 }
 
 fun properties(key: String) = project.findProperty(key).toString()
@@ -33,40 +32,43 @@ dependencies {
 // Configure gradle-intellij-plugin plugin.
 // Read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
-    pluginName = properties("pluginName")
-    version = properties("platformVersion")
-    type = properties("platformType")
-    downloadSources = properties("platformDownloadSources").toBoolean()
-    updateSinceUntilBuild = true
-    setPlugins("name.kropp.intellij.makefile:212.4746.52")
+    pluginName.set(properties("pluginName"))
+    version.set(properties("platformVersion"))
+    type.set(properties("platformType"))
+    downloadSources.set(properties("platformDownloadSources").toBoolean())
+    updateSinceUntilBuild.set(true)
+    plugins.set(listOf(
+        "name.kropp.intellij.makefile:212.4746.52"
+    ))
 }
 
 changelog {
-    version = properties("pluginVersion")
-    groups = emptyList()
+    version.set(properties("pluginVersion"))
+    groups.set(emptyList())
 }
 
 // Include the generated files in the source set
 sourceSets["main"].java.srcDir("src/main/gen")
 
 tasks {
-    // Set the compatibility versions to 1.8
-    withType<JavaCompile> {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
+    // Set the JVM compatibility versions
+    properties("javaVersion").let {
+        withType<JavaCompile> {
+            sourceCompatibility = it
+            targetCompatibility = it
+        }
     }
-
     runIde {
-        autoReloadPlugins = true
+        autoReloadPlugins.set(true)
     }
 
     patchPluginXml {
-        version(properties("pluginVersion"))
-        sinceBuild(properties("pluginSinceBuild"))
-        untilBuild(properties("pluginUntilBuild"))
+        version.set(properties("pluginVersion"))
+        sinceBuild.set(properties("pluginSinceBuild"))
+        untilBuild.set(properties("pluginUntilBuild"))
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
-        pluginDescription(closure {
+        pluginDescription.set(
             File(projectDir, "README.md").readText().lines().run {
                 val start = "<!-- Plugin description -->"
                 val end = "<!-- Plugin description end -->"
@@ -76,21 +78,34 @@ tasks {
                 }
                 subList(indexOf(start) + 1, indexOf(end))
             }.joinToString("\n").run { markdownToHTML(this) }
-        })
+        )
 
         // Get the latest available change notes from the changelog file
-        changeNotes(closure {
-            changelog.getLatest().toHTML()
-        })
+        changeNotes.set(provider { changelog.getLatest().toHTML() })
     }
 
     runPluginVerifier {
-        ideVersions(properties("pluginVerifierIdeVersions"))
+        ideVersions.set(properties("pluginVerifierIdeVersions").split(',').map(String::trim).filter(String::isNotEmpty))
+    }
+
+    // Configure UI tests plugin
+    // Read more: https://github.com/JetBrains/intellij-ui-test-robot
+    runIdeForUiTests {
+        systemProperty("robot-server.port", "8082")
+        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
+        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
+        systemProperty("jb.consents.confirmation.enabled", "false")
+    }
+
+    signPlugin {
+        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
+        privateKey.set(System.getenv("PRIVATE_KEY"))
+        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
     }
 
     publishPlugin {
         dependsOn("patchChangelog")
-        token(System.getenv("PUBLISH_TOKEN"))
-        channels(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first())
+        token.set((System.getenv("PUBLISH_TOKEN")))
+        channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
     }
 }
