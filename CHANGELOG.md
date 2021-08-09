@@ -4,11 +4,13 @@
 
 ## [Unreleased]
 ### Added
-- Support for syntax highlighting in `debian/rules`.  The feature builds upon the `Makefile` plugin
-  from Jetbrains.  Please see https://youtrack.jetbrains.com/issues?q=tag:%20%7BMakefile%20language%20plug-in%7D
-  for known issues.
+- Experimental support for syntax highlighting in `debian/rules` *if* the `Makefile Language` plugin from
+  JetBrains is installed.  The feature builds upon the `Makefile Language` plugin  from Jetbrains.  Please see
+  https://youtrack.jetbrains.com/issues?q=tag:%20%7BMakefile%20language%20plug-in%7D
+  for known issues with the `Makefile` language support.
+
 ### Fixed
-- Support multiple dependency profiles for a given dependency, which is permitted by the synxtax.
+- Support multiple dependency profiles for a given dependency, which is permitted by the syntax.
   Previously, this would have tripped a parse error.
 - Avoid using `Language` as a Map-key per https://plugins.jetbrains.com/docs/intellij/dynamic-plugins.html#code.
 

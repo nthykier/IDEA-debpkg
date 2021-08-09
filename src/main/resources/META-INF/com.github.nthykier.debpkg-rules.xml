@@ -1,0 +1,17 @@
+<idea-plugin>
+    <id>com.github.nthykier.debpkg-rules</id>
+    <vendor>nthykier</vendor>
+
+    <!-- Product and plugin compatibility requirements -->
+    <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>name.kropp.intellij.makefile</depends>
+    <resource-bundle>messages.DebpkgBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+          <!-- Debian Rules -->
+        <fileType name="debian/rules file (generic)" implementationClass="com.github.nthykier.debpkg.rules.DebianRulesFileType"
+                  fieldName="INSTANCE" language="Makefile" extensions="" />
+    </extensions>
+</idea-plugin>

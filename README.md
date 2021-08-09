@@ -71,14 +71,14 @@ Notably missing features for `debian/copyright`.  The License fields are *not* v
  * Quick fix for some syntactical issues with continuation lines.
  * URLs in field values are linkified.
 
-### debian/rules
+### debian/rules (requires Makefile Language plugin) - /experimental/
 
- * Automatically register it as a makefile using the [Makefile plugin].
-   - Please review [Makefile plugin issues] for known issues if you experience any issues with how your
-     `debian/rules` file is parsed.
+*Note*: The [Makefile Language plugin] is bundled with some but not all JetBrains products,
+and  you may have to install it manually to activate this feature.
 
-[Makefile plugin]: https://plugins.jetbrains.com/plugin/9333-makefile-language/
-[Makefile plugin issues]: https://youtrack.jetbrains.com/issues?q=tag:%20%7BMakefile%20language%20plug-in%7D
+ * Automatically register it as a makefile using the [Makefile Language plugin].
+   - Please review [Makefile Language plugin issues] for known issues if you experience any issues with
+     how your `debian/rules` file is parsed.
 
 ## Getting started
 
@@ -92,6 +92,8 @@ in the `debian` directory (such as `debian/control` and
 edited) will only be auto-detected if the file uses the common pattern for
 that file type (e.g. NAME_VERSION_ARCH.changes).  This is deliberate to
 reduce false positives in case other plugins react to similar extensions.
+There is also `debian/rules` which requires an extra dependency. Please
+see the Installation section below.
 
 Alternatively, you can set the file type manually by using IDEA's
 <kbd>Associate with File Type...</kbd> feature.
@@ -111,8 +113,16 @@ the relevant editor actions.
   Download the [latest release](https://github.com/nthykier/IDEA-debpkg/releases/latest) and install it manually using
   <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+### Optionally
+
+Install the [Makefile Language plugin] to enable features for `debian/rules` files.
 
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
 
 [template]: https://github.com/JetBrains/intellij-platform-plugin-template
+
+
+
+[Makefile Language plugin]: https://plugins.jetbrains.com/plugin/9333-makefile-language/
+[Makefile Language plugin issues]: https://youtrack.jetbrains.com/issues?q=tag:%20%7BMakefile%20language%20plug-in%7D
