@@ -1,9 +1,11 @@
 package com.github.nthykier.debpkg.deb822.dialects;
 
+import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.Deb822Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +34,11 @@ public class Deb822DialectBuildinfoFileType extends LanguageFileType implements 
     @Override
     public @NotNull String getDescription() {
         return "Debian buildinfo files";
+    }
+
+    @Override
+    public @Nls @NotNull String getDisplayName() {
+        return Deb822Bundle.message("file.type.buildinfo.name");
     }
 
     @Override

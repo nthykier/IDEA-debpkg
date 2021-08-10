@@ -1,6 +1,8 @@
 package com.github.nthykier.debpkg.deb822;
 
+import com.github.nthykier.debpkg.Deb822Bundle;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +26,11 @@ public class Deb822FileType extends LanguageFileType {
     @Override
     public @NotNull String getDescription() {
         return "Deb822 file (any)";
+    }
+
+    @Override
+    public @Nls @NotNull String getDisplayName() {
+        return Deb822Bundle.message("file.type.deb822.name");
     }
 
     @Override

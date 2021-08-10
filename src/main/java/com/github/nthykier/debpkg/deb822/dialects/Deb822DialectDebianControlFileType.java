@@ -1,8 +1,10 @@
 package com.github.nthykier.debpkg.deb822.dialects;
 
+import com.github.nthykier.debpkg.Deb822Bundle;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +33,11 @@ public class Deb822DialectDebianControlFileType extends LanguageFileType impleme
     @Override
     public @NotNull String getDefaultExtension() {
         return "";
+    }
+
+    @Override
+    public @Nls @NotNull String getDisplayName() {
+        return Deb822Bundle.message("file.type.debian/control.name");
     }
 
     @Override

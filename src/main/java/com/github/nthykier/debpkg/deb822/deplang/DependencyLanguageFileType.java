@@ -1,7 +1,9 @@
 package com.github.nthykier.debpkg.deb822.deplang;
 
+import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.DebpkgIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +25,11 @@ public class DependencyLanguageFileType extends LanguageFileType {
     @Override
     public @NotNull String getDescription() {
         return "Deb822DependencyLanguage file (internal injected format)";
+    }
+
+    @Override
+    public @Nls @NotNull String getDisplayName() {
+        return Deb822Bundle.message("file.type.internal/deplang.name");
     }
 
     @Override

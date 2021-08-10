@@ -8,6 +8,7 @@
   JetBrains is installed.  The feature builds upon the `Makefile Language` plugin  from Jetbrains.  Please see
   https://youtrack.jetbrains.com/issues?q=tag:%20%7BMakefile%20language%20plug-in%7D
   for known issues with the `Makefile` language support.
+- Proper display names for the file formats, which are used in IDEA's `Override File Type` feature.
 
 ### Fixed
 - Support multiple dependency profiles for a given dependency, which is permitted by the syntax.

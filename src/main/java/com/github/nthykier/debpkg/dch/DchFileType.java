@@ -1,8 +1,10 @@
 package com.github.nthykier.debpkg.dch;
 
+import com.github.nthykier.debpkg.Deb822Bundle;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +29,13 @@ public class DchFileType extends LanguageFileType implements FileTypeIdentifiabl
     public @NotNull String getDescription() {
         return "Debian Changelog";
     }
+
+
+    @Override
+    public @Nls @NotNull String getDisplayName() {
+        return Deb822Bundle.message("file.type.dch.name");
+    }
+
 
     @Override
     public @NotNull String getDefaultExtension() {

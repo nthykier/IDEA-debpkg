@@ -1,6 +1,8 @@
 package com.github.nthykier.debpkg.deb822.dialects;
 
+import com.github.nthykier.debpkg.Deb822Bundle;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +26,11 @@ public class Deb822DialectDebianCopyrightFileType extends LanguageFileType {
     @Override
     public @NotNull String getDescription() {
         return "Debian machine parsable copyright (deb822) files";
+    }
+
+    @Override
+    public @Nls @NotNull String getDisplayName() {
+        return Deb822Bundle.message("file.type.debian/copyright.name");
     }
 
     @Override
