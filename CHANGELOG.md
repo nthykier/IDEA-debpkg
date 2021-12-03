@@ -14,6 +14,8 @@
 - Support multiple dependency profiles for a given dependency, which is permitted by the syntax.
   Previously, this would have tripped a parse error.
 - Avoid using `Language` as a Map-key per https://plugins.jetbrains.com/docs/intellij/dynamic-plugins.html#code.
+- Internal/Chore: Have Bundle class extend `DynamicBundle` rather than `AbstractBundle` per recommendation of
+  JetBrains' documentation.
 
 ### Changed
 - When dependency profiles are present in a dependency field where it is not permitted, flag the
