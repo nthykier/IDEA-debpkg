@@ -22,6 +22,7 @@
   profile(s) and not the entire dependency as problematic.
 - Bump build time dependencies (org.jetbrains.intellij, org.jetbrains.changelog)
 - Internal/Chore: Bump gradle version to 7.3.
+- Internal/Chore: Update CI jobs.
 
 ## [0.0.12]
 ### Changed
