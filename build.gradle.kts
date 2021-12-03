@@ -36,9 +36,10 @@ intellij {
     type.set(properties("platformType"))
     downloadSources.set(properties("platformDownloadSources").toBoolean())
     updateSinceUntilBuild.set(true)
+    /* When we are ready to work with makefile support
     plugins.set(listOf(
         "name.kropp.intellij.makefile:212.4746.52"
-    ))
+    ))*/
 }
 
 changelog {

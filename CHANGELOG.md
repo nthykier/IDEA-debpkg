@@ -1,13 +1,15 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
+<!--
+- Experimental support for syntax highlighting in `debian/rules` *if* the `Makefile Language` plugin from
+  JetBrains is installed.  The feature builds upon the `Makefile Language` plugin  from Jetbrains.  Please see
+  https://youtrack.jetbrains.com/issues?q=tag:%20%7BMakefile%20language%20plug-in%7D
+  for known issues with the `Makefile` language support.
+ -->
 
 # debpkg Changelog
 
 ## [Unreleased]
 ### Added
-- Experimental support for syntax highlighting in `debian/rules` *if* the `Makefile Language` plugin from
-  JetBrains is installed.  The feature builds upon the `Makefile Language` plugin  from Jetbrains.  Please see
-  https://youtrack.jetbrains.com/issues?q=tag:%20%7BMakefile%20language%20plug-in%7D
-  for known issues with the `Makefile` language support.
 - Proper display names for the file formats, which are used in IDEA's `Override File Type` feature.
 
 ### Fixed
@@ -24,6 +26,7 @@
 - Internal/Chore: Bump gradle version to 7.3.
 - Internal/Chore: Update CI jobs.
 - Internal/Chore: Bump build-time dependencies on `org.jetbrains.intellij` and `org.jetbrains.changelog`.
+- Bump the compat range for IDE to support 2021.3
 
 ## [0.0.12]
 ### Changed

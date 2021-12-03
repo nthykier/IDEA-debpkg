@@ -1,10 +1,10 @@
 package com.github.nthykier.debpkg.rules;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
+import com.github.nthykier.debpkg.deb822.Deb822Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.jetbrains.lang.makefile.MakefileLanguage;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +18,8 @@ public class DebianRulesFileType extends LanguageFileType implements FileTypeIde
     public static final DebianRulesFileType INSTANCE = new DebianRulesFileType();
 
     private DebianRulesFileType() {
-        super(MakefileLanguage.INSTANCE);
+        //super(MakefileLanguage.INSTANCE);
+        super(Deb822Language.INSTANCE);
     }
 
     @Override
