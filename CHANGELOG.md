@@ -23,6 +23,7 @@
 - Bump build time dependencies (org.jetbrains.intellij, org.jetbrains.changelog)
 - Internal/Chore: Bump gradle version to 7.3.
 - Internal/Chore: Update CI jobs.
+- Internal/Chore: Bump build-time dependencies on `org.jetbrains.intellij` and `org.jetbrains.changelog`.
 
 ## [0.0.12]
 ### Changed
