@@ -9,6 +9,8 @@
 # debpkg Changelog
 
 ## [Unreleased]
+
+## [0.0.13]
 ### Added
 - Proper display names for the file formats, which are used in IDEA's `Override File Type` feature.
 
@@ -199,10 +201,8 @@
 - Add new icons instead of using the default icon from the template.
 - Check for misplaced `Package` and `Source` fields.
 
-
 ## [0.0.1]
 ### Initial version
-
 - Syntax highlighting of `debian/changelog` and `*.dch` files
 - Syntax highlighting of `debian/control` and `*.deb822` files
 - Code completion support for `debian/control`
