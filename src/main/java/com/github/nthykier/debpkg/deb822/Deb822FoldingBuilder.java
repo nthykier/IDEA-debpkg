@@ -14,10 +14,6 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.TokenType;
-import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.psi.impl.source.tree.TreeElement;
-import com.intellij.psi.impl.source.tree.TreeElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -115,11 +111,6 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
         return descriptors.toArray(FoldingDescriptor.EMPTY);
     }
 
-    /**
-     * @param node  Node corresponding to PsiLiteralExpression containing a string in the format
-     *              SIMPLE_PREFIX_STR + SIMPLE_SEPARATOR_STR + Key, where Key is
-     *              defined by the Simple language file.
-     */
     @Nullable
     @Override
     public String getPlaceholderText(@NotNull ASTNode node) {
@@ -159,7 +150,7 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
 
     @Override
     public boolean isCollapsedByDefault(@NotNull ASTNode node) {
-        /* We setup "Collapsed by default" in the FoldingDescriptors */
+        /* We set up "Collapsed by default" in the FoldingDescriptors */
         return false;
     }
 

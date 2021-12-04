@@ -35,7 +35,7 @@ public class DependencyLanguageSyntaxHighlighter extends SyntaxHighlighterBase {
 
     @NotNull
     @Override
-    public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
+    public TextAttributesKey @NotNull [] getTokenHighlights(IElementType tokenType) {
         return TOKEN_TYPE2TEXT_ATTR_KEYS.getOrDefault(tokenType, EMPTY_KEYS);
     }
 

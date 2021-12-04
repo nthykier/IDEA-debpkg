@@ -36,12 +36,12 @@ public abstract class AbstractDeb822ParserDefinition implements ParserDefinition
     }
 
     @Override
-    public PsiParser createParser(Project project) {
+    public @NotNull PsiParser createParser(Project project) {
         return new Deb822Parser();
     }
 
     @Override
-    public IFileElementType getFileNodeType() {
+    public @NotNull IFileElementType getFileNodeType() {
         return this.fileElementType;
     }
 
@@ -61,7 +61,7 @@ public abstract class AbstractDeb822ParserDefinition implements ParserDefinition
     }
 
     @Override
-    public PsiFile createFile(FileViewProvider viewProvider) {
+    public @NotNull PsiFile createFile(@NotNull FileViewProvider viewProvider) {
         return new Deb822File(viewProvider, this.fileType);
     }
 }

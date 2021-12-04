@@ -25,12 +25,12 @@ public class DependencyLanguageParserDefinition implements ParserDefinition {
     }
 
     @Override
-    public PsiParser createParser(Project project) {
+    public @NotNull PsiParser createParser(Project project) {
         return new DependencyLanguageParser();
     }
 
     @Override
-    public IFileElementType getFileNodeType() {
+    public @NotNull IFileElementType getFileNodeType() {
         return FILE_ELEMENT_TYPE;
     }
 
@@ -50,7 +50,7 @@ public class DependencyLanguageParserDefinition implements ParserDefinition {
     }
 
     @Override
-    public PsiFile createFile(FileViewProvider viewProvider) {
+    public @NotNull PsiFile createFile(@NotNull FileViewProvider viewProvider) {
         return new DepLangFile(viewProvider, DependencyLanguage.INSTANCE, DependencyLanguageFileType.INSTANCE);
     }
 }

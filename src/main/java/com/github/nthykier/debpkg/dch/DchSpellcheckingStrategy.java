@@ -1,7 +1,6 @@
 package com.github.nthykier.debpkg.dch;
 
 import com.github.nthykier.debpkg.dch.psi.DchChangeDescription;
-import com.github.nthykier.debpkg.dch.psi.DchTypes;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
