@@ -9,6 +9,8 @@
 # debpkg Changelog
 
 ## [Unreleased]
+### Added
+- Brace matching support inside the dependency language.
 
 ## [0.0.13]
 ### Added

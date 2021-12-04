@@ -123,7 +123,8 @@
                   language="DependencyLanguage" extensions="" />
         <completion.contributor language="DependencyLanguage"
                                 implementationClass="com.github.nthykier.debpkg.deb822.deplang.DepLangCodeCompletionContributor" />
-
+        <lang.braceMatcher language="DependencyLanguage"
+                           implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageBraceMatcher"/>
 
         <!-- Debian Changelog -->
 

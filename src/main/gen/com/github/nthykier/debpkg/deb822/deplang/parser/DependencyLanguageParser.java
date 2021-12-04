@@ -109,10 +109,10 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "build_profile_restriction_part")) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, BUILD_PROFILE_RESTRICTION_PART, "<build profile restriction part>");
-    r = consumeToken(b, LESS_THAN);
+    r = consumeToken(b, ANGLE_BRACKET_OPEN);
     p = r; // pin = 1
     r = r && report_error_(b, restriction_list(b, l + 1));
-    r = p && consumeToken(b, GREATER_THAN) && r;
+    r = p && consumeToken(b, ANGLE_BRACKET_CLOSE) && r;
     exit_section_(b, l, m, r, p, DependencyLanguageParser::recover_until_closing_token);
     return r || p;
   }
@@ -344,7 +344,7 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "recover_until_closing_token_0")) return false;
     boolean r;
     r = consumeToken(b, PARANTHESES_CLOSE);
-    if (!r) r = consumeToken(b, LESS_THAN);
+    if (!r) r = consumeToken(b, ANGLE_BRACKET_OPEN);
     if (!r) r = consumeToken(b, BRACKETS_OPEN);
     if (!r) r = consumeToken(b, OPERATOR_AND);
     if (!r) r = consumeToken(b, OPERATOR_OR);
@@ -431,7 +431,7 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, "!=");
     if (!r) r = consumeToken(b, "==");
     if (!r) r = version_operator_7(b, l + 1);
-    if (!r) r = consumeToken(b, GREATER_THAN);
+    if (!r) r = consumeToken(b, ANGLE_BRACKET_CLOSE);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -441,7 +441,7 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "version_operator_7")) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeToken(b, LESS_THAN);
+    r = consumeToken(b, ANGLE_BRACKET_OPEN);
     p = r; // pin = 1
     r = r && version_operator_7_1(b, l + 1);
     exit_section_(b, l, m, r, p, null);
@@ -451,7 +451,7 @@ public class DependencyLanguageParser implements PsiParser, LightPsiParser {
   // '>'?
   private static boolean version_operator_7_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "version_operator_7_1")) return false;
-    consumeToken(b, GREATER_THAN);
+    consumeToken(b, ANGLE_BRACKET_CLOSE);
     return true;
   }
 

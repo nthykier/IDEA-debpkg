@@ -21,10 +21,10 @@
     PARANTHESES_OPEN='('
     PARANTHESES_CLOSE=')'
     NEGATION='!'
-    LESS_THAN='<'
-    GREATER_THAN='>'
     BRACKETS_OPEN='['
     BRACKETS_CLOSE=']'
+    ANGLE_BRACKET_OPEN='<'
+    ANGLE_BRACKET_CLOSE='>'
     COMMENT="regexp:^#[^\n]*"
     MISPLACED_COMMENT="regexp:#[^\n]*"
     VERSION_OP="regexp:(?:[<>]?[<>=]|[!=]?[=])"

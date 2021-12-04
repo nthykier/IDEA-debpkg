@@ -18,11 +18,13 @@ import com.intellij.spellchecker.tokenizer.Tokenizer;
 %eof{  return;
 %eof}
 
-WORDISH=[a-zA-Z0-9][a-zA-Z0-9.+\-~:_]*
+WORDISH=([0-9]+:)?[a-zA-Z0-9][a-zA-Z0-9.+\-~:_]*
 
 WHITE_SPACE=[\ \t\f\n]
 END_OF_LINE_COMMENT=[#][^\r\n]*
 SUBSTVAR_NAME=[a-zA-Z0-9][a-zA-Z0-9\-:]*
+
+%state DEPENDENCY
 
 %%
 
@@ -36,24 +38,34 @@ SUBSTVAR_NAME=[a-zA-Z0-9][a-zA-Z0-9\-:]*
 [|]                                             { return DependencyLanguageTypes.OPERATOR_OR; }
 [,]                                             { return DependencyLanguageTypes.OPERATOR_AND; }
 
-[(]                                             { return DependencyLanguageTypes.PARANTHESES_OPEN; }
-[)]                                             { return DependencyLanguageTypes.PARANTHESES_CLOSE; }
+[(]                                             { yybegin(DEPENDENCY); return DependencyLanguageTypes.PARANTHESES_OPEN; }
+[)]                                             { yybegin(YYINITIAL); return DependencyLanguageTypes.PARANTHESES_CLOSE; }
 
 [\[]                                            { return DependencyLanguageTypes.BRACKETS_OPEN; }
 [\]]                                            { return DependencyLanguageTypes.BRACKETS_CLOSE; }
 
-[<]                                             { return DependencyLanguageTypes.LESS_THAN; }
-[>]                                             { return DependencyLanguageTypes.GREATER_THAN; }
+/*
+ * We use difference tokens for <> based on context for the sake of the BraceMatcher
+ * The "<" in "(<" should not have a closing brace (version OP) while "a <" should have (profile).
+ */
+<DEPENDENCY>{
+    [<]                                         { return DependencyLanguageTypes.VERSION_OP; }
+    [>]                                         { return DependencyLanguageTypes.VERSION_OP; }
+}
+
+<YYINITIAL>{
+    [<]                                         { return DependencyLanguageTypes.ANGLE_BRACKET_OPEN; }
+    [>]                                         { return DependencyLanguageTypes.ANGLE_BRACKET_CLOSE; }
+}
+
 /* Fake token */
 [-][-]                                          { return DependencyLanguageTypes.DEPENDENCY_LANG_SEPARATOR; }
 
 {WORDISH}                                       { return DependencyLanguageTypes.WORDISH; }
-// Same as the above, except covers epoch
-[0-9]+:{WORDISH}                                { return DependencyLanguageTypes.WORDISH; }
 
 // Accept slightly invalid variants of the token to ease code completition
 [$][{]?                                         { return DependencyLanguageTypes.SUBSTVAR_TOKEN; }
-[$][{][}]?                                      { return DependencyLanguageTypes.SUBSTVAR_TOKEN; }
+[$][{][}]                                       { return DependencyLanguageTypes.SUBSTVAR_TOKEN; }
 [$][{]?{SUBSTVAR_NAME}[}]?                      { return DependencyLanguageTypes.SUBSTVAR_TOKEN; }
 
 ^{END_OF_LINE_COMMENT}                          { return DependencyLanguageTypes.COMMENT; }

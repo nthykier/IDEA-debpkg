@@ -22,12 +22,12 @@ public interface DependencyLanguageTypes {
   IElementType VERSION_OPERATOR = new DepLangElementType("VERSION_OPERATOR");
   IElementType VERSION_PART = new DepLangElementType("VERSION_PART");
 
+  IElementType ANGLE_BRACKET_CLOSE = new DepLangTokenType(">");
+  IElementType ANGLE_BRACKET_OPEN = new DepLangTokenType("<");
   IElementType BRACKETS_CLOSE = new DepLangTokenType("]");
   IElementType BRACKETS_OPEN = new DepLangTokenType("[");
   IElementType COMMENT = new DepLangTokenType("COMMENT");
   IElementType DEPENDENCY_LANG_SEPARATOR = new DepLangTokenType("--");
-  IElementType GREATER_THAN = new DepLangTokenType(">");
-  IElementType LESS_THAN = new DepLangTokenType("<");
   IElementType MISPLACED_COMMENT = new DepLangTokenType("MISPLACED_COMMENT");
   IElementType NEGATION = new DepLangTokenType("!");
   IElementType OPERATOR_AND = new DepLangTokenType(",");
