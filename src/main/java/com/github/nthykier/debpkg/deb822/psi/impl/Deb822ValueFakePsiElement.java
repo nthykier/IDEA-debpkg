@@ -1,6 +1,7 @@
 package com.github.nthykier.debpkg.deb822.psi.impl;
 
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
+import com.intellij.lang.documentation.DocumentationMarkup;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,16 +23,17 @@ public class Deb822ValueFakePsiElement extends Deb822FakePsiElementBase<PsiEleme
     @Override
     public @Nullable String getDocumentation() {
         if (keyword != null) {
-            String name = "<b>" + keyword.getValueName() + "</b>";
+            StringBuilder doc = new StringBuilder(DocumentationMarkup.DEFINITION_START + "<b>" + keyword.getValueName() + "</b>" + DocumentationMarkup.DEFINITION_END + DocumentationMarkup.CONTENT_START);
             String docs = keyword.getValueDescription();
-            if (keyword.isExclusive()) {
-                name = name + " (can only be used on its own)";
-            }
             if (docs != null) {
-                return name  + "<br><br>" + docs;
+                doc.append("<p>").append(docs).append("</p>");
             } else {
-                return name + "<br><br>[Standard value; no documentation available]";
+                doc.append("<p>[Standard value; no documentation available]</p>");
             }
+            if (keyword.isExclusive()) {
+                doc.append("<br><p><b>Exclusive value</b>: <em>The value only makes sense when it is used alone (even if the field allows multiple values).</em></p>");
+            }
+            return doc.append(DocumentationMarkup.CONTENT_END).toString();
         }
         return null;
     }

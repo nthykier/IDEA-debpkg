@@ -2,6 +2,7 @@ package com.github.nthykier.debpkg.deb822.psi.impl;
 
 import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvar;
 import com.github.nthykier.debpkg.deb822.psi.Deb822SubstvarBase;
+import com.intellij.lang.documentation.DocumentationMarkup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,18 +25,19 @@ public class Deb822SubstvarFakePsiElement extends Deb822FakePsiElementBase<Deb82
 
     @Override
     public @Nullable String getDocumentation() {
+        String docs = "[Custom substvar; no documentation available]";
+        String substvarName;
         if (knownSubstvar != null) {
-            String name = knownSubstvar.getName();
-            String docs = knownSubstvar.getDescription();
-            String value = renderSubstvarValue(knownSubstvar.getPredefinedValue());
-            if (docs != null) {
-                return name  + value + "<br><br>" + docs;
-            } else {
-                return name + value + "<br><br>[Standard substvar; no documentation available]";
+            substvarName = "<b>" + knownSubstvar.getName() + "</b>" + renderSubstvarValue(knownSubstvar.getPredefinedValue());
+            docs = knownSubstvar.getDescription();
+            if (docs == null) {
+                docs = "[Standard substvar; no documentation available]";
             }
         } else {
-            return this.element.getText() + "<br><br>[Custom substvar; no documentation available]";
+            substvarName = this.element.getText();
         }
+        return DocumentationMarkup.DEFINITION_START + "<b>" + substvarName + "</b>" + DocumentationMarkup.CONTENT_END +
+                DocumentationMarkup.CONTENT_START + docs + DocumentationMarkup.CONTENT_END;
     }
 
     private static  @NotNull String renderSubstvarValue(@Nullable String value) {

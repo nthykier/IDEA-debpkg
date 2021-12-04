@@ -83,7 +83,7 @@ public class Deb822KnownSubstvars {
             List<String> fieldNames = getList(fieldDef, "fieldNames");
             List<Deb822KnownSubstvar> definedSubstvars = new ArrayList<>(fieldNames.size());
             if (patternName == null) {
-                throw new IllegalArgumentException("Missing required \"name\" or \"patternName\" field");
+                throw new IllegalArgumentException("Missing required \"name\" or \"pattern\" field");
             }
             if (fieldNames.isEmpty()) {
                 throw new IllegalArgumentException("fieldNames must be a non-empty list when pattern is defined (pattern: " + patternName + ")");

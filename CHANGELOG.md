@@ -14,6 +14,10 @@
 
 ### Changed
 - Bump lombok dependency fully to 1.18.22.  Previously 1.18.20 was still used in some cases.
+- Field, value and substvars documentation.  It is now done as "hover" navigation rather than "quick nav"
+  documentation.  That means it appears when you over the mouse over the element rather than having to
+  hold CTRL down while hovering.
+- Reformat documentation for fields, values and substvars to fit the conventions for hover documentation.
 
 ## [0.0.13]
 ### Added

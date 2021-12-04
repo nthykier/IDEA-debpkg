@@ -2,7 +2,7 @@ fields:
   - canonicalName: Package
     onlyInParagraphType: "Package"
     description: |
-      Declares the name of a binary package
+      <p>Declares the name of a binary package</p>
     valueType: SINGLE_TRIVIAL_VALUE
     valueValidation: /^[a-z0-9][a-z0-9.+-]+$/
     supportsSubstvars: false
@@ -10,7 +10,7 @@ fields:
   - canonicalName: Source
     onlyInParagraphType: "Source"
     description: |
-      Declares the name of the source package
+      <p>Declares the name of the source package</p>
     valueType: SINGLE_TRIVIAL_VALUE
     # Only valid for DebianControl; in other variants, it may have an optional version number appended
     # a la "foo (1.0-1)"
@@ -19,7 +19,7 @@ fields:
 
   - canonicalName: Package-Type
     description: |
-      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em>
+      <p><b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em></p>
 
       <p>Determines the type of package.  This field can be used to declare that a given package is a different type of package than usual.  The primary case
          where this is known to be useful is for building micro-debs ("udeb") to be consumed by the debian-installer.</p>
@@ -31,16 +31,16 @@ fields:
     keywordList:
       - value: "deb"
         description: |
-          The package will be built as a regular deb.
+          <p>The package will be built as a regular deb.</p>
       - value: "udeb"
         description: |
-          The package will be built as a micro-deb (also known as a udeb).  These are solely used by the debian-installer.
+          <p>The package will be built as a micro-deb (also known as a udeb).  These are solely used by the debian-installer.</p>
 
   - canonicalName: Essential
     valueType: SINGLE_KEYWORD
     onlyInParagraphType: "Package"
     description: |
-      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em>
+      <p><b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em></p>
 
       <p>Whether packages the package should be considered Essential as defined by Debian Policy.</p>
 
@@ -56,21 +56,21 @@ fields:
     keywordList:
       - value: "yes"
         description: |
-          The package is essential and uninstalling it will completely and utterly break the system beyond repair.
+          <p>The package is essential and uninstalling it will completely and utterly break the system beyond repair.</p>
       - value: "no"
         description: |
-          The package is a regular package.  This is the default and recommeded.
+          <p>The package is a regular package.  This is the default and recommeded.</p>
 
-          Note that declaring a package to be "Essential: no" is the same as not having the field except the less
-          wastes fewer bytes on everyones harddisk.
+          <p>Note that declaring a package to be "Essential: no" is the same as not having the field except omitting
+          the field wastes fewer bytes on everyones harddisk.</p>
 
   - canonicalName: XB-Important
     valueType: SINGLE_KEYWORD
     onlyInParagraphType: "Package"
     description: |
-      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em>
+      <p><b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em></p>
 
-      <b>Deprecated</b>. <em>You almost certainly want <em>Protected</em> instead of (or in addition to) this field.</b>
+      <p><b>Deprecated</b>. <em>You almost certainly want <em>Protected</em> instead of (or in addition to) this field.</b></p>
 
       <p>The field works similar to <b>Protected</b> except that dpkg does not support the field.  On the plus side, it is supported in older releases (e.g. Debian buster and earlier) and can be useful for backwards compatibility with these releases.</p>
     warnIfDefault: true
@@ -78,19 +78,19 @@ fields:
     keywordList:
       - value: "yes"
         description: |
-          The package is protected and attempts to uninstall it will cause strong warnings to the user that they might be breaking the system.
+          <p>The package is protected and attempts to uninstall it will cause strong warnings to the user that they might be breaking the system.</p>
       - value: "no"
         description: |
-          The package is a regular package.  This is the default and recommeded.
+          <p>The package is a regular package.  This is the default and recommeded.</p>
 
-          Note that declaring a package to be "Protected: no" is the same as not having the field except the less
-          wastes fewer bytes on everyones harddisk.
+          <p>Note that declaring a package to be "XB-Important: no" is the same as not having the field except omitting
+          the field wastes fewer bytes on everyones harddisk.</p>
 
   - canonicalName: Protected
     valueType: SINGLE_KEYWORD
     onlyInParagraphType: "Package"
     description: |
-      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em>
+      <p><b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em></p>
 
       <p>Whether packages the package should be considered Protected by dpkg and APT.</p>
 
@@ -102,23 +102,24 @@ fields:
     keywordList:
       - value: "yes"
         description: |
-          The package is protected and attempts to uninstall it will cause strong warnings to the user that they might be breaking the system.
+          <p>The package is protected and attempts to uninstall it will cause strong warnings to the user that they might be breaking the system.</p>
       - value: "no"
         description: |
-          The package is a regular package.  This is the default and recommeded.
+          <p>The package is a regular package.  This is the default and recommeded.</p>
 
-          Note that declaring a package to be "Protected: no" is the same as not having the field except the less
-          wastes fewer bytes on everyones harddisk.
-
+          <p>Note that declaring a package to be "Protected: no" is the same as not having the field except omitting
+          the field wastes fewer bytes on everyones harddisk.</p>
 
   - canonicalName: Standards-Version
     onlyInParagraphType: "Source"
     description: |
-      Declares the last semantic version of the Debian Policy this package as last checked against.
+      <p>Declares the last semantic version of the Debian Policy this package as last checked against.</p>
+
       <em>Example</em>:
       <pre>Standards-Version: 4.5.2</pre>
-      Note that the last version part (the <em>X</em> in 4.5.2.<em>X</em>) is typically omitted as it
-      is used solely for editioral changes to the policy (e.g. typo fixes).
+
+      <p>Note that the last version part (the <em>X</em> in 4.5.2.<em>X</em>) is typically omitted as it
+      is used solely for editioral changes to the policy (e.g. typo fixes).</p>
     valueType: SINGLE_TRIVIAL_VALUE
     valueValidation: /^\d+[.]\d+[.]\d+(?:[.]\d+)$/
     supportsSubstvars: false
@@ -126,10 +127,12 @@ fields:
   - canonicalName: Maintainer
     onlyInParagraphType: "Source"
     description: |
-      The maintainer of the package.
+      <p>The maintainer of the package.</p>
+
       <em>Example</em>:
       <pre>Maintainer: Jane Contributor &lt;jane@janes.email-provider.org&gt;</pre>
-      Note: If a person is listed in the Maintainer field, they should <em>not</em> be listed in Uploader field.
+
+      <p>Note: If a person is listed in the Maintainer field, they should <em>not</em> be listed in Uploader field.</p>
     # Technically wrong, but using SINGLE_TRIVIAL_VALUE trips another validation rule for a valid maintainer field
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
@@ -137,9 +140,9 @@ fields:
   - canonicalName: Vcs-Browser
     onlyInParagraphType: "Source"
     description: |
-      URL to the Version control system repo used for the packaging. The URL should be useable with a browser without requiring any login.
+      <p>URL to the Version control system repo used for the packaging. The URL should be useable with a browser without requiring any login.</p>
 
-      This should be used together with one of the other <b>Vcs-*</b> fields.
+      <p>This should be used together with one of the other <b>Vcs-*</b> fields.</p>
     # Technically wrong, but existing validation rules are not sufficient.
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
@@ -147,9 +150,9 @@ fields:
   - canonicalName: Vcs-Git
     onlyInParagraphType: "Source"
     description: |
-      URL to the git repo used for the packaging. The URL should be useable with "git clone" without requiring any login.
+      <p>URL to the git repo used for the packaging. The URL should be useable with "git clone" without requiring any login.</p>
 
-      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+      <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
@@ -157,9 +160,9 @@ fields:
   - canonicalName: Vcs-Svn
     onlyInParagraphType: "Source"
     description: |
-      URL to the Subversion (SVN) repo used for the packaging. The URL should be useable with "svn checkout" without requiring any login.
+      <p>URL to the Subversion (SVN) repo used for the packaging. The URL should be useable with "svn checkout" without requiring any login.</p>
 
-      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+      <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
@@ -167,9 +170,9 @@ fields:
   - canonicalName: Vcs-Arch
     onlyInParagraphType: "Source"
     description: |
-      URL to the Arch VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+      <p>URL to the Arch VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
 
-      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+      <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
@@ -177,9 +180,9 @@ fields:
   - canonicalName: Vcs-Bzr
     onlyInParagraphType: "Source"
     description: |
-      URL to the Bzr VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+      <p>URL to the Bzr VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
 
-      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+      <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
@@ -187,9 +190,9 @@ fields:
   - canonicalName: Vcs-Cvs
     onlyInParagraphType: "Source"
     description: |
-      URL to the Cvs VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+      <p>URL to the CVS VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
 
-      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+      <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
@@ -197,9 +200,9 @@ fields:
   - canonicalName: Vcs-Darcs
     onlyInParagraphType: "Source"
     description: |
-      URL to the Darcs VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+      <p>URL to the Darcs VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
 
-      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+      <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
@@ -207,9 +210,9 @@ fields:
   - canonicalName: Vcs-Hg
     onlyInParagraphType: "Source"
     description: |
-      URL to the Mercurial (hg) VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+      <p>URL to the Mercurial (hg) VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
 
-      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+      <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
@@ -217,9 +220,9 @@ fields:
   - canonicalName: Vcs-Mtn
     onlyInParagraphType: "Source"
     description: |
-      URL to the Monotone (Mtn) VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.
+      <p>URL to the Monotone (Mtn) VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
 
-      This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.
+      <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
@@ -227,7 +230,7 @@ fields:
   - canonicalName: "Build-Depends"
     onlyInParagraphType: "Source"
     description: |
-      The build-dependency for this source package.  Needed for any target including <b>clean</b>.
+      <p>The build-dependency for this source package.  Needed for any target including <b>clean</b>.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_DEPENDENCY
     supportsSubstvars: false
@@ -236,11 +239,11 @@ fields:
   - canonicalName: "Build-Depends-Arch"
     onlyInParagraphType: "Source"
     description: |
-      The build-dependency for this source package but only when running <b>build-arch</b> and <b>binary-arch</b> targets.
+      <p>The build-dependency for this source package but only when running <b>build-arch</b> and <b>binary-arch</b> targets.</p>
 
-      This with <pre>dpkg-buildpackage -B</pre>.
+      <p>This occurs when building with <pre>dpkg-buildpackage -B</pre>.</p>
 
-      Note that these dependencies are <em>not</em> available during <b>clean</b>.
+      <p>Note that these dependencies are <em>not</em> available during <b>clean</b>.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_DEPENDENCY
     supportsSubstvars: false
@@ -249,11 +252,11 @@ fields:
   - canonicalName: "Build-Depends-Indep"
     onlyInParagraphType: "Source"
     description: |
-      The build-dependency for this source package but only when running <b>build-indep</b> and <b>binary-indep</b> targets.
+      <p>The build-dependency for this source package but only when running <b>build-indep</b> and <b>binary-indep</b> targets.</p>
 
-      This with <pre>dpkg-buildpackage -A</pre>.
+      <p>This occurs when building with <pre>dpkg-buildpackage -A</pre>.</p>
 
-      Note that these dependencies are <em>not</em> available during <b>clean</b>.
+      <p>Note that these dependencies are <em>not</em> available during <b>clean</b>.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_DEPENDENCY
     supportsSubstvars: false
@@ -262,11 +265,11 @@ fields:
   - canonicalName: "Build-Conflicts"
     onlyInParagraphType: "Source"
     description: |
-      Packages that must not be installed during the build.  This applies to any target including <b>clean</b>.
+      <p>Packages that must not be installed during the build.  This applies to any target including <b>clean</b>.</p>
 
-      Where possible, it is often better to configure the build so that it does not react to the package being
+      <p>Where possible, it is often better to configure the build so that it does not react to the package being
       present in the first place.  Usually this is a question of using a <b>--without-foo</b> or <b>--disable-foo</b>
-      or such to the build configuration.
+      or such to the build configuration.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_NEGATIVE_DEPENDENCY
     supportsSubstvars: false
@@ -275,11 +278,11 @@ fields:
   - canonicalName: "Build-Conflicts-Arch"
     onlyInParagraphType: "Source"
     description: |
-      Packages that must not be installed when running <b>build-arch</b> and <b>binary-arch</b> targets.
+      <p>Packages that must not be installed when running <b>build-arch</b> and <b>binary-arch</b> targets.</p>
 
-      Where possible, it is often better to configure the build so that it does not react to the package being
+      <p>Where possible, it is often better to configure the build so that it does not react to the package being
       present in the first place.  Usually this is a question of using a <b>--without-foo</b> or <b>--disable-foo</b>
-      or such to the build configuration.
+      or such to the build configuration.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_NEGATIVE_DEPENDENCY
     supportsSubstvars: false
@@ -288,11 +291,11 @@ fields:
   - canonicalName: "Build-Conflicts-Indep"
     onlyInParagraphType: "Source"
     description: |
-      Packages that must not be installed when running <b>build-indep</b> and <b>binary-indep</b> targets.
+      <p>Packages that must not be installed when running <b>build-indep</b> and <b>binary-indep</b> targets.</p>
 
-      Where possible, it is often better to configure the build so that it does not react to the package being
+      <p>Where possible, it is often better to configure the build so that it does not react to the package being
       present in the first place.  Usually this is a question of using a <b>--without-foo</b> or <b>--disable-foo</b>
-      or such to the build configuration.
+      or such to the build configuration.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_NEGATIVE_DEPENDENCY
     supportsSubstvars: false
@@ -301,21 +304,21 @@ fields:
   - canonicalName: "Pre-Depends"
     onlyInParagraphType: "Package"
     description: |
-      <b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
+      <p><b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
       probably not looking for this field (except to set a <b>${misc:Pre-Depends}</b> relation.  Incorrect use
       of this field can cause issues - among other causing issues during upgrades that users cannot work around
       without passing --force-* options to dpkg.
-      </em>
+      </em></p>
 
-      This field is like <b>Depends</b>, except that is also forces dpkg to complete installation of the packages
-      named before even startning the installation of the package which declares the pre-dependency.
+      <p>This field is like <b>Depends</b>, except that is also forces dpkg to complete installation of the packages
+      named before even startning the installation of the package which declares the pre-dependency.</p>
 
       <em>Example:</em>
       <pre>Pre-Depends: ${misc:Pre-Depends}</pre>
 
-      Note this is a very strong dependency and not all packages support being a pre-dependency because it puts
+      <p>Note this is a very strong dependency and not all packages support being a pre-dependency because it puts
       additional requirements on the package being depended on.  Use of <b>${misc:Pre-Depends}</b> is pre-approved
-      and recommended.
+      and recommended.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
@@ -323,8 +326,8 @@ fields:
   - canonicalName: "Depends"
     onlyInParagraphType: "Package"
     description: |
-      Lists the packages that must be installed (<em>configured</em>) and before this package is installed
-      (<em>configured</em>).
+      <p>Lists the packages that must be installed (<em>configured</em>) and before this package is installed
+      (<em>configured</em>).</p>
 
       <em>Example:</em>
       <pre>Package: foo
@@ -335,12 +338,12 @@ fields:
                foo-data (= ${source:Version}),
       </pre>
 
-      This field declaares an absolute dependency.  A package will not be configured unless all of the packages
-      listed in its <b>Depends</b> field have been correctly configured (unless there is a circular dependency).
+      <p>This field declares an absolute dependency.  A package will not be configured unless all of the packages
+      listed in its <b>Depends</b> field have been correctly configured (unless there is a circular dependency)./<p>
 
-      This field should be used if the depended-on package is required for the dpeending papkage to provide a
+      <p>This field should be used if the depended-on package is required for the dpeending papkage to provide a
       <em>significant amount of functionality</em> or when it is used in the <b>postinst</b> or <b>prerm</b>
-      scripts.
+      scripts.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
@@ -348,14 +351,14 @@ fields:
   - canonicalName: "Recommends"
     onlyInParagraphType: "Package"
     description: |
-      Lists the packages that <em>should</em> be installed when this package is installed in all but <em>unusual
-      installations</em>.
+      <p>Lists the packages that <em>should</em> be installed when this package is installed in all but <em>unusual
+      installations</em>.</p>
 
       <em>Example:</em>
       <pre>Recommends: foo-optional</pre>
 
-      By default, APT will attempt to install recommends unless they cannot be installed or the user has configured
-      APT skip recommends.
+      <p>By default, APT will attempt to install recommends unless they cannot be installed or the user has configured
+      APT skip recommends.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_DEPENDENCY
     supportsSubstvars: true
@@ -363,9 +366,9 @@ fields:
   - canonicalName: "Suggests"
     onlyInParagraphType: "Package"
     description: |
-      Lists the packages that may make this package more useful but not installing them is perfectly reasonable as
+      <p>Lists the packages that may make this package more useful but not installing them is perfectly reasonable as
       well.  Suggests can also be useful for add-ons that only make sense in particular corner cases like supporting
-      a non-standard file format.
+      a non-standard file format.</p>
 
       <em>Example:</em>
       <pre>Suggests: bar</pre>
@@ -376,8 +379,8 @@ fields:
   - canonicalName: "Enhances"
     onlyInParagraphType: "Package"
     description: |
-      This field is similar to Suggests but works in the opposite direction.  It is used to declare that a package
-      can enhance the functionality of the package.
+      <p>This field is similar to Suggests but works in the opposite direction.  It is used to declare that a package
+      can enhance the functionality of the package.</p>
 
       <em>Example:</em>
       <pre>Enhances: bar</pre>
@@ -388,8 +391,8 @@ fields:
   - canonicalName: "Provides"
     onlyInParagraphType: "Package"
     description: |
-      Declare this package also provide one or more other packages.  This means that this package can substitute
-      for the provided package in some relations.
+      <p>Declare this package also provide one or more other packages.  This means that this package can substitute
+      for the provided package in some relations.</p>
 
       <em>Example:</em>
       <pre>Package: foo
@@ -400,11 +403,11 @@ fields:
       </pre>
 
 
-      If the provides relation is versioned, it must use a "strictly equals" version.  If it does not a version,
+      <p>If the provides relation is versioned, it must use a "strictly equals" version.  If it does not a version,
       then it <em>cannot</em> be used to satisfy a dependency with a version restriction.  Consider the following
-      example:
+      example:</p>
 
-      <em>Archive scenario:</em>  (This is <em>not</em> valid debian/control paragraphs, despite the resemblence)
+      <em>Archive scenario:</em>  (This is <em>not</em> a valid debian/control file, despite the resemblence)
       <pre>
       Package foo
       Depends: bar (&gt;= 1.0)
@@ -419,9 +422,9 @@ fields:
       Provides: bar
       </pre>
 
-      In this archive scenario, the <b>bar-plus</b> package will satisfy the dependency of <b>foo</b> as the only one.
+      <p>In this archive scenario, the <b>bar-plus</b> package will satisfy the dependency of <b>foo</b> as the only one.
       The <b>bar</b> package fails because the version is only <em>0.9</em> and <b>bar-clone</b> because the provides
-      is unversioned but the dependency clause is versioned.
+      is unversioned but the dependency clause is versioned.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
@@ -430,19 +433,19 @@ fields:
   - canonicalName: "Conflicts"
     onlyInParagraphType: "Package"
     description: |
-      <b>Confusion warning</b> <em>You may be looking for Breaks instead of Conflicts</em>.
+      <p><b>Confusion warning</b> <em>You may be looking for Breaks instead of Conflicts</em>.</p>
 
-      This package cannot be installed together with the packages listed in the Conflicts field.  This
+      <p>This package cannot be installed together with the packages listed in the Conflicts field.  This
       is a "bigger hammer" than <b>Breaks</b> and is used sparingly.  Notably, if you want to do a versioned
-      <b>Conflicts</b> then you <em>almost certainly</em> want <b>Breaks</b> instead.
+      <b>Conflicts</b> then you <em>almost certainly</em> want <b>Breaks</b> instead.</p>
 
       <em>Example:</em>
       <pre>Conflicts: bar</pre>
 
-      Please check the description of the <b>Breaks</b> field for when you would use <b>Breaks</b> vs. <b>Conflicts</b>.
+      <p>Please check the description of the <b>Breaks</b> field for when you would use <b>Breaks</b> vs. <b>Conflicts</b>.</p>
 
-      Note if a package conflicts with itself (indirectly or via <b>Provides</b>), then it is using a special rule
-      for Conflicts.  See section 7.6.2 "Replacing whole packages, forcing their removal" in the Debian Policy Manual.
+      <p>Note if a package conflicts with itself (indirectly or via <b>Provides</b>), then it is using a special rule
+      for Conflicts.  See section 7.6.2 "Replacing whole packages, forcing their removal" in the Debian Policy Manual.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
@@ -450,24 +453,24 @@ fields:
   - canonicalName: "Breaks"
     onlyInParagraphType: "Package"
     description: |
-      This package cannot be installed together with the packages listed in the Breaks field.
+      <p>This package cannot be installed together with the packages listed in the Breaks field.</p>
 
-      This is often use to declare versioned issues such as "This package does not work with foo if it is version 1.0 or less".
-      In comparsion, <b>Conflicts</b> is generally used to declare that "This package does not work at all as long as foo is installed".
+      <p>This is often use to declare versioned issues such as "This package does not work with foo if it is version 1.0 or less".
+      In comparsion, <b>Conflicts</b> is generally used to declare that "This package does not work at all as long as foo is installed".</p>
 
       <em>Example:</em>
       <pre>Breaks: bar (<= 1.0~)</pre>
 
       <em>Breaks vs. Conflicts:</em>
       <table>
-        <tr><th>Case</th><th></th<th>What to do</th></tr>
-        <tr><td>I moved files from <b>foo</b> to <b>bar</b> in version X</td><td>-&gt;</td><td>Add <b>Breaks: foo (&lt;&lt; X~)</b> + <b>Replaces: foo (&lt;&lt; X~)</b> to <b>bar</b></td></tr>
-        <tr><td>Upgrading bar while <b>foo</b> is version X or less causes problems <b>foo</b> or <b>bar</b> to break</td><td>-&gt;</td><td>Add <b>Breaks: foo (&lt;&lt; X~)</b> to <b>bar</b></td></tr>
-        <tr><td>The <b>foo</b and <b>bar</b> packages provide the same functionality (interface) but different implementations and there can be at most one of them.</td><td>-&gt;</td></td>See section 7.6.2 "Replacing whole packages, forcing their removal" in the Debian Policy Manual.</td></tr>
-        <tr><td>The <b>foo</b and <b>bar</b> packages are unrelated but happen to provide the same binrary.</td><td>-&gt;</td><td>Attempt to resolve the name conflict by renaming either (or both) sides.</td>/<tr>
+        <tr><th>Case</th><th>What to do</th></tr>
+        <tr><td>I moved files from <b>foo</b> to <b>bar</b> in version X</td><td>Add <b>Breaks: foo (&lt;&lt; X~)</b> + <b>Replaces: foo (&lt;&lt; X~)</b> to <b>bar</b></td></tr>
+        <tr><td>Upgrading bar while <b>foo</b> is version X or less causes problems <b>foo</b> or <b>bar</b> to break</td><td>Add <b>Breaks: foo (&lt;&lt; X~)</b> to <b>bar</b></td></tr>
+        <tr><td>The <b>foo</b> and <b>bar</b> packages provide the same functionality (interface) but different implementations and there can be at most one of them.</td></td>See section 7.6.2 "Replacing whole packages, forcing their removal" in the Debian Policy Manual.</td></tr>
+        <tr><td>The <b>foo</b> and <b>bar</b> packages are unrelated but happen to provide the same binrary.</td><td>Attempt to resolve the name conflict by renaming either (or both) sides.</td>/<tr>
       </table>
 
-      Note the use of <em>~</em> in version numbers are generally used to ensure this works correctly in case of a backports (in the Debian archive), where the package is rebuilt with the "~bpo" suffix in its version.
+      <p>Note the use of <em>~</em> in version numbers are generally used to ensure this works correctly in case of a backports (in the Debian archive), where the package is rebuilt with the "~bpo" suffix in its version.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
@@ -475,9 +478,9 @@ fields:
   - canonicalName: "Replaces"
     onlyInParagraphType: "Package"
     description: |
-      This package either replaces another package or overwrites files that used to be provided by another package.
+      <p>This package either replaces another package or overwrites files that used to be provided by another package.</p>
 
-      <em>Attention: The <b>Replaces</b> field is <b>always</b> used with either <b>Breaks</b> or <b>Conflicts</b></em>.
+      <p><em>Attention: The <b>Replaces</b> field is <b>always</b> used with either <b>Breaks</b> or <b>Conflicts</b></em>.</p>
 
       <em>Example:</em>
       <pre>
@@ -489,7 +492,7 @@ fields:
       Replaces: foo (<< 1.2-3~)
       Breaks: foo (<< 1.2-3~)
 
-      Please check the description of the <b>Breaks</b> field for when you would use <b>Breaks</b> vs. <b>Conflicts</b>.  It also covers common uses of <b>Replaces</b>.
+      <p>Please check the description of the <b>Breaks</b> field for when you would use <b>Breaks</b> vs. <b>Conflicts</b>.  It also covers common uses of <b>Replaces</b>.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
@@ -497,19 +500,19 @@ fields:
   - canonicalName: Uploaders
     onlyInParagraphType: "Source"
     description: |
-      Comma separated list of uploaders associcated with the package.
+      <p>Comma separated list of uploaders associcated with the package.</p>
       <em>Example</em>:
       <pre>Uploaders:
          John Doe &lt;john@doe.org&gt;,
          Lisbeth Worker &lt;lis@worker.org&gt;,
       </pre>
-      Note: If a person is listed in the Maintainer field, they should <em>not</em> be listed in Uploader field.
+      <p>Note: If a person is listed in the Maintainer field, they should <em>not</em> be listed in Uploader field.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST
     supportsSubstvars: false
 
   - canonicalName: Section
     description: |
-      Define the section of the Package
+      <p>Define the section of the Package</p>
 
       <em>Example</em>:
       <pre>Section: devel</pre>
@@ -521,9 +524,9 @@ fields:
   - canonicalName: Testsuite
     onlyInParagraphType: "Source"
     description: |
-      Declares a "dep8" runtime test suite if any.
+      <p>Declares a "dep8" runtime test suite if any.</p>
 
-      If you declare a test in <em>debian/tests/control</em>, then <b>dpkg</b> will automatically include that for you without this field being set.
+      <p>If you declare a test in <em>debian/tests/control</em>, then <b>dpkg</b> will automatically include that for you without this field being set.</p>
     valueType: SPACE_SEPARATED_VALUE_LIST
     supportsSubstvars: false
 
@@ -538,9 +541,10 @@ fields:
   - canonicalName: Multi-Arch
     onlyInParagraphType: "Package"
     description: |
-      <b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
+      <p><b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
          adviced to leave it at its default until you have a working basic package or lots of time to understand
-         this topic.</em>
+         this topic.</em></p>
+
       <p>Declare the Multi-Arch interface of the package.</p>
       <p>The Multi-Arch field is used to inform the installation system (APT and dpkg) about how it should handle
       dependency relations involving this package and foreign architecture.</p>
@@ -609,116 +613,120 @@ fields:
 
       - value: "no"
         description: |
-          The default. The package can be installed for at most one architecture at the time.  It can
+          <p>The default. The package can be installed for at most one architecture at the time.  It can
           <i>only</i> satisfy relations for the same architecture as itself. Note that "Architecture: all" packages
           are considered as a part of the system's "primary" architecture (see output of
-          <pre>dpkg --print-architecture</pre>).
-          Note: Despite the "no", the package <em>can</em> be installed for a foreign architecture (e.g. you can
+          <pre>dpkg --print-architecture</pre>).</p>
+
+          <p>Note: Despite the "no", the package <em>can</em> be installed for a foreign architecture (e.g. you can
           install a 32-bit version of a package on a 64-bit system).  However, packages depending on it must also
-          be installed for the foreign architecture.
+          be installed for the foreign architecture.</p>
 
       - value: "foreign"
         description: |
-          The package can be installed for at most one architecture at the time.  However, it can
+          <p>The package can be installed for at most one architecture at the time.  However, it can
           satisfy relations for packages regardless of their architecture.  This is often useful for packages
-          solely providingly data or binaries that have "Multi-Arch neutral interfaces". Sadly, describing
-          a "Multi-Arch neutral interface" is hard and often only done by Multi-Arch experns on a case-by-case
-          basis.  Some programs are have "Multi-Arch dependent interfaces" and are not safe to declare as
-          "Multi-Arch: foreign".
-          The name "foreign" refers to the fact that the package can satisfy relations for native <em>and foreign</em>
-          architectures at the same time.
+          solely providingly data or binaries that have "Multi-Arch neutral interfaces".</p>
+
+          <p>Sadly, describing a "Multi-Arch neutral interface" is hard and often only done by Multi-Arch experts
+          on a case-by-case basis.  Some programs and scripts have "Multi-Arch dependent interfaces" and are not
+          safe to declare as "Multi-Arch: foreign".</p>
+
+          <p>The name "foreign" refers to the fact that the package can satisfy relations for native <em>and foreign</em>
+          architectures at the same time.</p>
 
       - value: "same"
         description: |
-          The same version of the package can be co-installed for multiple architecture. However,
+          <p>The same version of the package can be co-installed for multiple architecture. However,
           for this to work, the package <b>MUST</b> ship all files in architecture unique paths (usually
           beneath <em>/usr/lib/&lt;DEB_HOST_MULTIARCH&gt;</em>) <em>OR</em> have bit-for-bit identical content
-          in files that are in non-architecture unique paths (e.g. <em>/usr/share/doc</em>).
-          The name "same" refers to the fact that the package can satisfy relations only for the "same"
+          in files that are in non-architecture unique paths (e.g. <em>/usr/share/doc</em>).</p>
+
+          <p>The name "same" refers to the fact that the package can satisfy relations only for the "same"
           architecture as itself.  However, in this case, it is co-installable with itself as noted above.
-          Note: This value <b>cannot</b> be used with "Architecture: all".
+          Note: This value <b>cannot</b> be used with "Architecture: all".</p>
 
       - value: "allowed"
         description: |
-          <em>Advanced value</em>.  The package is <b>NOT</b> co-installable with itself but
+          <p><em>Advanced value</em>.  The package is <b>NOT</b> co-installable with itself but
           can satisfy Multi-Arch foreign and Multi-Arch same relations at the same.  This is useful for
           implementations of scripting languages (e.g. Perl or Python).  Here the interpreter contextually need
-          to satisfy some relations as "Multi-Arch: foreign" and others as "Multi-Arch: same" (or "Multi-Arch: no").
-          Typically, native extentions or plugins will need a "Multi-Arch: same"-relation as they only work with
+          to satisfy some relations as "Multi-Arch: foreign" and others as "Multi-Arch: same" (or "Multi-Arch: no").</p>
+
+          <p>Typically, native extentions or plugins will need a "Multi-Arch: same"-relation as they only work with
           the interpreter compiled for the same machine architecture as themselves whereas scripts are usally less
           picky and can rely on the "Multi-Arch: foreign" relation.  Packages wanting to rely on the
           "Multi-Arch: foreign" interface must explicitly declare this adding a ":any" suffix to the package name
           in the dependency relation (e.g. "Depends: python3:any").  However, the ":any" suffix cannot be used
-          unconditionally and should not be used unless you know you need it.
+          unconditionally and should not be used unless you know you need it.</p>
 
   - canonicalName: Priority
     valueType: SINGLE_KEYWORD
     description: |
-      The priority field describes how important the package is for the functionality of the system.
+      <p>The priority field describes how important the package is for the functionality of the system.</p>
 
-      Unless you know you need a different value, you should choose <b>optional</b> for your packages.
+      <p>Unless you know you need a different value, you should choose <b>optional</b> for your packages.</p>
     defaultValue: "optional"
     keywordList:
       - value: "required"
         description: |
-          The package is necessary for the proper functioning of the system (read: dpkg needs it).
+          <p>The package is necessary for the proper functioning of the system (read: dpkg needs it).</p>
 
-          No two packages that both have a priority of <em>standard</em> or higher may conflict with each
-          other.
+          <p>No two packages that both have a priority of <em>standard</em> or higher may conflict with each
+          other.</p>
 
-          Applicable if dpkg <em>needs</em> this package to function and it is not a library.
+          <p>Applicable if dpkg <em>needs</em> this package to function and it is not a library.</p>
       - value: "important"
         description: |
-          The <em>important<em> packages are a bare minumum of commonly-expected and necessary tools.
+          <p>The <em>important<em> packages are a bare minumum of commonly-expected and necessary tools.</p>
 
-          Applicable if 99% of all users in the distribution needs this package and it is not a library.
+          <p>Applicable if 99% of all users in the distribution needs this package and it is not a library.</p>
 
-          No two packages that both have a priority of <em>standard</em> or higher may conflict with each
-          other.
+          <p>No two packages that both have a priority of <em>standard</em> or higher may conflict with each
+          other.</p>
 
-          Applicable if dpkg <em>needs</em> this package to function and it is not a library.
+          <p>Applicable if dpkg <em>needs</em> this package to function and it is not a library.</p>
       - value: "standard"
         description: |
-          These packages provide a reasonable small but not too limited character-mode system.  This is
-          what will be installed by default (by the debian-installer) if hte user does not select anything
-          else.  This does not include many large applications.
+          <p>These packages provide a reasonable small but not too limited character-mode system.  This is
+          what will be installed by default (by the debian-installer) if the user does not select anything
+          else.  This does not include many large applications.</p>
 
-          Applicable if your distribution installer will install this package by default on a new system
-          and it is not a library.
+          <p>Applicable if your distribution installer will install this package by default on a new system
+          and it is not a library.</p>
 
-          No two packages that both have a priority of <em>standard</em> or higher may conflict with each
-          other.
+          <p>No two packages that both have a priority of <em>standard</em> or higher may conflict with each
+          other.</p>
       - value: "optional"
         description: |
-          This is the default priority for the majority of all packages in the Debian archive.
+          <p>This is the default priority for the majority of all packages in the Debian archive.</p>
       - value: "extra"
         description: |
-          Obsolete alias of <em>optional</em>.
+          <p>Obsolete alias of <em>optional</em>.</p>
 
   - canonicalName: Rules-Requires-Root
     onlyInParagraphType: "Source"
     valueType: SPACE_SEPARATED_VALUE_LIST
     defaultValue: "binary-targets"
     description: |
-      Declare if and when the package build assumes it is run as root or fakeroot.  Most packages do not need to run as root or fakeroot and the legacy behaviour comes with a performance cost.
-
+      <p>Declare if and when the package build assumes it is run as root or fakeroot.  Most packages do not need to run as root or fakeroot and the legacy behaviour comes with a performance cost.</p>
+      <br>
       <em>Example:</em>
       <pre>Rules-Requires-Root: no</pre>
+      <br>
+      <p>Setting this field to "no" <em>can</em> cause the package to stop building if it requires root.  Depending on the situation, it might require some trivial or some complicated changes to fix that.  If it breaks and you cannot figure out how to fix it, then reset the field to "binary-targets" and move on until you have time to fix it.</p>
 
-       Setting this field to "no" <em>can</em> cause the package to stop building if it requires root.  Depending on the situation, it might require some trivial or some complicated changes to fix that.  If it breaks and you cannot figure out how to fix it, then reset the field to "binary-targets" and move on until you have time to fix it.
-
-      Note it is not possible to require running the package as "true root".
+      <p>Note it is not possible to require running the package as "true root".</p>
     keywordList:
       - value: "no"
         isExclusive: true
         description: |
-          The build process will not require root or fakeroot during any step.  This enables dpkg-buildpackage and
-          debhelper to perform several optimizations during the build.
+          <p>The build process will not require root or fakeroot during any step.  This enables dpkg-buildpackage and
+          debhelper to perform several optimizations during the build.</p>
       - value: "binary-targets"
         isExclusive: true
         description: |
-          The build process assumes that dpkg-buildpackage will run the relevant binary target with root or fakeroot.
-      # Permit unknown values; we do not have a full list of architectures handy
+          <p>The build process assumes that dpkg-buildpackage will run the relevant binary target with root or fakeroot.</p>
       - ...
     unknownKeywordValidation: /^[a-z0-9][a-z0-0.+-]+/\S+$/
     supportsSubstvars: false
@@ -752,15 +760,15 @@ fields:
     keywordList:
       - value: "all"
         description: |
-          The package is an architecture independent package.  This is typically fitting for packages containing only scripts, data or documentatition.
+          <p>The package is an architecture independent package.  This is typically fitting for packages containing only scripts, data or documentatition.</p>
 
-          This name <b>all</b> refers to the fact that the package can be used for <em>all</em> architectures at the same.  Though note that it is still subject to the rules of the <b>Multi-Arch</b> field.
+          <p>This name <b>all</b> refers to the fact that the package can be used for <em>all</em> architectures at the same.  Though note that it is still subject to the rules of the <b>Multi-Arch</b> field.</p>
         isExclusive: true
       - value: "any"
         description: |
-          The package is an architecture dependent package and need to be compiled for each and every architecture it.
+          <p>The package is an architecture dependent package and need to be compiled for each and every architecture it.</p>
 
-          The name <b>any</b> refers to the fact that this is an architecture <em>wildcard</em> matching <em>any machine architecture</em> supported by dpkg.
+          <p>The name <b>any</b> refers to the fact that this is an architecture <em>wildcard</em> matching <em>any machine architecture</em> supported by dpkg.</p>
       # Permit unknown values; we do not have a full list of architectures handy
       - ...
     supportsSubstvars: false
@@ -768,7 +776,7 @@ fields:
   - canonicalName: X-DH-Build-For-Type
     onlyInParagraphType: "Package"
     description: |
-      <b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em>
+      <p><b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em></p>
       <p>This field is used when building a cross-compiling C-compiler (or similar cases), some packages need
         to be build for target (DEB_<b>TARGET</b>_ARCH) rather than the host (DEB_<b>HOST</b>_ARCH) architecture.
       </p>
@@ -792,10 +800,10 @@ fields:
     keywordList:
       - value: "host"
         description: |
-          The package should be compiled for <b>DEB_HOST_ARCH</b> (the default).
+          <p>The package should be compiled for <b>DEB_HOST_ARCH</b> (the default).</p>
       - value: "target"
         description: |
-          The package should be compiled for <b>DEB_HOST_TARGET</b>.
+          <p>The package should be compiled for <b>DEB_HOST_TARGET</b>.</p>
     supportsSubstvars: false
 
   - canonicalName: Description
@@ -834,48 +842,48 @@ fields:
 substvars:
   - name: "${Arch}"
     description: |
-      The current host architecture (i.e. the architecture the package is being built for).  Defaults to
-      <b>DEB_HOST_ARCH</b> (but can differ with <b>X-DH-BUild-For-Type</b>).
+      <p>The current host architecture (i.e. the architecture the package is being built for).  Defaults to
+      <b>DEB_HOST_ARCH</b> (but can differ with <b>X-DH-BUild-For-Type</b>).</p>
 
   - name: "${source:Version}"
     description: |
-      The version of the source package.
+      <p>The version of the source package.</p>
 
   - name: "${source:Upstream-Version}"
     description: |
-      The version of the source package that denotes the upstream part of the version though including the Debian epoch if any.
+      <p>The version of the source package that denotes the upstream part of the version though including the Debian epoch if any.</p>
 
   - name: "${binary:Version}"
     description: |
-      The version of the binary package.  This is <em>usually</em> the same as ${source:Version} with the exception of the following two cases: binNMUs and custom versions passed to <b>dpkg-gencontrol</b>.
+      <p>The version of the binary package.  This is <em>usually</em> the same as ${source:Version} with the exception of the following two cases: binNMUs and custom versions passed to <b>dpkg-gencontrol</b>.</p>
 
   - name: "${Newline}"
     value: "\n"
     description: |
-      Expands to a single newline character.
+      <p>Expands to a single newline character.</p>
 
   - name: "${Space}"
     value: " "
     description: |
-      Expands to a single space character.
+      <p>Expands to a single space character.</p>
 
   - name: "${Tab}"
     value: "\t"
     description: |
-      Expands to a single tab character.
+      <p>Expands to a single tab character.</p>
 
   - name: "${}"
     value: "$"
     description: |
-      Not a true substitution value but will be replaced by a literal $ sign after all substituions have been made.
+      <p>Not a true substitution value but will be replaced by a literal $ sign after all substituions have been made.</p>
 
   - pattern: "${shlibs:<FIELD_NAME>}"
     fieldNames: ["Pre-Depends", "Depends", "Recommends", "Suggests"]
     description: |
-      This variable can be generated at runtime by <b><a href="https://manpages.debian.org/dpkg-dhlibdeps.1">dpkg-shlibdeps</a></b> if it is called (possibly indirectly via <b><a href="https://manpages.debian.org/dh_genshlibdeps.1">dh_genshlibdeps</a></b>).
+      <p>This variable can be generated at runtime by <b><a href="https://manpages.debian.org/dpkg-dhlibdeps.1">dpkg-shlibdeps</a></b> if it is called (possibly indirectly via <b><a href="https://manpages.debian.org/dh_genshlibdeps.1">dh_genshlibdeps</a></b>).</p>
 
-      By default, only <b>${shlibs:Depends}</b> is generated.  However, other the variants can appear if "-d<Name>" is passed to <b>dpkg-shlibdeps</b>.
-      Variable settings with names of this form are generated by <b><a href="https://manpages.debian.org/dpkg-dhlibdeps.1">dpkg-shlibdeps</a></b>.
+      <p>By default, only <b>${shlibs:Depends}</b> is generated.  However, other the variants can appear if "-d<Name>" is passed to <b>dpkg-shlibdeps</b>.
+      Variable settings with names of this form are generated by <b><a href="https://manpages.debian.org/dpkg-dhlibdeps.1">dpkg-shlibdeps</a></b>.</p>
     docSource: "dpkg-shlibdeps(1)"
 
 #  - pattern: "S:<FIELD_NAME>"
@@ -888,9 +896,9 @@ substvars:
     fieldFrom: SOURCE_PARAGRAPH
     fieldName: Description
     description: |
-      Expands to the <em>Synopsis</em> part of the <em>Description</em> field from the <em>Source</em> paragraph (if present).
+      <p>Expands to the <em>Synopsis</em> part of the <em>Description</em> field from the <em>Source</em> paragraph (if present).</p>
 
-      This can be useful for having a standard synopsis that can be reused in all binary packages (followed by a unique bit).
+      <p>This can be useful for having a standard synopsis that can be reused in all binary packages (followed by a unique bit).</p>
 
       <em>Example:</em>
       <pre>Source: foo
@@ -922,18 +930,19 @@ substvars:
     fieldFrom: SOURCE_PARAGRAPH
     fieldName: Description
     description: |
-      Expands to the <em>Extendend-Description</em> part of the <em>Description</em> field from the <em>Source</em> paragraph (if present).
+      <p>Expands to the <em>Extendend-Description</em> part of the <em>Description</em> field from the <em>Source</em> paragraph (if present).</p>
 
-      This can be useful for having a standard extended description that can be reused in all binary packages (followed by a unique bit).
+      <p>This can be useful for having a standard extended description that can be reused in all binary packages (followed by a unique bit).</p>
 
-      Please see the documentation for <b>${source:Synopsis}</b> for an example of how to use this substvar.
+      <p>Please see the documentation for <b>${source:Synopsis}</b> for an example of how to use this substvar.</p>
 
-  - name: "${misc:Depends}"
+  - pattern: "${misc:<FIELD_NAME>}"
+    fieldNames: ["Pre-Depends", "Depends"]
     description: |
-      Additional dependencies injected by debhelper based tools when they conclude they are necessary.
+      <p>Additional dependencies injected by debhelper based tools when they conclude they are necessary.</p>
     docSource: "debhelper(7)"
 
   - name: "${perl:Depends}"
     description: |
-      Additional Perl related dependencies injected by dh_perl when it concludes they are necessary.
+      <p>Additional Perl related dependencies injected by dh_perl when it concludes they are necessary.</p>
     providingTool: "dh_perl(1)"

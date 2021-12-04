@@ -2,6 +2,7 @@ package com.github.nthykier.debpkg.deb822.psi.impl;
 
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldBase;
+import com.intellij.lang.documentation.DocumentationMarkup;
 import org.jetbrains.annotations.Nullable;
 
 public class Deb822FieldFakePsiElement extends Deb822FakePsiElementBase<Deb822FieldBase> {
@@ -23,15 +24,16 @@ public class Deb822FieldFakePsiElement extends Deb822FakePsiElementBase<Deb822Fi
 
     @Override
     public @Nullable String getDocumentation() {
+        String docs = "No documentation available";
+        String fieldName = element.getFieldName();
         if (knownField != null) {
-            String docs = knownField.getFieldDescription();
+            docs = knownField.getFieldDescription();
             if (docs == null) {
-                docs = knownField.getCanonicalFieldName() + " (standard field; no documentation available)";
+                docs = "<i>standard field, but no documentation is available</i>";
             }
-            return docs;
-        } else {
-            return this.element.getFieldName() + " (no documentation available)";
         }
+        return DocumentationMarkup.DEFINITION_START + "<b>" + fieldName + "</b>" + DocumentationMarkup.CONTENT_END +
+                DocumentationMarkup.CONTENT_START + docs + DocumentationMarkup.CONTENT_END;
     }
 
     public static Deb822FieldFakePsiElement newInstance(Deb822FieldBase element, @Nullable Deb822KnownField knownField) {
