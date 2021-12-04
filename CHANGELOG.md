@@ -12,6 +12,9 @@
 ### Added
 - Brace matching support inside the dependency language.
 
+### Changed
+- Bump lombok dependency fully to 1.18.22.  Previously 1.18.20 was still used in some cases.
+
 ## [0.0.13]
 ### Added
 - Proper display names for the file formats, which are used in IDEA's `Override File Type` feature.
