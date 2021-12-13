@@ -19,6 +19,10 @@
   hold CTRL down while hovering.
 - Reformat documentation for fields, values and substvars to fit the conventions for hover documentation.
 
+### Fixed
+- Disable "Rename" refactor option for "fake" references (e.g., known fields and values) where it does not
+  make sense to use refactoring.
+
 ## [0.0.13]
 ### Added
 - Proper display names for the file formats, which are used in IDEA's `Override File Type` feature.
