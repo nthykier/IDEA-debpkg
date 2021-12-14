@@ -8,6 +8,7 @@ import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldKeywordImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownRelationFieldImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.KnownFieldTableImpl;
+import com.github.nthykier.debpkg.deb822.psi.Deb822ParagraphSupport;
 import com.intellij.lang.Language;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,8 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static com.github.nthykier.debpkg.deb822.Deb822YamlDataFileParserUtil.*;
 import static com.github.nthykier.debpkg.deb822.field.KnownFields.ANY_PARAGRAPH_TYPES;
@@ -30,12 +33,16 @@ public class Deb822KnownFieldsAndValues {
             ">>", ">=", "=", "<=", "<<"
     ));
 
+    private static final BiFunction<KnownFieldTable, Deb822ParagraphSupport, Deb822KnownField> CLASSIFICATION_FIELD_NAMING_RULE = (knownFieldTable, paragraph) -> {
+        return knownFieldTable.getField(paragraph.classifyParagraph());
+    };
+
     private Deb822KnownFieldsAndValues() {}
 
     @NotNull
     public static KnownFieldTable getKnownFieldsFor(Language language) {
         if (language.is(Deb822DialectDebianControlLanguage.INSTANCE)) {
-            return new KnownFieldTableImpl(DCTRL_KNOWN_FIELDS, true);
+            return new KnownFieldTableImpl(DCTRL_KNOWN_FIELDS, true, CLASSIFICATION_FIELD_NAMING_RULE);
         } else if (language.is(Deb822DialectDebianCopyrightLanguage.INSTANCE)) {
             return new KnownFieldTableImpl(DCOPY_KNOWN_FIELDS);
         } else if (language.isKindOf(Deb822Language.INSTANCE)) {

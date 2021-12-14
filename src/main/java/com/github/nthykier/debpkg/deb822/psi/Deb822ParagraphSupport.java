@@ -2,14 +2,14 @@ package com.github.nthykier.debpkg.deb822.psi;
 
 import com.github.nthykier.debpkg.deb822.Deb822LanguageSupport;
 import com.github.nthykier.debpkg.deb822.Deb822ParagraphClassifier;
-import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-public interface Deb822ParagraphSupport extends PsiElement {
+public interface Deb822ParagraphSupport extends PsiElement, PsiNameIdentifierOwner {
 
   /**
    * Convenient and cache-enabled way of getting the key-value pairs in a paragraph.
@@ -52,6 +52,5 @@ public interface Deb822ParagraphSupport extends PsiElement {
   @NotNull
   default String classifyParagraph() {
     return Deb822LanguageSupport.fromDeb822Language(getContainingFile().getLanguage()).getParagraphClassifier().classifyParagraph(this);
-
   }
 }

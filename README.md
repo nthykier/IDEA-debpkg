@@ -34,6 +34,8 @@ commonly used formats in Debian packaging.
  * Validate dependency fields for use of unsupported version operators (e.g. in `Provides`) or build profile
    restrictions (in any binary package relation field).
  * Warn if a field just duplicates the field of the source paragraph.
+ * Refactor support when renaming binary packages (includes renaming files in `debian/*` but not content
+   inside `debian/rules`).
 
 Plus the features listed for Generic deb822 files.
 

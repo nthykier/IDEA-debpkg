@@ -1,6 +1,7 @@
 package com.github.nthykier.debpkg.deb822.field;
 
 import com.github.nthykier.debpkg.deb822.field.impl.KnownFieldTableImpl;
+import com.github.nthykier.debpkg.deb822.psi.Deb822ParagraphSupport;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +22,8 @@ public interface KnownFieldTable {
     Collection<Deb822KnownField> getAllFields();
 
     boolean getAutoStripXPrefix();
+
+    Deb822KnownField getParagraphNamingField(Deb822ParagraphSupport paragraph);
 
     static @Nullable String withXPrefixStripped(String fieldName) {
         int firstDash = fieldName.indexOf('-');

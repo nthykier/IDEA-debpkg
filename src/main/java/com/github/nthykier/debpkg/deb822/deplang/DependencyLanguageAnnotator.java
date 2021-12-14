@@ -31,11 +31,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static com.github.nthykier.debpkg.util.Constants.PACKAGE_NAME_REGEX;
+import static com.github.nthykier.debpkg.util.Constants.VERSION_NUMBER_REGEX;
+
 public class DependencyLanguageAnnotator implements Annotator {
 
     private static final Map<String, String> INVALID_VERSION_OPERATORS;
-    private static final Pattern PACKAGE_NAME_REGEX = Pattern.compile("[a-z0-9][a-z0-9.+-]+");
-    private static final Pattern VERSION_NUMBER_REGEX = Pattern.compile("(?:[0-9]+:)?[0-9][a-z0-9.+~]*([-][a-z0-9.+~-]+)?");
 
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
         if (element instanceof DepLangVersionOperator) {

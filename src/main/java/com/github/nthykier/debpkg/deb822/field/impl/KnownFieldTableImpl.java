@@ -2,6 +2,7 @@ package com.github.nthykier.debpkg.deb822.field.impl;
 
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
+import com.github.nthykier.debpkg.deb822.psi.Deb822ParagraphSupport;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,18 +10,20 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 public class KnownFieldTableImpl implements KnownFieldTable {
     private final Map<String, Deb822KnownField> knownFieldMap;
     private final List<String> knownFieldNames;
     private final boolean autoStripXPrefix;
+    private final BiFunction<KnownFieldTable, Deb822ParagraphSupport, Deb822KnownField> paragraphNamingField;
 
     public KnownFieldTableImpl(@NotNull Map<String, Deb822KnownField> knownFieldMap) {
-        this(knownFieldMap, false);
+        this(knownFieldMap, false, null);
     }
 
-    public KnownFieldTableImpl(@NotNull Map<String, Deb822KnownField> knownFieldMap, boolean autoStripXPrefix) {
+    public KnownFieldTableImpl(@NotNull Map<String, Deb822KnownField> knownFieldMap, boolean autoStripXPrefix, BiFunction<KnownFieldTable, Deb822ParagraphSupport, Deb822KnownField> paragraphNamingField) {
         this.knownFieldMap = Collections.unmodifiableMap(knownFieldMap);
         // When 1.10 can be assumed; use ".collect(Collectors.toUnmodifiableList())"
         this.knownFieldNames = Collections.unmodifiableList(knownFieldMap.values()
@@ -30,6 +33,15 @@ public class KnownFieldTableImpl implements KnownFieldTable {
                 .collect(Collectors.toList())
         );
         this.autoStripXPrefix = autoStripXPrefix;
+        this.paragraphNamingField = paragraphNamingField;
+    }
+
+    @Override
+    public Deb822KnownField getParagraphNamingField(Deb822ParagraphSupport paragraph) {
+        if (paragraphNamingField == null) {
+            return null;
+        }
+        return paragraphNamingField.apply(this, paragraph);
     }
 
     @Override

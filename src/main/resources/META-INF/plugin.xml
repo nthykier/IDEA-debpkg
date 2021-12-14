@@ -32,6 +32,9 @@
         <fileType name="debian/control" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlFileType" fieldName="INSTANCE"
                   language="DebianControl" extensions="" />
         <vetoRenameCondition implementation="com.github.nthykier.debpkg.deb822.Deb822RefactorVetoHandler" />
+        <renamePsiElementProcessor
+                implementation="com.github.nthykier.debpkg.deb822.DebianControlRenamePsiElementProcessor"/>
+        <lang.namesValidator language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.PackageNamesValidator"/>
         <lang.parserDefinition language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822ParserDefinition" />
         <lang.parserDefinition language="DebianControl" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlParserDefinition" />
         <lang.parserDefinition language="DebianCopyright" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianCopyrightParserDefinition" />
