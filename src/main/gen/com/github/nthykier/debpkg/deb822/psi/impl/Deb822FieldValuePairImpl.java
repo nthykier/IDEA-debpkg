@@ -41,7 +41,7 @@ public class Deb822FieldValuePairImpl extends ASTWrapperPsiElement implements De
   }
 
   @Override
-  public @Nullable PsiReference @NotNull [] getReferences() {
+  public @NotNull PsiReference @NotNull [] getReferences() {
     return Deb822PsiImplUtil.getReferences(this);
   }
 

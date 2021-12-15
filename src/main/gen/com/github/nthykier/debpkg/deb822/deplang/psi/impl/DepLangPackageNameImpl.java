@@ -11,6 +11,7 @@ import static com.github.nthykier.debpkg.deb822.deplang.psi.DependencyLanguageTy
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.deb822.deplang.psi.*;
 import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
+import com.intellij.psi.PsiReference;
 
 public class DepLangPackageNameImpl extends ASTWrapperPsiElement implements DepLangPackageName {
 
@@ -32,6 +33,11 @@ public class DepLangPackageNameImpl extends ASTWrapperPsiElement implements DepL
   @Nullable
   public DepLangSubstvar getSubstvar() {
     return findChildByClass(DepLangSubstvar.class);
+  }
+
+  @Override
+  public @Nullable PsiReference getReference() {
+    return Deb822PsiImplUtil.getReference(this);
   }
 
 }

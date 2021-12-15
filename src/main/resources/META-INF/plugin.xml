@@ -129,6 +129,8 @@
                                 implementationClass="com.github.nthykier.debpkg.deb822.deplang.DepLangCodeCompletionContributor" />
         <lang.braceMatcher language="DependencyLanguage"
                            implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageBraceMatcher"/>
+        <lang.elementManipulator forClass="com.github.nthykier.debpkg.deb822.deplang.psi.DepLangPackageName"
+                                 implementationClass="com.github.nthykier.debpkg.deb822.deplang.DepLangElementManipulator"/>
 
         <!-- Debian Changelog -->
 

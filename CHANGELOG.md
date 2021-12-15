@@ -13,6 +13,8 @@
 - Brace matching support inside the dependency language.
 - Add refactor support to rename binary packages.  It will attempt to rename relevant files in debian as
   well (`oldname.foo` -> `newname.foo`).
+- Support for auto-completion of packages from `debian/control` inside relation fields.  In "positive" dependency
+  fields (`Depends, Recommends, etc.`) for a binary package, then the relation will be versioned by default.
 
 ### Changed
 - Bump lombok dependency fully to 1.18.22.  Previously 1.18.20 was still used in some cases.

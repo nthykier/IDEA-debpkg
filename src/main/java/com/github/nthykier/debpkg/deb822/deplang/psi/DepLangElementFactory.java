@@ -30,8 +30,13 @@ public class DepLangElementFactory {
         return createOrDependencyClause(project, text).getDependencyList().get(0);
     }
 
+    public static DepLangPackageName createPackageName(Project project, String text) {
+        return createDependency(project, text).getPackageName();
+    }
+
+
     public static Deb822SubstvarBase createSubstvar(Project project, String text) {
-        Deb822SubstvarBase substvar = createDependency(project, text).getPackageName().getSubstvar();
+        Deb822SubstvarBase substvar = createPackageName(project, text).getSubstvar();
         assert substvar != null;
         return substvar;
     }

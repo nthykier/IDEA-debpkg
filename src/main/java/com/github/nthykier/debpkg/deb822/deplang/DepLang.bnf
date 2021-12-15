@@ -71,7 +71,9 @@ substvar ::= SUBSTVAR_TOKEN {
   methods=[getReference]
 }
 
-package_name ::= name_or_substvar
+package_name ::= name_or_substvar {
+    methods=[getReference]
+}
 version ::= name_or_substvar_as_version
 
 /* (arch_restriction_part)? (build_profile_restriction_part)? */

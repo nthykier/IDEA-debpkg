@@ -1,20 +1,35 @@
 package com.github.nthykier.debpkg.deb822.psi.impl;
 
-import com.github.nthykier.debpkg.deb822.*;
+import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvar;
+import com.github.nthykier.debpkg.deb822.Deb822KnownSubstvars;
+import com.github.nthykier.debpkg.deb822.deplang.psi.DepLangPackageName;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlFileType;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
+import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import static com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage.PARAGRAPH_TYPE_BINARY_PACKAGE;
 
 public class Deb822PsiImplUtil {
 
@@ -22,6 +37,13 @@ public class Deb822PsiImplUtil {
         String substvarName = substvar.getText();
         Deb822KnownSubstvar knownSubstvar = Deb822KnownSubstvars.lookupSubstvar(substvarName);
         return new Deb822SubstvarPsiReference(substvar, TextRange.from(0, substvar.getTextLength()), knownSubstvar);
+    }
+
+    public static @Nullable PsiReference getReference(@NotNull DepLangPackageName packageElement) {
+        if (packageElement.getSubstvar() != null) {
+            return null;
+        }
+        return new Dependency2ParagraphPsiReference(packageElement);
     }
 
     public static @Nullable PsiReference getReference(@NotNull Deb822Value value) {
@@ -41,7 +63,7 @@ public class Deb822PsiImplUtil {
         return null;
     }
 
-    public static @Nullable PsiReference @NotNull [] getReferences(@NotNull Deb822FieldValuePair fieldValuePair) {
+    public static @NotNull PsiReference @NotNull [] getReferences(@NotNull Deb822FieldValuePair fieldValuePair) {
         return ReferenceProvidersRegistry.getReferencesFromProviders(fieldValuePair);
     }
 
