@@ -4,6 +4,7 @@ import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 import com.intellij.codeInsight.completion.*;
@@ -30,9 +31,27 @@ public class Deb822CodeCompletionContributor extends CompletionContributor imple
                                                @NotNull CompletionResultSet resultSet) {
                         PsiElement fieldValue = parameters.getPosition();
                         KnownFieldTable knownFieldTable = Deb822LanguageSupport.fromPsiElement(fieldValue).getKnownFieldTable();
-                        Collection<String> knownValues = knownFieldTable.getAllFieldNames();
+                        Collection<Deb822KnownField> knownValues = knownFieldTable.getAllFields();
                         List<LookupElement> completions = new ArrayList<>(knownValues.size());
-                        for (String name : knownValues) {
+                        Deb822Paragraph paragraph = null;
+                        String paragraphClassification = null;
+                        if (parameters.getOriginalPosition() != null) {
+                            paragraph = Deb822PsiImplUtil.getAncestorOfType(parameters.getOriginalPosition(), Deb822Paragraph.class);
+                            if (paragraph != null) {
+                                paragraphClassification = paragraph.classifyParagraph();
+                            }
+                        }
+                        for (Deb822KnownField knownField : knownValues) {
+                            String name = knownField.getCanonicalFieldName();
+                            if (paragraph != null) {
+                                if (paragraph.getFieldValuePair(name) != null) {
+                                    continue;
+                                }
+                                if (!knownField.isSupportedInParagraphType(paragraphClassification)) {
+                                    continue;
+                                }
+                            }
+
                             completions.add(LookupElementBuilder.create(name + ": "));
                         }
                         resultSet.addAllElements(completions);

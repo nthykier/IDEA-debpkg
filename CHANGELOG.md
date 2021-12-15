@@ -22,6 +22,8 @@
   documentation.  That means it appears when you over the mouse over the element rather than having to
   hold CTRL down while hovering.
 - Reformat documentation for fields, values and substvars to fit the conventions for hover documentation.
+- Field name suggestions now exclude fields already present in the paragraph.  Note that generally only fields
+  present "above" the cursor are considered a part of the paragraph.
 
 ### Fixed
 - Disable "Rename" refactor option for "fake" references (e.g., known fields and values) where it does not
