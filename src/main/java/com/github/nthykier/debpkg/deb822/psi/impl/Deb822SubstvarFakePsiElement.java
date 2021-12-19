@@ -46,4 +46,9 @@ public class Deb822SubstvarFakePsiElement extends Deb822FakePsiElementBase<Deb82
         }
         return " -> " + value.replace("\t", "\\t").replace("\n", "\\n");
     }
+
+    @Override
+    public @Nullable String getPresentableText() {
+        return "Substitution variable (no target available)";
+    }
 }

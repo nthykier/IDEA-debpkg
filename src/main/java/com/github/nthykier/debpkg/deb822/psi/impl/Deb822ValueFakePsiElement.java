@@ -37,4 +37,9 @@ public class Deb822ValueFakePsiElement extends Deb822FakePsiElementBase<PsiEleme
         }
         return null;
     }
+
+    @Override
+    public @Nullable String getPresentableText() {
+        return "Field value (no target available)";
+    }
 }

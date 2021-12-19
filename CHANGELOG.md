@@ -30,6 +30,7 @@
 ### Fixed
 - Disable "Rename" refactor option for "fake" references (e.g., known fields and values) where it does not
   make sense to use refactoring.
+- Provider better quick-nav text for dummy references (i.e., references only present for providing documentation).
 
 ## [0.0.13]
 ### Added

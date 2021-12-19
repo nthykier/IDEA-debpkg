@@ -36,4 +36,7 @@ public abstract class Deb822FakePsiElementBase<T extends PsiElement> extends Fak
      */
     @Nullable
     public abstract String getDocumentation();
+
+    @Nullable
+    public abstract String getPresentableText();
 }

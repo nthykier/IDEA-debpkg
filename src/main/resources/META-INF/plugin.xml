@@ -122,7 +122,7 @@
         <lang.syntaxHighlighterFactory language="DependencyLanguage" implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageSyntaxHighlighterFactory" />
 
         <lang.documentationProvider language="DependencyLanguage"
-                                    implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageDocumentationProvider" />
+                                    implementationClass="com.github.nthykier.debpkg.Deb822DocumentationProvider" />
         <fileType name="Deb822DependencyLanguage File (internal injected format)" implementationClass="com.github.nthykier.debpkg.deb822.deplang.DependencyLanguageFileType" fieldName="INSTANCE"
                   language="DependencyLanguage" extensions="" />
         <completion.contributor language="DependencyLanguage"

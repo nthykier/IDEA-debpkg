@@ -9,7 +9,7 @@ public class Deb822FieldFakePsiElement extends Deb822FakePsiElementBase<Deb822Fi
 
     private final Deb822KnownField knownField;
 
-    private Deb822FieldFakePsiElement(Deb822FieldBase element, @Nullable Deb822KnownField knownField) {
+    public Deb822FieldFakePsiElement(Deb822FieldBase element, @Nullable Deb822KnownField knownField) {
         super(element);
         this.knownField = knownField;
     }
@@ -36,14 +36,8 @@ public class Deb822FieldFakePsiElement extends Deb822FakePsiElementBase<Deb822Fi
                 DocumentationMarkup.CONTENT_START + docs + DocumentationMarkup.CONTENT_END;
     }
 
-    public static Deb822FieldFakePsiElement newInstance(Deb822FieldBase element, @Nullable Deb822KnownField knownField) {
-        return new Field(element, knownField);
-    }
-
-    /* Jump though a hoop to ensure a better hover text for unrecognised fields */
-    private static class Field extends Deb822FieldFakePsiElement {
-        Field(Deb822FieldBase element, @Nullable Deb822KnownField knownField) {
-            super(element, knownField);
-        }
+    @Override
+    public @Nullable String getPresentableText() {
+        return "Field (no target available)";
     }
 }
