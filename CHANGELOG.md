@@ -24,6 +24,7 @@
 - Reformat documentation for fields, values and substvars to fit the conventions for hover documentation.
 - Field name suggestions now exclude fields already present in the paragraph.  Note that generally only fields
   present "above" the cursor are considered a part of the paragraph.
+- Chore: Bump snakeyaml dependency to 1.29 and action/cache CI dependency to 2.1.7. 
 
 ### Fixed
 - Disable "Rename" refactor option for "fake" references (e.g., known fields and values) where it does not
