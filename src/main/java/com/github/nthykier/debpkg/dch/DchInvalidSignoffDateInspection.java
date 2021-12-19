@@ -21,19 +21,6 @@ import static com.github.nthykier.debpkg.dch.psi.DchSignoffDateSupport.PREFERRED
 
 public class DchInvalidSignoffDateInspection extends LocalInspectionTool {
 
-    private static final Pattern SIGN_OFF_DATE_PATTERN = Pattern.compile(
-                    "^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),[ ]" +
-                    // dd
-                    // A strict reading of Debian Policy does not allow a single digit
-                    // but in practise it was common in the "early days" of Debian and
-                    // any package with a history beyond 2006 is likely to have a lot
-                    // of single digit dates, so we permit them.
-                    "([ 0-2]\\d|3[01])[ ]" +
-                    // Month
-                    "(?:Jan|Feb|Mar|Apr|May|Ju[nl]|Aug|Sep|Oct|Nov|Dec)" +
-                    // YYYY + TS + TZ
-                    "[ ]\\d{4}[ ]\\d{2}:\\d{2}:\\d{2}[ ][+\\-]\\d{4}$"
-    );
     private static final Pattern STRIP_DAY_NAME = Pattern.compile("^\\S+,\\s*");
     private static final DateTimeFormatter[] LENIENT_DATE_FORMAT_PATTERNS = new DateTimeFormatter[]{
             DateTimeFormatter.ofPattern("d MMM uuuu H:m:s X"),
@@ -51,7 +38,7 @@ public class DchInvalidSignoffDateInspection extends LocalInspectionTool {
 
     @NotNull
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
-        /* This only makes sense for debian/control files */
+        /* This only makes sense for debian/changelog files */
         if (holder.getFile().getLanguage() != DchLanguage.INSTANCE) {
             return PsiElementVisitor.EMPTY_VISITOR;
         }
