@@ -152,5 +152,7 @@
                          level="ERROR"
                          implementationClass="com.github.nthykier.debpkg.dch.DchInvalidSignoffDateInspection"
         />
+        <lang.elementManipulator forClass="com.github.nthykier.debpkg.dch.psi.DchSource"
+                                 implementationClass="com.github.nthykier.debpkg.dch.DchSourceElementManipulator"/>
     </extensions>
 </idea-plugin>

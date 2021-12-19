@@ -10,15 +10,16 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.nthykier.debpkg.dch.psi.DchTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.dch.psi.*;
+import com.intellij.psi.PsiReference;
 
-public class DchVersionLineImpl extends ASTWrapperPsiElement implements DchVersionLine {
+public class DchSourceImpl extends ASTWrapperPsiElement implements DchSource {
 
-  public DchVersionLineImpl(@NotNull ASTNode node) {
+  public DchSourceImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull DchVisitor visitor) {
-    visitor.visitVersionLine(this);
+    visitor.visitSource(this);
   }
 
   @Override
@@ -28,15 +29,8 @@ public class DchVersionLineImpl extends ASTWrapperPsiElement implements DchVersi
   }
 
   @Override
-  @NotNull
-  public List<DchDistribution> getDistributionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, DchDistribution.class);
-  }
-
-  @Override
-  @NotNull
-  public DchSource getSource() {
-    return findNotNullChildByClass(DchSource.class);
+  public PsiReference getReference() {
+    return DchPsiImplUtil.getReference(this);
   }
 
 }

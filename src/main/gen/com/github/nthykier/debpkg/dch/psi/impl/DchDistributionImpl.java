@@ -11,32 +11,20 @@ import static com.github.nthykier.debpkg.dch.psi.DchTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.dch.psi.*;
 
-public class DchVersionLineImpl extends ASTWrapperPsiElement implements DchVersionLine {
+public class DchDistributionImpl extends ASTWrapperPsiElement implements DchDistribution {
 
-  public DchVersionLineImpl(@NotNull ASTNode node) {
+  public DchDistributionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull DchVisitor visitor) {
-    visitor.visitVersionLine(this);
+    visitor.visitDistribution(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof DchVisitor) accept((DchVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @NotNull
-  public List<DchDistribution> getDistributionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, DchDistribution.class);
-  }
-
-  @Override
-  @NotNull
-  public DchSource getSource() {
-    return findNotNullChildByClass(DchSource.class);
   }
 
 }

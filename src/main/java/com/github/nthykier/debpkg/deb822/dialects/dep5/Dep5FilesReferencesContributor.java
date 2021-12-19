@@ -3,10 +3,7 @@ package com.github.nthykier.debpkg.deb822.dialects.dep5;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Value;
-import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
 import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
-import com.github.nthykier.debpkg.util.ASTNodeStringConverter;
-import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.patterns.PlatformPatterns;
@@ -16,7 +13,6 @@ import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

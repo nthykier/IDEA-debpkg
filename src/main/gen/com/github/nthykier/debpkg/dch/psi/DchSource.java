@@ -4,13 +4,10 @@ package com.github.nthykier.debpkg.dch.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 
-public interface DchVersionLine extends PsiElement {
+public interface DchSource extends PsiElement {
 
-  @NotNull
-  List<DchDistribution> getDistributionList();
-
-  @NotNull
-  DchSource getSource();
+  PsiReference getReference();
 
 }

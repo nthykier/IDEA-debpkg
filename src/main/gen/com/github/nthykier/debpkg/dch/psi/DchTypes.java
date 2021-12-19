@@ -11,8 +11,10 @@ public interface DchTypes {
   IElementType CHANGELOG_ENTRY = new DchElementType("CHANGELOG_ENTRY");
   IElementType CHANGELOG_LINE = new DchElementType("CHANGELOG_LINE");
   IElementType CHANGE_DESCRIPTION = new DchElementType("CHANGE_DESCRIPTION");
+  IElementType DISTRIBUTION = new DchElementType("DISTRIBUTION");
   IElementType SIGNOFF = new DchElementType("SIGNOFF");
   IElementType SIGNOFF_DATE = new DchElementType("SIGNOFF_DATE");
+  IElementType SOURCE = new DchElementType("SOURCE");
   IElementType VERSION_LINE = new DchElementType("VERSION_LINE");
 
   IElementType CHANGE_BULLET_POINT = new DchTokenType("CHANGE_BULLET_POINT");
@@ -45,11 +47,17 @@ public interface DchTypes {
       else if (type == CHANGE_DESCRIPTION) {
         return new DchChangeDescriptionImpl(node);
       }
+      else if (type == DISTRIBUTION) {
+        return new DchDistributionImpl(node);
+      }
       else if (type == SIGNOFF) {
         return new DchSignoffImpl(node);
       }
       else if (type == SIGNOFF_DATE) {
         return new DchSignoffDateImpl(node);
+      }
+      else if (type == SOURCE) {
+        return new DchSourceImpl(node);
       }
       else if (type == VERSION_LINE) {
         return new DchVersionLineImpl(node);

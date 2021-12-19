@@ -139,6 +139,26 @@ public class DchParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // DISTRIBUTION_NAME {
+  // }
+  public static boolean distribution(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "distribution")) return false;
+    if (!nextTokenIs(b, DISTRIBUTION_NAME)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, DISTRIBUTION_NAME);
+    r = r && distribution_1(b, l + 1);
+    exit_section_(b, m, DISTRIBUTION, r);
+    return r;
+  }
+
+  // {
+  // }
+  private static boolean distribution_1(PsiBuilder b, int l) {
+    return true;
+  }
+
+  /* ********************************************************** */
   // LESS_THAN MAINTAINER_EMAIL GREATER_THAN
   static boolean maintainer_email(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "maintainer_email")) return false;
@@ -253,9 +273,21 @@ public class DchParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // SOURCE_NAME
+  public static boolean source(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "source")) return false;
+    if (!nextTokenIs(b, SOURCE_NAME)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, SOURCE_NAME);
+    exit_section_(b, m, SOURCE, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // PARANTHESES_OPEN VERSION PARANTHESES_CLOSE
-  static boolean version(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "version")) return false;
+  static boolean version_group(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "version_group")) return false;
     if (!nextTokenIs(b, PARANTHESES_OPEN)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
@@ -266,13 +298,13 @@ public class DchParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // SOURCE_NAME version DISTRIBUTION_NAME+ SEMI_COLON KEYVALUE_PAIR+
+  // source version_group distribution+ SEMI_COLON KEYVALUE_PAIR+
   public static boolean version_line(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "version_line")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, VERSION_LINE, "<version line>");
-    r = consumeToken(b, SOURCE_NAME);
-    r = r && version(b, l + 1);
+    r = source(b, l + 1);
+    r = r && version_group(b, l + 1);
     r = r && version_line_2(b, l + 1);
     r = r && consumeToken(b, SEMI_COLON);
     r = r && version_line_4(b, l + 1);
@@ -280,15 +312,15 @@ public class DchParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // DISTRIBUTION_NAME+
+  // distribution+
   private static boolean version_line_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "version_line_2")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, DISTRIBUTION_NAME);
+    r = distribution(b, l + 1);
     while (r) {
       int c = current_position_(b);
-      if (!consumeToken(b, DISTRIBUTION_NAME)) break;
+      if (!distribution(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "version_line_2", c)) break;
     }
     exit_section_(b, m, null, r);

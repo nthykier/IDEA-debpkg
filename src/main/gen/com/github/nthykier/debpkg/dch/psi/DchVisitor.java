@@ -20,12 +20,20 @@ public class DchVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitDistribution(@NotNull DchDistribution o) {
+    visitPsiElement(o);
+  }
+
   public void visitSignoff(@NotNull DchSignoff o) {
     visitPsiElement(o);
   }
 
   public void visitSignoffDate(@NotNull DchSignoffDate o) {
     visitSignoffDateSupport(o);
+  }
+
+  public void visitSource(@NotNull DchSource o) {
+    visitPsiElement(o);
   }
 
   public void visitVersionLine(@NotNull DchVersionLine o) {

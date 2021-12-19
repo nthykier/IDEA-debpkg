@@ -22,12 +22,20 @@ changelog_entry ::= version_line changelog_line+ signoff {
 //  recoverWhile=recover_property
 }
 
-version_line ::= SOURCE_NAME version DISTRIBUTION_NAME+ SEMI_COLON KEYVALUE_PAIR+ {
+version_line ::= source version_group distribution+ SEMI_COLON KEYVALUE_PAIR+ {
   recoverWhile=recover_top_level
 }
 
-private version ::= PARANTHESES_OPEN VERSION PARANTHESES_CLOSE {
+private version_group ::= PARANTHESES_OPEN VERSION PARANTHESES_CLOSE {
   pin=1
+}
+
+source ::= SOURCE_NAME {
+  methods=[getReference]
+}
+
+distribution ::= DISTRIBUTION_NAME {
+
 }
 
 changelog_line ::= (change_description|CHANGE_RESPONSIBLE) {
