@@ -9,6 +9,9 @@
 # debpkg Changelog
 
 ## [Unreleased]
+- Bump the compat range for IDE to support 2022.1
+- Internal/Chore: Update build time dependency on `gradle-intellij-plugin`.
+- Internal/Chore: Update the CI dependency on `actions/checkout`.
 
 ## [0.0.14]
 ### Added
@@ -27,7 +30,7 @@
 - Field name suggestions now exclude fields already present in the paragraph.  Note that generally only fields
   present "above" the cursor are considered a part of the paragraph.
 - Renaming Source package now also updates the source name in the latest UNRELEASED changelog entry as well.
-- Chore: Bump snakeyaml dependency to 1.29 and action/cache CI dependency to 2.1.7. 
+- Chore: Bump snakeyaml dependency to 1.29 and action/cache CI dependency to 2.1.7.
 
 ### Fixed
 - Disable "Rename" refactor option for "fake" references (e.g., known fields and values) where it does not
