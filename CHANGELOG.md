@@ -11,7 +11,7 @@
 ## [Unreleased]
 - Bump the compat range for IDE to support 2022.1
 - Internal/Chore: Update build time dependency on `gradle-intellij-plugin`.
-- Internal/Chore: Update the CI dependency on `actions/checkout`.
+- Internal/Chore: Update the CI dependency on `actions/checkout`, `actions/cache`, `actions/setup-java`, and `actions/upload-artifact`.
 
 ## [0.0.14]
 ### Added
