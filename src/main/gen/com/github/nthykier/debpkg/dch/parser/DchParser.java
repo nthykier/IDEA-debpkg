@@ -71,9 +71,7 @@ public class DchParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // version_line changelog_line+ signoff {
-  // //  recoverWhile=recover_property
-  // }
+  // version_line changelog_line+ signoff
   public static boolean changelog_entry(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "changelog_entry")) return false;
     if (!nextTokenIs(b, SOURCE_NAME)) return false;
@@ -82,7 +80,6 @@ public class DchParser implements PsiParser, LightPsiParser {
     r = version_line(b, l + 1);
     r = r && changelog_entry_1(b, l + 1);
     r = r && signoff(b, l + 1);
-    r = r && changelog_entry_3(b, l + 1);
     exit_section_(b, m, CHANGELOG_ENTRY, r);
     return r;
   }
@@ -100,13 +97,6 @@ public class DchParser implements PsiParser, LightPsiParser {
     }
     exit_section_(b, m, null, r);
     return r;
-  }
-
-  // {
-  // //  recoverWhile=recover_property
-  // }
-  private static boolean changelog_entry_3(PsiBuilder b, int l) {
-    return true;
   }
 
   /* ********************************************************** */
@@ -285,14 +275,28 @@ public class DchParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // PARANTHESES_OPEN VERSION PARANTHESES_CLOSE
+  // VERSION_TOKEN
+  public static boolean version(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "version")) return false;
+    if (!nextTokenIs(b, VERSION_TOKEN)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, VERSION_TOKEN);
+    exit_section_(b, m, VERSION, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // PARANTHESES_OPEN version PARANTHESES_CLOSE
   static boolean version_group(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "version_group")) return false;
     if (!nextTokenIs(b, PARANTHESES_OPEN)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeTokens(b, 1, PARANTHESES_OPEN, VERSION, PARANTHESES_CLOSE);
+    r = consumeToken(b, PARANTHESES_OPEN);
     p = r; // pin = 1
+    r = r && report_error_(b, version(b, l + 1));
+    r = p && consumeToken(b, PARANTHESES_CLOSE) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }

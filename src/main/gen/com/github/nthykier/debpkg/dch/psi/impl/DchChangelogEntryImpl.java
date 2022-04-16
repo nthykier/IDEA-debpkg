@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.nthykier.debpkg.dch.psi.DchTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.dch.psi.*;
+import com.intellij.navigation.ItemPresentation;
 
 public class DchChangelogEntryImpl extends ASTWrapperPsiElement implements DchChangelogEntry {
 
@@ -43,6 +44,26 @@ public class DchChangelogEntryImpl extends ASTWrapperPsiElement implements DchCh
   @NotNull
   public DchVersionLine getVersionLine() {
     return findNotNullChildByClass(DchVersionLine.class);
+  }
+
+  @Override
+  public boolean isFirstChangelogEntry() {
+    return DchPsiImplUtil.isFirstChangelogEntry(this);
+  }
+
+  @Override
+  public boolean isUnreleasedEntry() {
+    return DchPsiImplUtil.isUnreleasedEntry(this);
+  }
+
+  @Override
+  public ItemPresentation getPresentation() {
+    return DchPsiImplUtil.getPresentation(this);
+  }
+
+  @Override
+  public DchChangelogEntry getFirstEntry() {
+    return DchPsiImplUtil.getFirstEntry(this);
   }
 
 }

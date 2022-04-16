@@ -579,7 +579,7 @@ public class DchLexer implements FlexLexer {
             // fall through
           case 26: break;
           case 5: 
-            { return DchTypes.VERSION;
+            { return DchTypes.VERSION_TOKEN;
             } 
             // fall through
           case 27: break;

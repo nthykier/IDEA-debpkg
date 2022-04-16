@@ -21,6 +21,8 @@ commonly used formats in Debian packaging.
  * Bundled spelling dictionary with common Debian package related terms and jargon to avoid some
    false-positive spelling mistakes.
  * Debian and Ubuntu bug numbers in `Closes` and http/https addresses are linkified.
+ * A structure view providing a quick nagivation overview for indiviual versions.
+   (<kbd>View</kbd> > <kbd>Tool Windows</kbd> > <kbd>Structure</kbd>)
 
 ### debian/control
 

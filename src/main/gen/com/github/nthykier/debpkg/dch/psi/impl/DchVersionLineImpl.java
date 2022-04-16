@@ -39,4 +39,10 @@ public class DchVersionLineImpl extends ASTWrapperPsiElement implements DchVersi
     return findNotNullChildByClass(DchSource.class);
   }
 
+  @Override
+  @Nullable
+  public DchVersion getVersion() {
+    return findChildByClass(DchVersion.class);
+  }
+
 }

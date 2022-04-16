@@ -19,6 +19,8 @@
 dchFile ::= changelog_entry+
 
 changelog_entry ::= version_line changelog_line+ signoff {
+  methods=[isFirstChangelogEntry isUnreleasedEntry getPresentation getFirstEntry]
+  implements=["com.intellij.psi.NavigatablePsiElement"]
 //  recoverWhile=recover_property
 }
 
@@ -26,9 +28,11 @@ version_line ::= source version_group distribution+ SEMI_COLON KEYVALUE_PAIR+ {
   recoverWhile=recover_top_level
 }
 
-private version_group ::= PARANTHESES_OPEN VERSION PARANTHESES_CLOSE {
+private version_group ::= PARANTHESES_OPEN version PARANTHESES_CLOSE {
   pin=1
 }
+
+version ::= VERSION_TOKEN
 
 source ::= SOURCE_NAME {
   methods=[getReference]

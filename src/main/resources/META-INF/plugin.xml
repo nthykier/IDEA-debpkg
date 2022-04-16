@@ -154,5 +154,7 @@
         />
         <lang.elementManipulator forClass="com.github.nthykier.debpkg.dch.psi.DchSource"
                                  implementationClass="com.github.nthykier.debpkg.dch.DchSourceElementManipulator"/>
+        <lang.psiStructureViewFactory language="DebianChangelog"
+                                      implementationClass="com.github.nthykier.debpkg.dch.DchStructureViewFactory"/>
     </extensions>
 </idea-plugin>

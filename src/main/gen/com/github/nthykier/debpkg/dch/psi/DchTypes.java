@@ -15,6 +15,7 @@ public interface DchTypes {
   IElementType SIGNOFF = new DchElementType("SIGNOFF");
   IElementType SIGNOFF_DATE = new DchElementType("SIGNOFF_DATE");
   IElementType SOURCE = new DchElementType("SOURCE");
+  IElementType VERSION = new DchElementType("VERSION");
   IElementType VERSION_LINE = new DchElementType("VERSION_LINE");
 
   IElementType CHANGE_BULLET_POINT = new DchTokenType("CHANGE_BULLET_POINT");
@@ -33,7 +34,7 @@ public interface DchTypes {
   IElementType SIGNOFF_DATE_TOKEN = new DchTokenType("SIGNOFF_DATE_TOKEN");
   IElementType SIGNOFF_STARTER = new DchTokenType("SIGNOFF_STARTER");
   IElementType SOURCE_NAME = new DchTokenType("SOURCE_NAME");
-  IElementType VERSION = new DchTokenType("VERSION");
+  IElementType VERSION_TOKEN = new DchTokenType("VERSION_TOKEN");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -58,6 +59,9 @@ public interface DchTypes {
       }
       else if (type == SOURCE) {
         return new DchSourceImpl(node);
+      }
+      else if (type == VERSION) {
+        return new DchVersionImpl(node);
       }
       else if (type == VERSION_LINE) {
         return new DchVersionLineImpl(node);

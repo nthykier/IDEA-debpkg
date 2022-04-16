@@ -10,27 +10,21 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.nthykier.debpkg.dch.psi.DchTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.dch.psi.*;
-import com.intellij.psi.PsiReference;
 
-public class DchSourceImpl extends ASTWrapperPsiElement implements DchSource {
+public class DchVersionImpl extends ASTWrapperPsiElement implements DchVersion {
 
-  public DchSourceImpl(@NotNull ASTNode node) {
+  public DchVersionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull DchVisitor visitor) {
-    visitor.visitSource(this);
+    visitor.visitVersion(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof DchVisitor) accept((DchVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  public @Nullable PsiReference getReference() {
-    return DchPsiImplUtil.getReference(this);
   }
 
 }

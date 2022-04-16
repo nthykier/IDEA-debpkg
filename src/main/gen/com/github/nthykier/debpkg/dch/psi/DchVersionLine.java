@@ -13,4 +13,7 @@ public interface DchVersionLine extends PsiElement {
   @NotNull
   DchSource getSource();
 
+  @Nullable
+  DchVersion getVersion();
+
 }

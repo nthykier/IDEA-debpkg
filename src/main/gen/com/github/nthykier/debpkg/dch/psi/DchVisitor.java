@@ -5,6 +5,7 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.HintedReferenceHost;
+import com.intellij.psi.NavigatablePsiElement;
 
 public class DchVisitor extends PsiElementVisitor {
 
@@ -13,7 +14,7 @@ public class DchVisitor extends PsiElementVisitor {
   }
 
   public void visitChangelogEntry(@NotNull DchChangelogEntry o) {
-    visitPsiElement(o);
+    visitNavigatablePsiElement(o);
   }
 
   public void visitChangelogLine(@NotNull DchChangelogLine o) {
@@ -36,6 +37,10 @@ public class DchVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitVersion(@NotNull DchVersion o) {
+    visitPsiElement(o);
+  }
+
   public void visitVersionLine(@NotNull DchVersionLine o) {
     visitPsiElement(o);
   }
@@ -45,6 +50,10 @@ public class DchVisitor extends PsiElementVisitor {
   }
 
   public void visitHintedReferenceHost(@NotNull HintedReferenceHost o) {
+    visitElement(o);
+  }
+
+  public void visitNavigatablePsiElement(@NotNull NavigatablePsiElement o) {
     visitElement(o);
   }
 

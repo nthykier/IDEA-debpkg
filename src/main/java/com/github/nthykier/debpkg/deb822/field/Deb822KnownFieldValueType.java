@@ -99,7 +99,7 @@ public enum Deb822KnownFieldValueType {
     }
 
     private static @NotNull List<List<ASTNode>> partitionList(@NotNull List<ASTNode> values,
-                                                              @NotNull Predicate<ASTNode> seperator) {
+                                                              @NotNull Predicate<ASTNode> separator) {
         List<List<ASTNode>> result = new ArrayList<>();
         List<ASTNode> currentValue = null;
         for (ASTNode e : values) {
@@ -112,7 +112,7 @@ public enum Deb822KnownFieldValueType {
                 }
                 currentValue = new ArrayList<>();
             }
-            if (seperator.test(e)) {
+            if (separator.test(e)) {
                 result.add(trimList(currentValue, Deb822KnownFieldValueTypeUtil.IS_WHITESPACE));
                 currentValue = null;
             } else {

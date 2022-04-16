@@ -42,7 +42,7 @@ DASH=[\-]
 
 <ENTRY_STARTER_EXPECTING_VERSION>{
 [(]                                              { return DchTypes.PARANTHESES_OPEN; }
-{VERSION}                                        { return DchTypes.VERSION; }
+{VERSION}                                        { return DchTypes.VERSION_TOKEN; }
 [)]                                              { yybegin(ENTRY_STARTER_EXPECTING_DISTS); return DchTypes.PARANTHESES_CLOSE; }
 {SPACE_CHAR}+                                    { return TokenType.WHITE_SPACE; }
 }
