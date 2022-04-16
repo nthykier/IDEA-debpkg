@@ -36,7 +36,7 @@ public class DchLexerTest extends TestCase {
         DchLexer lexer = new DchLexer(null);
         List<IElementType> expected = Arrays.asList(
                 /* Initial line */
-                DchTypes.SOURCE_NAME, DchTypes.PARANTHESES_OPEN, DchTypes.VERSION, DchTypes.PARANTHESES_CLOSE,
+                DchTypes.SOURCE_NAME, DchTypes.PARANTHESES_OPEN, DchTypes.VERSION_TOKEN, DchTypes.PARANTHESES_CLOSE,
                 /* Continued */ DchTypes.DISTRIBUTION_NAME, DchTypes.SEMI_COLON, DchTypes.KEYVALUE_PAIR,
                 /* Changes */
                 DchTypes.CHANGE_RESPONSIBLE,
@@ -49,7 +49,7 @@ public class DchLexerTest extends TestCase {
                 /* Continued */ DchTypes.LESS_THAN, DchTypes.MAINTAINER_EMAIL, DchTypes.GREATER_THAN,
                 /* Continued */ DchTypes.DOUBLE_SPACE, DchTypes.SIGNOFF_DATE_TOKEN,
                 /* Initial line of second entry */
-                DchTypes.SOURCE_NAME, DchTypes.PARANTHESES_OPEN, DchTypes.VERSION, DchTypes.PARANTHESES_CLOSE,
+                DchTypes.SOURCE_NAME, DchTypes.PARANTHESES_OPEN, DchTypes.VERSION_TOKEN, DchTypes.PARANTHESES_CLOSE,
                 /* Continued */ DchTypes.DISTRIBUTION_NAME, DchTypes.SEMI_COLON, DchTypes.KEYVALUE_PAIR,
                 /* Changes */
                 DchTypes.CHANGE_BULLET_POINT, DchTypes.CHANGE_DETAILS, DchTypes.CHANGE_DETAILS,
