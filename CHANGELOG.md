@@ -9,6 +9,8 @@
 # debpkg Changelog
 
 ## [Unreleased]
+
+## [0.0.15]
 ### Added
 - Structure view for changelog files to provide an overview of the versions.
 
