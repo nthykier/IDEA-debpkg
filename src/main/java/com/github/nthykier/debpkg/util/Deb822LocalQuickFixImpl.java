@@ -1,6 +1,8 @@
 package com.github.nthykier.debpkg.util;
 
+import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,11 +13,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.BiConsumer;
 
 @RequiredArgsConstructor(access = AccessLevel.MODULE)
-public class Deb822LocalQuickFixImpl implements Deb822LocalQuickFix {
+public class Deb822LocalQuickFixImpl implements LocalQuickFix {
 
+
+    @IntentionFamilyName
     @NonNull
     @Getter
-    private final String baseName;
+    private final String familyName;
+
     @NonNull
     private final BiConsumer<Project, ProblemDescriptor> fixCode;
 

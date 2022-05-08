@@ -54,8 +54,9 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         arch = archValueParts.getText().trim();
         multiarchValue = multiarchValueParts.getText().trim();
         if (arch.equals("all") && multiarchValue.equals("same")) {
-            Function<String, Deb822TypeSafeLocalQuickFix<Deb822ValueParts>> quickfixer =
+            Deb822TypeSafeLocalQuickFix<Deb822ValueParts> quickfixer =
                     AnnotatorUtil.replacementQuickFixer(
+                            Deb822Bundle.message("deb822.files.quickfix.fields.arch-all-multi-arch-same.name"),
                             (Project p) -> Deb822ElementFactory.createValuePartsFromText(p, "Multi-Arch: foreign")
                     );
 
@@ -142,7 +143,10 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
                 AnnotatorUtil.createAnnotationWithQuickFix(
                         holder,
                         HighlightSeverity.WARNING,
-                        AnnotatorUtil.elementRemovalQuickfixer(Deb822FieldValuePair.class),
+                        AnnotatorUtil.elementRemovalQuickfixer(
+                                Deb822Bundle.message("deb822.files.quickfix.fields.field-is-unnecessary-when-value-is-default.name"),
+                                Deb822FieldValuePair.class
+                        ),
                         "field-is-unnecessary-when-value-is-default",
                         pair,
                         ProblemHighlightType.WARNING,
@@ -189,8 +193,9 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
                             .create();
                 }
                 if (field.getCanonicalFieldName().equals("Priority") && value.equals("extra")) {
-                    Function<String, Deb822TypeSafeLocalQuickFix<Deb822ValueParts>> quickfixer =
+                    Deb822TypeSafeLocalQuickFix<Deb822ValueParts> quickfixer =
                             AnnotatorUtil.replacementQuickFixer(
+                                    Deb822Bundle.message("deb822.files.quickfix.fields.priority-extra-is-obsolete.name"),
                                     (Project p) -> Deb822ElementFactory.createValuePartsFromText(p, "Priority: optional")
                             );
 

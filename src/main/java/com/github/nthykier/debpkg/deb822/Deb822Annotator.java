@@ -7,7 +7,6 @@ import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822HangingContValue;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
-import com.github.nthykier.debpkg.util.Deb822ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
@@ -56,7 +55,10 @@ public class Deb822Annotator implements Annotator, DumbAware {
                 AnnotatorUtil.createAnnotationWithQuickFix(
                         holder,
                         HighlightSeverity.ERROR,
-                        AnnotatorUtil.elementRemovalQuickfixer(Deb822FieldValuePair.class),
+                        AnnotatorUtil.elementRemovalQuickfixer(
+                                Deb822Bundle.message("deb822.files.quickfix.fields.field-does-not-belong-in-paragraph.name"),
+                                Deb822FieldValuePair.class
+                        ),
                         "field-does-not-belong-in-paragraph",
                         pair,
                         ProblemHighlightType.ERROR,

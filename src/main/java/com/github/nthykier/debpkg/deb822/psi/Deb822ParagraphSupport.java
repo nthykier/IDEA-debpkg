@@ -28,8 +28,8 @@ public interface Deb822ParagraphSupport extends PsiElement, PsiNameIdentifierOwn
    * In case of errors, where the paragraph have duplicate fields (which is not permitted
    * in deb822 but the parser survives it), the first field is used.
    *
-   * This method will also handle stripping of "X-" (and similar prefixes) if this is a
-   * debian/control file.
+   * This method will also handle stripping of "X-" (and similar prefixes) of the field name
+   * if this is a debian/control file.
    *
    * @param fieldName Name of the field to look up.  The method handles lower-casing as necessary.
    * @return The Deb822FieldValuePair with the field of this name.

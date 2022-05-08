@@ -3,21 +3,18 @@ package com.github.nthykier.debpkg.deb822.inspections;
 import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
-import com.github.nthykier.debpkg.deb822.psi.*;
-import com.github.nthykier.debpkg.util.AnnotatorUtil;
+import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
+import com.github.nthykier.debpkg.deb822.psi.Deb822File;
+import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Visitor;
 import com.intellij.codeInspection.*;
-import com.intellij.codeInspection.util.InspectionMessage;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Function;
 
 public class DCtrlRedundantComponentInSectionInspection extends LocalInspectionTool {
 

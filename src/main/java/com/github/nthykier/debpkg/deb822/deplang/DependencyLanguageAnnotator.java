@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -189,8 +188,9 @@ public class DependencyLanguageAnnotator implements Annotator {
                     .range(operatorToken)
                     .create();
             } else {
-                Function<String, Deb822TypeSafeLocalQuickFix<DepLangVersionOperator>> quickfixer =
+                Deb822TypeSafeLocalQuickFix<DepLangVersionOperator> quickfixer =
                         AnnotatorUtil.replacementQuickFixer(
+                                Deb822Bundle.message("deb822.files.quickfix.fields.incorrect-version-operator-in-dependency-with-known-replacement.name"),
                                 (Project p) -> DepLangElementFactory.createVersionPart(p, "debhelper (" + replacement + " 1.0)").getVersionOperator()
                         );
 

@@ -3,11 +3,15 @@ package com.github.nthykier.debpkg.util;
 import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
-import com.github.nthykier.debpkg.deb822.psi.*;
+import com.github.nthykier.debpkg.deb822.psi.Deb822ElementFactory;
+import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
+import com.github.nthykier.debpkg.deb822.psi.Deb822HangingContValue;
 import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
+import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
+import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.HighlightSeverity;
@@ -22,19 +26,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class AnnotatorUtil {
 
-    private static final Deb822LocalQuickFix INSERT_SPACE_DOT_CONTINUATION_LINE_FIXER = incorrectContinuationLineFixer(
-            "whitespace-only-continuation-line-insert-dotspace",
+    private static final LocalQuickFix INSERT_SPACE_DOT_CONTINUATION_LINE_FIXER = incorrectContinuationLineFixer(
+            Deb822Bundle.message("deb822.files.quickfix.fields.whitespace-only-continuation-line-insert-dotspace.name"),
             " .\n "
     );
-    private static final Deb822LocalQuickFix REMOVE_INCORRECT_CONTINUATION_LINE_FIXER = incorrectContinuationLineFixer(
-            "whitespace-only-continuation-line-remove",
+    private static final LocalQuickFix REMOVE_INCORRECT_CONTINUATION_LINE_FIXER = incorrectContinuationLineFixer(
+            Deb822Bundle.message("deb822.files.quickfix.fields.whitespace-only-continuation-line-remove.name"),
             " "
     );
 
@@ -44,14 +47,20 @@ public class AnnotatorUtil {
     public static <T extends PsiElement> void createAnnotationWithQuickFix(
             @NotNull AnnotationHolder annoHolder,
             @NotNull HighlightSeverity severity,
-            @NotNull Function<String, Deb822TypeSafeLocalQuickFix<T>> quickfixer,
+            @NotNull Deb822TypeSafeLocalQuickFix<T> quickFix,
             @NotNull String baseName,
             @NotNull T elementToFix,
             @NotNull ProblemHighlightType highlightType,
             Object... params
     ) {
-        LocalQuickFix quickFix = quickfixer.apply(baseName);
-        ProblemDescriptor problemDescriptor = new Deb822ProblemDescriptor(quickFix, baseName, elementToFix, highlightType);
+        InspectionManager inspectionManager = InspectionManager.getInstance(elementToFix.getProject());
+        ProblemDescriptor problemDescriptor = inspectionManager.createProblemDescriptor(
+                elementToFix,
+                Deb822Bundle.message("deb822.files.quickfix.fields."  + baseName +".description"),
+                quickFix,
+                highlightType,
+                true
+        );
         annoHolder.newAnnotation(severity, getAnnotationText(baseName, params))
                 .range(elementToFix)
                 .newLocalQuickFix(quickFix, problemDescriptor).registerFix()
@@ -61,17 +70,25 @@ public class AnnotatorUtil {
     public static void createAnnotationWithQuickFixWithoutTypeSafety(
             @NotNull AnnotationHolder annoHolder,
             @NotNull HighlightSeverity severity,
-            @NotNull Function<String, Deb822LocalQuickFix> quickfixer,
+            @NotNull LocalQuickFix quickFix,
             @NotNull String baseName,
             @NotNull PsiElement elementToFix,
             @Nullable TextRange affectedRange,
             @NotNull ProblemHighlightType highlightType,
             Object... params
     ) {
-        LocalQuickFix quickFix = quickfixer.apply(baseName);
-        ProblemDescriptor problemDescriptor = new Deb822ProblemDescriptor(quickFix, baseName, elementToFix, highlightType);
+        InspectionManager inspectionManager = InspectionManager.getInstance(elementToFix.getProject());
+        TextRange range = affectedRange == null ? elementToFix.getTextRange() : affectedRange;
+        ProblemDescriptor problemDescriptor = inspectionManager.createProblemDescriptor(
+                elementToFix,
+                range,
+                Deb822Bundle.message("deb822.files.quickfix.fields."  + baseName +".description"),
+                highlightType,
+                true,
+                quickFix
+        );
         annoHolder.newAnnotation(severity, getAnnotationText(baseName, params))
-                .range(affectedRange == null ? elementToFix.getTextRange() : affectedRange)
+                .range(range)
                 .newLocalQuickFix(quickFix, problemDescriptor).registerFix()
                 .create();
     }
@@ -85,11 +102,13 @@ public class AnnotatorUtil {
         LocalQuickFix[] fixes = CONT_LINE_FIXES_REMOVE_ONLY;
         ProblemDescriptor problemDescriptor;
         AnnotationBuilder annotationBuilder;
+        InspectionManager inspectionManager = InspectionManager.getInstance(elementToFix.getProject());
         final String basename = "whitespace-only-continuation-line";
+        final String problemDescription = Deb822Bundle.message("deb822.files.quickfix.fields.whitespace-only-continuation-line.description");
         if (knownField == null || knownField.getFieldValueType() == Deb822KnownFieldValueType.FREE_TEXT_VALUE) {
             fixes = CONT_LINE_FIXES_ALL;
         }
-        problemDescriptor = new Deb822ProblemDescriptor(fixes, basename, elementToFix, ProblemHighlightType.ERROR);
+        problemDescriptor = inspectionManager.createProblemDescriptor(elementToFix, problemDescription, true, fixes, ProblemHighlightType.ERROR);
         annotationBuilder = annoHolder.newAnnotation(HighlightSeverity.ERROR, getAnnotationText(basename))
                 .range(elementToFix);
         for (LocalQuickFix localQuickFix : fixes) {
@@ -101,13 +120,13 @@ public class AnnotatorUtil {
     }
 
     @NotNull
-    public static <T extends PsiElement> Function<String, Deb822TypeSafeLocalQuickFix<T>> replacementQuickFixer(final Function<Project, T> factoryMethod) {
-        return (String s) -> psiReplacement(s, factoryMethod);
+    public static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> replacementQuickFixer(@IntentionFamilyName  String familyName, final Function<Project, T> factoryMethod) {
+        return psiReplacement(familyName, factoryMethod);
     }
 
     @NotNull
-    public static <T extends PsiElement> Function<String, Deb822TypeSafeLocalQuickFix<T>> elementRemovalQuickfixer(final Class<T> clazz) {
-        return (String s) -> deleteFieldQuickFix(s, clazz);
+    public static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> elementRemovalQuickfixer(@IntentionFamilyName String familyName, final Class<T> clazz) {
+        return deleteFieldQuickFix(familyName, clazz);
     }
 
     @NotNull
@@ -115,37 +134,36 @@ public class AnnotatorUtil {
         return new Deb822InsertFieldQuickFix(content, Arrays.asList(insertRelativeTo));
     }
 
-    private static Deb822LocalQuickFix incorrectContinuationLineFixer(String baseName, String replacementText) {
-        return fieldValueReplacementFix((problemDescriptor, fieldValuePair, builder) -> {
+    private static LocalQuickFix incorrectContinuationLineFixer(@IntentionFamilyName String familyName, String replacementText) {
+        return tweakFieldWithValueReplacementFix(familyName, (problemDescriptor, fieldValuePair, builder) -> {
             PsiElement hangingContElement = problemDescriptor.getPsiElement();
             TextRange rangeOfElement = hangingContElement.getTextRange();
             int offset = rangeOfElement.getStartOffset() - fieldValuePair.getTextOffset();
             builder.replace(offset, offset + rangeOfElement.getLength(), replacementText);
-        }).apply(baseName);
+        });
     }
 
-    public static Function<String, Deb822LocalQuickFix> fieldValueReplacementFix(TriConsumer<ProblemDescriptor, Deb822FieldValuePair, StringBuilder> contextReplacer) {
-        return baseName ->
-                Deb822LocalQuickFixImpl.of(baseName, (project, problemDescriptor) -> {
-                    PsiElement problemElement = problemDescriptor.getPsiElement();
-                    Deb822FieldValuePair fieldValuePair;
-                    StringBuilder builder = new StringBuilder();
-                    ASTNodeStringConverter stringConverter = new ASTNodeStringConverter(builder);
-                    Deb822FieldValuePair replacement;
-                    if (problemElement instanceof Deb822FieldValuePair) {
-                        fieldValuePair = (Deb822FieldValuePair)problemElement;
-                    } else {
-                        fieldValuePair = Deb822PsiImplUtil.getAncestorOfType(problemElement, Deb822FieldValuePair.class);
-                        assert fieldValuePair != null;
-                    }
+    public static LocalQuickFix tweakFieldWithValueReplacementFix(@IntentionFamilyName String familyName, TriConsumer<ProblemDescriptor, Deb822FieldValuePair, StringBuilder> contextReplacer) {
+        return Deb822LocalQuickFixImpl.of(familyName, (project, problemDescriptor) -> {
+            PsiElement problemElement = problemDescriptor.getPsiElement();
+            Deb822FieldValuePair fieldValuePair;
+            StringBuilder builder = new StringBuilder();
+            ASTNodeStringConverter stringConverter = new ASTNodeStringConverter(builder);
+            Deb822FieldValuePair replacement;
+            if (problemElement instanceof Deb822FieldValuePair) {
+                fieldValuePair = (Deb822FieldValuePair)problemElement;
+            } else {
+                fieldValuePair = Deb822PsiImplUtil.getAncestorOfType(problemElement, Deb822FieldValuePair.class);
+                assert fieldValuePair != null;
+            }
 
-                    stringConverter.readTextFromNode(fieldValuePair.getNode());
+            stringConverter.readTextFromNode(fieldValuePair.getNode());
 
-                    contextReplacer.accept(problemDescriptor, fieldValuePair, builder);
+            contextReplacer.accept(problemDescriptor, fieldValuePair, builder);
 
-                    replacement = Deb822ElementFactory.createFieldValuePairFromText(project, builder.toString());
-                    fieldValuePair.replace(replacement);
-                });
+            replacement = Deb822ElementFactory.createFieldValuePairFromText(project, builder.toString());
+            fieldValuePair.replace(replacement);
+        });
     }
 
     @NotNull
@@ -173,8 +191,9 @@ public class AnnotatorUtil {
     @RequiredArgsConstructor(staticName = "of")
     public static class GenericTypeSafeQuickfix<T extends PsiElement> implements Deb822TypeSafeLocalQuickFix<T> {
 
+        @IntentionFamilyName
         @Getter
-        private final String baseName;
+        private final String familyName;
         private final Function<Project, T> replacementGenerator;
         private final TriConsumer<Project, ProblemDescriptor, T> fixerWithReplacement;
 
@@ -194,8 +213,8 @@ public class AnnotatorUtil {
         }
     }
 
-    private static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> psiReplacement(String baseName, Function<Project, T> replacementGenerator) {
-        return GenericTypeSafeQuickfix.of(baseName, replacementGenerator, (p, descriptor, replacement) -> {
+    private static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> psiReplacement(@IntentionFamilyName String familyName, Function<Project, T> replacementGenerator) {
+        return GenericTypeSafeQuickfix.of(familyName, replacementGenerator, (p, descriptor, replacement) -> {
             PsiElement originalElement = descriptor.getPsiElement();
             originalElement.replace(replacement);
         });

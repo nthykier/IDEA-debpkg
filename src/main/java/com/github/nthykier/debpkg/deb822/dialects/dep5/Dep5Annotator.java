@@ -231,7 +231,10 @@ public class Dep5Annotator implements Annotator {
             AnnotatorUtil.createAnnotationWithQuickFixWithoutTypeSafety(
                     holder,
                     HighlightSeverity.WARNING,
-                    AnnotatorUtil.fieldValueReplacementFix(contextReplacer),
+                    AnnotatorUtil.tweakFieldWithValueReplacementFix(
+                            Deb822Bundle.message("deb822.files.quickfix.fields.paths-in-files-field-must-match-files.name"),
+                            contextReplacer
+                    ),
                     "paths-in-files-field-must-match-files",
                     affectedField,
                     fullRange,

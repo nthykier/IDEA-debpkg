@@ -55,14 +55,14 @@ public class DchInvalidSignoffDateInspection extends LocalInspectionTool {
     }
 
     private void checkSignoffDate(@NotNull final ProblemsHolder holder, @NotNull DchSignoffDate dchSignoffDate, boolean isOnTheFly) {
-        String text = dchSignoffDate.getText();
-        LocalQuickFix[] quickFix;
+        LocalQuickFix quickFix = null;
         String reducedDate;
         ZonedDateTime parsedDate = null;
         ZonedDateTime actualDate = dchSignoffDate.getSignoffDate();
         if (actualDate != null) {
             return;
         }
+        String text = dchSignoffDate.getText();
         // We ignore the day name as people often get it wrong.
         reducedDate = STRIP_DAY_NAME.matcher(text).replaceFirst("").trim();
         for (DateTimeFormatter parseFormat : LENIENT_DATE_FORMAT_PATTERNS) {
@@ -74,24 +74,20 @@ public class DchInvalidSignoffDateInspection extends LocalInspectionTool {
         }
         if (parsedDate != null) {
             String correctlyFormatted = parsedDate.format(PREFERRED_DATE_FORMAT);
-            Function<String, ? extends LocalQuickFix> quickFixFunction = AnnotatorUtil.replacementQuickFixer(project -> DchElementFactory.createSignoffDate(project, correctlyFormatted));
-            quickFix = new LocalQuickFix[]{
-                quickFixFunction.apply("invalid-signoff-date-format")
-            };
-        } else {
-            quickFix = LocalQuickFix.EMPTY_ARRAY;
+            quickFix = AnnotatorUtil.replacementQuickFixer(
+                    Deb822Bundle.message("deb822.files.quickfix.fields.invalid-signoff-date-format.name"),
+                    project -> DchElementFactory.createSignoffDate(project, correctlyFormatted)
+            );
         }
 
-        holder.registerProblem(new ProblemDescriptorBase(
-                dchSignoffDate,
+        InspectionManager inspectionManager = InspectionManager.getInstance(dchSignoffDate.getProject());
+        ProblemDescriptor descriptor = inspectionManager.createProblemDescriptor(
                 dchSignoffDate,
                 Deb822Bundle.message("dch.files.inspection.invalid-signoff-date-format"),
                 quickFix,
                 ProblemHighlightType.ERROR,
-                false,
-                TextRange.from(0, text.length()),
-                true,
                 isOnTheFly
-        ));
+        );
+        holder.registerProblem(descriptor);
     }
 }

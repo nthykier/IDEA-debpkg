@@ -78,7 +78,10 @@ public class DCtrlFieldDuplicatesSourceParagraphInspection extends LocalInspecti
             binaryValue = getValueFromField(binaryValuePair, stringConverter);
             if (sourceValue.equals(binaryValue)) {
                 LocalQuickFix[] fixes = new LocalQuickFix[] {
-                        AnnotatorUtil.elementRemovalQuickfixer(Deb822FieldValuePair.class).apply("dctrl-field-duplicates-source-paragraph-remove-field")
+                        AnnotatorUtil.elementRemovalQuickfixer(
+                                Deb822Bundle.message("deb822.files.quickfix.fields.dctrl-field-duplicates-source-paragraph-remove-field.name"),
+                                Deb822FieldValuePair.class
+                        )
                 };
                 holder.registerProblem(binaryValuePair,
                         Deb822Bundle.message("deb822.files.suggested-field.dctrl-field-duplicates-source-paragraph"),
