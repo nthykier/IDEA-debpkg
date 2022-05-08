@@ -12,6 +12,7 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.util.IntentionFamilyName;
+import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.HighlightSeverity;
@@ -125,8 +126,13 @@ public class AnnotatorUtil {
     }
 
     @NotNull
-    public static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> elementRemovalQuickfixer(@IntentionFamilyName String familyName, final Class<T> clazz) {
-        return deleteFieldQuickFix(familyName, clazz);
+    public static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> elementRemovalQuickfixer(@IntentionName String name, final Class<T> clazz) {
+        return elementRemovalQuickfixer(name, name, clazz);
+    }
+
+    @NotNull
+    public static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> elementRemovalQuickfixer(@IntentionName String name, @IntentionFamilyName String familyName, final Class<T> clazz) {
+        return deleteFieldQuickFix(name, familyName, clazz);
     }
 
     @NotNull
@@ -202,13 +208,13 @@ public class AnnotatorUtil {
     }
 
     public static class Deb822TypeSafeLocalQuickFixImpl<T extends PsiElement> extends Deb822LocalQuickFixImpl implements Deb822TypeSafeLocalQuickFix<T> {
-        protected Deb822TypeSafeLocalQuickFixImpl(String baseName, BiConsumer<Project, ProblemDescriptor> fix) {
-           super(baseName, fix);
+        protected Deb822TypeSafeLocalQuickFixImpl(@IntentionName String name, @IntentionFamilyName String familyName, BiConsumer<Project, ProblemDescriptor> fix) {
+           super(name, familyName, fix);
         }
     }
 
-    private static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> deleteFieldQuickFix(String baseName, Class<T> psiElementClass) {
-        return new Deb822TypeSafeLocalQuickFixImpl<>(baseName, (p, descriptor) -> {
+    private static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> deleteFieldQuickFix(@IntentionName String name, @IntentionFamilyName String familyName, Class<T> psiElementClass) {
+        return new Deb822TypeSafeLocalQuickFixImpl<>(name, familyName, (p, descriptor) -> {
             PsiElement element = descriptor.getPsiElement();
             if (! psiElementClass.isAssignableFrom(element.getClass())) {
                 throw new IncorrectOperationException("Mismatch between element type being removed vs. the element intended for removal");

@@ -93,6 +93,17 @@
                          level="WARNING"
                          implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlPackageNameImpliesDifferentArchInspection"
         />
+
+        <localInspection language="DebianControl"
+                         groupPathKey="pluginDescriptor.inspection.DebianControl.groupPath"
+                         shortName="DCtrlUsesObsoleteFieldInspection"
+                         key="deb822.files.inspection.dctrl-obsolete-field.name"
+                         groupKey="pluginDescriptor.inspection.DebianControl.groupName"
+                         enabledByDefault="true"
+                         hasStaticDescription="true"
+                         level="WARNING"
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlUsesObsoleteFieldInspection"
+        />
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
         <!-- Should have been DebianControl, but we have to work around IDEA, which uses the language of the element

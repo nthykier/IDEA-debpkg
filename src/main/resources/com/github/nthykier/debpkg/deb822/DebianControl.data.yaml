@@ -13,7 +13,7 @@ fields:
       <p>Declares the name of the source package</p>
     valueType: SINGLE_TRIVIAL_VALUE
     # Only valid for DebianControl; in other variants, it may have an optional version number appended
-    # a la "foo (1.0-1)"
+    # à la "foo (1.0-1)"
     valueValidation: /^[a-z0-9][a-z0-9.+-]+$/
     supportsSubstvars: false
 
@@ -226,6 +226,25 @@ fields:
     # Technically wrong, but existing validation rules are not sufficient.
     valueType: FREE_TEXT_VALUE
     supportsSubstvars: false
+
+  - canonicalName: "DM-Upload-Allowed"
+    valueType: SINGLE_KEYWORD
+    onlyInParagraphType: "Source"
+    description: |
+      <p><b>Obsolete</b>.  <em>This field is obsolete and can be removed.</em></p>
+
+      <p>This field was an implementation detail of how Debian Maintainer permissions in Debian originally worked but the implementation has since changed.</p>
+
+      <p>Note that "Debian Maintainer" is a form of privilege inside Debian to denote that a person has limited permissions to do unsupervised uploads of packages.
+         Not to be confused by "maintainer (of the package)", which is used to denote who is responsible for maintaining the package.
+      </p>
+      <p>For more details about the Debian Maintainer concept and how the field was used, please see
+         <a href="https://www.debian.org/vote/2007/vote_003">General Resolution: Endorse the concept of Debian Maintainers</a></p>
+    warnIfDefault: true
+    keywordList:
+      - value: "yes"
+        description: |
+          <p>When this field was used, this value indicated that the package could be uploaded by a Debian Maintainer.</p>
 
   - canonicalName: "Build-Depends"
     onlyInParagraphType: "Source"
