@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-public class DCtrlPackageNameImpliesArchAllInspection extends AbstractDctrlInspection {
+public class DCtrlPackageNameImpliesDifferentArchInspection extends AbstractDctrlInspection {
 
     private static final Heuristic[] HEURISTICS = {
             Heuristic.of("Documentation package (-doc/-docs)", p -> p.endsWith("-doc") || p.endsWith("-docs")),
@@ -51,7 +51,7 @@ public class DCtrlPackageNameImpliesArchAllInspection extends AbstractDctrlInspe
                 holder.registerProblem(new ProblemDescriptorBase(
                         architectureValueParts,
                         architectureValueParts,
-                        Deb822Bundle.message("deb822.files.inspection.dctrl-package-name-implies-arch-all"),
+                        Deb822Bundle.message("deb822.files.inspection.dctrl-package-name-implies-different-arch.description"),
                         new LocalQuickFix[]{
                                 AnnotatorUtil.replaceFieldValueReplacementFix(
                                         Deb822Bundle.message("deb822.files.quickfix.fields.set-architecture-to-all.name"),

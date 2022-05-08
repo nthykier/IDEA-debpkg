@@ -85,13 +85,13 @@
         />
         <localInspection language="DebianControl"
                          groupPathKey="pluginDescriptor.inspection.DebianControl.groupPath"
-                         shortName="DCtrlPackageNameImpliesArchAll"
-                         key="deb822.files.inspection.dctrl-package-name-implies-arch-all"
+                         shortName="DCtrlPackageNameImpliesDifferentArch"
+                         key="deb822.files.inspection.dctrl-package-name-implies-different-arch.name"
                          groupKey="pluginDescriptor.inspection.DebianControl.groupName"
                          enabledByDefault="true"
                          hasStaticDescription="true"
                          level="WARNING"
-                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlPackageNameImpliesArchAllInspection"
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlPackageNameImpliesDifferentArchInspection"
         />
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
