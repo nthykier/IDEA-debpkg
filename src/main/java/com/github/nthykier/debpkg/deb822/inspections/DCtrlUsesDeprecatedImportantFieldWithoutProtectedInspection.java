@@ -1,12 +1,9 @@
 package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
-import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
-import com.github.nthykier.debpkg.deb822.psi.Deb822File;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Visitor;
-import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -15,17 +12,10 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.github.nthykier.debpkg.util.AnnotatorUtil.fieldInsertionQuickFix;
 
-public class DCtrlUsesDeprecatedImportantFieldWithoutProtectedInspection extends LocalInspectionTool {
+public class DCtrlUsesDeprecatedImportantFieldWithoutProtectedInspection extends AbstractDctrlInspection {
 
     @NotNull
-    public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
-        /* This only makes sense for debian/control files */
-        if (holder.getFile().getLanguage() != Deb822DialectDebianControlLanguage.INSTANCE) {
-            return PsiElementVisitor.EMPTY_VISITOR;
-        }
-        if (!(holder.getFile() instanceof Deb822File)) {
-            return PsiElementVisitor.EMPTY_VISITOR;
-        }
+    public PsiElementVisitor inspectionVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
         return new Deb822Visitor() {
 
             @Override

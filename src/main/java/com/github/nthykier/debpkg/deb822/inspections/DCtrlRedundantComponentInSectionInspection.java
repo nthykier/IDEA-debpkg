@@ -1,7 +1,6 @@
 package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
-import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822File;
@@ -16,17 +15,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class DCtrlRedundantComponentInSectionInspection extends LocalInspectionTool {
+public class DCtrlRedundantComponentInSectionInspection extends AbstractDctrlInspection {
 
     @NotNull
-    public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
-        /* This only makes sense for debian/control files */
-        if (holder.getFile().getLanguage() != Deb822DialectDebianControlLanguage.INSTANCE) {
-            return PsiElementVisitor.EMPTY_VISITOR;
-        }
-        if (!(holder.getFile() instanceof Deb822File)) {
-            return PsiElementVisitor.EMPTY_VISITOR;
-        }
+    public PsiElementVisitor inspectionVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
         return new Deb822Visitor() {
             @Override
             public void visitFieldValuePair(@NotNull Deb822FieldValuePair o) {
