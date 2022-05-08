@@ -19,11 +19,13 @@ import java.util.regex.Pattern;
 
 public class DCtrlPackageNameImpliesDifferentSectionInspection extends AbstractDctrlInspection {
 
+    private static final Heuristic DEBUG_PACKAGE_HEURISTIC = Heuristic.of( "debug", endsWith("-dbg", "-dbgsym"));
+
     // Hoisted from lintian
     // Order matters - first "match" decides.
     private static final Heuristic[] HEURISTICS = {
             Heuristic.of( "doc", endsWith("-doc", "-docs")),
-            Heuristic.of( "debug", endsWith("-dbg", "-dbgsym")),
+            DEBUG_PACKAGE_HEURISTIC,
             Heuristic.of( "httpd", startsWith("libapache2-mod-", "libnginx-mod-", "lighttpd-mod")),
             Heuristic.of( "gnustep", startsWith("gnustep-")),
             Heuristic.of( "gnustep", Pattern.compile("\\.(?:framework|tool|app)(?:-common)?$")),
@@ -103,6 +105,14 @@ public class DCtrlPackageNameImpliesDifferentSectionInspection extends AbstractD
                             Deb822Bundle.message("deb822.files.quickfix.fields.set-section-to-new-value.name", newValue),
                             Deb822Bundle.message("deb822.files.quickfix.fields.set-section-to-new-value.familyName"),
                             newValue)
+            );
+        } else if (DEBUG_PACKAGE_HEURISTIC.section.equals(sectionValue) && !DEBUG_PACKAGE_HEURISTIC.packageNamePredicate.test(packageName)) {
+            // For the debug section, packages are also expected to be named -dbg/-dbgsym
+            holder.registerProblem(
+                    sectionFVPair,
+                    Deb822Bundle.message("deb822.files.inspection.dctrl-debug-section-implies-different-package-name.description"),
+                    ProblemHighlightType.WARNING,
+                    sectionFVPair.getValueParts().getTextRangeInParent()
             );
         }
     }
