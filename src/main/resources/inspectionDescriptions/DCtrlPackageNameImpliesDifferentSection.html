@@ -1,0 +1,22 @@
+<html>
+<body>
+<p>Detects packages with possibly wrong section based on the name</p>
+<p>
+    This inspection relies on common patterns in package names to detect possible inconsistencies
+    between Section field and the "guessed" architecture (based on the package name).  Examples
+    include:
+</p>
+<ul>
+    <li>Packages ending with -doc or -docs tends to be documentation packages and should have section be "doc".</li>
+    <li>Packages named "aspell-&lt;lang&gt;" (and similar) is a common naming convention for words lists to aspell and should have section "localization".</li>
+</ul>
+<p>
+    The inspection provides a quick fix to update the section to the expected value.
+</p>
+
+<!-- tooltip end -->
+<p>
+    This inspection is based on the lintian hint <b>wrong-section-according-to-package-name</b>.
+</p>
+</body>
+</html>

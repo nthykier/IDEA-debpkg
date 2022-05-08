@@ -12,6 +12,8 @@
 ### Added
 - Add inspection for possibly incorrect architecture field value based on package name.
 - Add DM-Upload-Allowed as known field and an inspection suggesting removing it as it is obsolete.
+- Add inspection for possibly incorrect section field value based on package name.  This inspection
+  matches the lintian hint wrong-section-according-to-package-name.
 
 ### Changed
 - Internal/Chore: Update the CI dependency on `actions/setup-java`.

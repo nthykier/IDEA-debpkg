@@ -150,7 +150,7 @@ public class AnnotatorUtil {
     }
 
     public static LocalQuickFix tweakFieldWithValueReplacementFix(@IntentionFamilyName String familyName, TriConsumer<ProblemDescriptor, Deb822FieldValuePair, StringBuilder> contextReplacer) {
-        return Deb822LocalQuickFixImpl.of(familyName, (project, problemDescriptor) -> {
+        return new Deb822LocalQuickFixImpl(familyName, familyName, (project, problemDescriptor) -> {
             PsiElement problemElement = problemDescriptor.getPsiElement();
             Deb822FieldValuePair fieldValuePair;
             StringBuilder builder = new StringBuilder();
@@ -172,12 +172,16 @@ public class AnnotatorUtil {
         });
     }
 
-    public static LocalQuickFix replaceFieldValueReplacementFix(@IntentionFamilyName String familyName, String newValue) {
-        return replaceFieldValueReplacementFix(familyName, newValue, false);
+    public static LocalQuickFix replaceFieldValueReplacementFix(@IntentionName String name, @IntentionFamilyName String familyName, String newValue) {
+        return replaceFieldValueReplacementFix(name, familyName, newValue, false);
     }
 
-    public static LocalQuickFix replaceFieldValueReplacementFix(@IntentionFamilyName String familyName, String newValue, boolean useValueAsIs) {
-        return Deb822LocalQuickFixImpl.of(familyName, (project, problemDescriptor) -> {
+    public static LocalQuickFix replaceFieldValueReplacementFix(@IntentionFamilyName String familyName, String newValue) {
+        return replaceFieldValueReplacementFix(familyName, familyName, newValue, false);
+    }
+
+    public static LocalQuickFix replaceFieldValueReplacementFix(@IntentionName String name, @IntentionFamilyName String familyName, String newValue, boolean useValueAsIs) {
+        return new Deb822LocalQuickFixImpl(name, familyName, (project, problemDescriptor) -> {
             PsiElement problemElement = problemDescriptor.getPsiElement();
             Deb822FieldValuePair fieldValuePair;
             Deb822FieldValuePair replacement;
