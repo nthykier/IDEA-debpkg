@@ -75,6 +75,10 @@ Notably missing features for `debian/copyright`.  The License fields are *not* v
  * Quick fix for some syntactical issues with continuation lines.
  * URLs in field values are linkified.
 
+<!--
+
+Commented out because this code/feature is not enabled.
+
 ### debian/rules (requires Makefile Language plugin) - /experimental/
 
 *Note*: The [Makefile Language plugin] is bundled with some but not all JetBrains products,
@@ -83,6 +87,8 @@ and  you may have to install it manually to activate this feature.
  * Automatically register it as a makefile using the [Makefile Language plugin].
    - Please review [Makefile Language plugin issues] for known issues if you experience any issues with
      how your `debian/rules` file is parsed.
+
+-->
 
 ## Getting started
 
