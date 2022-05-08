@@ -9,6 +9,8 @@
 # debpkg Changelog
 
 ## [Unreleased]
+### Added
+- Add inspection for possibly incorrect architecture field value based on package name.
 
 ### Changed
 - Internal/Chore: Update the CI dependency on `actions/setup-java`.

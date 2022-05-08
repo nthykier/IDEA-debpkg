@@ -166,6 +166,35 @@ public class AnnotatorUtil {
         });
     }
 
+    public static LocalQuickFix replaceFieldValueReplacementFix(@IntentionFamilyName String familyName, String newValue) {
+        return replaceFieldValueReplacementFix(familyName, newValue, false);
+    }
+
+    public static LocalQuickFix replaceFieldValueReplacementFix(@IntentionFamilyName String familyName, String newValue, boolean useValueAsIs) {
+        return Deb822LocalQuickFixImpl.of(familyName, (project, problemDescriptor) -> {
+            PsiElement problemElement = problemDescriptor.getPsiElement();
+            Deb822FieldValuePair fieldValuePair;
+            Deb822FieldValuePair replacement;
+            if (problemElement instanceof Deb822FieldValuePair) {
+                fieldValuePair = (Deb822FieldValuePair)problemElement;
+            } else {
+                fieldValuePair = Deb822PsiImplUtil.getAncestorOfType(problemElement, Deb822FieldValuePair.class);
+                assert fieldValuePair != null;
+            }
+            String replacementValue = newValue;
+            if (!useValueAsIs) {
+                if (!replacementValue.startsWith(" ")) {
+                    replacementValue = " " + replacementValue;
+                }
+                if (!replacementValue.endsWith("\n")) {
+                    replacementValue += "\n";
+                }
+            }
+            replacement = Deb822ElementFactory.createFieldValuePairFromText(project, fieldValuePair.getField().getFieldName() + ":" + replacementValue);
+            fieldValuePair.replace(replacement);
+        });
+    }
+
     @NotNull
     @Nls(capitalization = Nls.Capitalization.Sentence)
     public static String getAnnotationText(@NotNull String baseName, Object... params) {

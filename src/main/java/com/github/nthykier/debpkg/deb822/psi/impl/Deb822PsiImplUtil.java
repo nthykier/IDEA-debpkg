@@ -67,6 +67,15 @@ public class Deb822PsiImplUtil {
         return ReferenceProvidersRegistry.getReferencesFromProviders(fieldValuePair);
     }
 
+    public static @NotNull String getFieldValue(@NotNull Deb822FieldValuePair fieldValuePair) {
+        Deb822ValueParts valueParts = fieldValuePair.getValueParts();
+        if (valueParts == null) {
+            return "";
+        }
+        return valueParts.getText();
+    }
+
+
     @NotNull
     public static String getTextFromCompositeWrappingAToken(@NotNull PsiElement element,
                                                             @NotNull TokenSet tokenTypes) {

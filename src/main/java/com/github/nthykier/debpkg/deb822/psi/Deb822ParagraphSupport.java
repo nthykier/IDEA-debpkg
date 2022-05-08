@@ -38,6 +38,29 @@ public interface Deb822ParagraphSupport extends PsiElement, PsiNameIdentifierOwn
   Deb822FieldValuePair getFieldValuePair(@NotNull String fieldName);
 
   /**
+   * Convenient way of getting the value of a field by name.
+   *
+   * In case of errors, where the paragraph have duplicate fields (which is not permitted
+   * in deb822 but the parser survives it), the first field is used.
+   *
+   * If the field is absent, null is returned.
+   *
+   * This method will also handle stripping of "X-" (and similar prefixes) of the field name
+   * if this is a debian/control file.
+   *
+   * @param fieldName Name of the field to look up.  The method handles lower-casing as necessary.
+   * @return The value of the field (or null if the field is absent).
+   */
+  @Nullable
+  default String getFieldValue(@NotNull String fieldName) {
+    Deb822FieldValuePair pair = getFieldValuePair(fieldName);
+    if (pair == null) {
+      return null;
+    }
+    return pair.getFieldValue();
+  }
+
+  /**
    * Check if the paragraph is the first in the file
    *
    * @return true if this paragraph is the first paragraph in the file.

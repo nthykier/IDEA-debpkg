@@ -45,4 +45,9 @@ public class Deb822FieldValuePairImpl extends ASTWrapperPsiElement implements De
     return Deb822PsiImplUtil.getReferences(this);
   }
 
+  @Override
+  public @NotNull String getFieldValue() {
+    return Deb822PsiImplUtil.getFieldValue(this);
+  }
+
 }

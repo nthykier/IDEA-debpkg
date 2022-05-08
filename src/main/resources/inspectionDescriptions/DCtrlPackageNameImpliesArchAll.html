@@ -1,0 +1,27 @@
+<html>
+<body>
+<p>Detects packages with possibly wrong architecture based on the name</p>
+<p>
+    This inspection relies on common patterns in package names to detect possible inconsistencies
+    between Architecture field and the "guessed" architecture (based on the package name).  Examples
+    include:
+</p>
+<ul>
+    <li>Packages ending with -doc or -docs tends to be documentation packages and should be architecture independent.</li>
+    <li>Packages named "aspell-&lt;lang&gt;" (and similar) is a common naming convention for words lists to aspell and should be architecture independent.</li>
+</ul>
+<p>
+    Note that this inspection can sometimes be a hint that something else is wrong.  If you find yourself with a package that contains architecture dependent
+    binaries in a package that triggers this warning, then perhaps the naming is in correct, the contents should be split differently, or (for doc packages)
+    you should not include pre-compiled example code.
+</p>
+
+<!-- tooltip end -->
+<p>
+    The heuristics do not apply to naming conventions that have common known exceptions. As an example, packages following "lib*-perl" convention can both be
+    architecture dependent if they are implemented as an XS module (C-code). While it is "rare" compared to the number of "pure perl" modules, it is common
+    enough that this inspection does not emit warnings for that (and other programming language specific patterns).
+</p>
+
+</body>
+</html>

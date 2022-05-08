@@ -46,7 +46,7 @@ field_value_pair ::= field SEPARATOR value_parts {
   implements="com.intellij.psi.ContributedReferenceHost"
   recoverWhile=recover_property
   //methods=[getFieldName getFieldValue getName setName getNameIdentifier getPresentation]
-    methods=[getReferences]
+    methods=[getReferences getFieldValue]
 }
 
 field ::= FIELD_NAME {

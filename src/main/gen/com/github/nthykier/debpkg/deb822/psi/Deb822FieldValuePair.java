@@ -17,4 +17,6 @@ public interface Deb822FieldValuePair extends ContributedReferenceHost {
 
   @NotNull PsiReference @NotNull [] getReferences();
 
+  @NotNull String getFieldValue();
+
 }
