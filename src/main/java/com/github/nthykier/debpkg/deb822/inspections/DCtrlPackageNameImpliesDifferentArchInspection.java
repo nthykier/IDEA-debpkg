@@ -6,8 +6,6 @@ import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Visitor;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptorBase;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -15,6 +13,7 @@ import com.intellij.psi.PsiElementVisitor;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -31,43 +30,34 @@ public class DCtrlPackageNameImpliesDifferentArchInspection extends AbstractDctr
             public void visitParagraph(@NotNull Deb822Paragraph deb822Paragraph) {
                 ProgressIndicatorProvider.checkCanceled();
                 if (deb822Paragraph.classifyParagraph().equals(Deb822DialectDebianControlLanguage.PARAGRAPH_TYPE_BINARY_PACKAGE)) {
-                    checkBinaryParagraph(holder, deb822Paragraph, isOnTheFly);
+                    checkBinaryParagraph(holder, deb822Paragraph);
                 }
             }
         };
     }
 
-    private void checkBinaryParagraph(ProblemsHolder holder, Deb822Paragraph deb822Paragraph, boolean isOnTheFly) {
+    private void checkBinaryParagraph(ProblemsHolder holder, Deb822Paragraph deb822Paragraph) {
         String architectureValue = deb822Paragraph.getFieldValue("Architecture");
         if (architectureValue == null || architectureValue.equals("all")) {
             return;
         }
         String packageName = deb822Paragraph.getFieldValue("Package");
-        Deb822FieldValuePair architectureValueParts = deb822Paragraph.getFieldValuePair("Architecture");
-        assert architectureValueParts != null;
+        Deb822FieldValuePair architectureFVPair = deb822Paragraph.getFieldValuePair("Architecture");
+        assert architectureFVPair != null && architectureFVPair.getValueParts() != null;
 
-        for (Heuristic heuristic : HEURISTICS) {
-            if (heuristic.packageNamePredicate.test(packageName)) {
-                holder.registerProblem(new ProblemDescriptorBase(
-                        architectureValueParts,
-                        architectureValueParts,
+        Arrays.stream(HEURISTICS)
+                .filter(h -> h.packageNamePredicate.test(packageName))
+                .findFirst()
+                .ifPresent(matchingHeuristic -> holder.registerProblem(
+                        architectureFVPair,
                         Deb822Bundle.message("deb822.files.inspection.dctrl-package-name-implies-different-arch.description"),
-                        new LocalQuickFix[]{
-                                AnnotatorUtil.replaceFieldValueReplacementFix(
-                                        Deb822Bundle.message("deb822.files.quickfix.fields.set-architecture-to-all.name"),
-                                        "all")
-                        },
                         ProblemHighlightType.WARNING,
-                        false,
-                        null,
-                        true,
-                        isOnTheFly
+                        architectureFVPair.getValueParts().getTextRangeInParent(),
+                        AnnotatorUtil.replaceFieldValueReplacementFix(
+                                Deb822Bundle.message("deb822.files.quickfix.fields.set-architecture-to-all.name"),
+                                "all")
                 ));
-                break;
-            }
 
-
-        }
     }
 
     @Data(staticConstructor = "of")
