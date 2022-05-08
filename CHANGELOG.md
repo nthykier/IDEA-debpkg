@@ -10,6 +10,11 @@
 
 ## [Unreleased]
 
+### Changed
+- Internal/Chore: Update the CI dependency on `actions/setup-java`.
+- Internal/Chore: Bump lombok dependency to 1.18.24.
+- Internal/Chore: Rewrite how problem descriptors are managed internally.
+
 ## [0.0.15]
 ### Added
 - Structure view for changelog files to provide an overview of the versions.
