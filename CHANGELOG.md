@@ -16,6 +16,10 @@
   matches the lintian hint `wrong-section-according-to-package-name`.
 - Add `Build-Profiles` as a known field.
 
+### Fixed
+- Typo of the archive section `electronics`, which caused the plugin to mark the correct spelling as an error and
+  promote the spelling error instead.
+
 ### Changed
 - Internal/Chore: Update the CI dependency on `actions/setup-java`.
 - Internal/Chore: Bump lombok dependency to 1.18.24.
