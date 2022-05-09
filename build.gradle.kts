@@ -17,10 +17,10 @@ version = properties("pluginVersion")
 // Configure project's dependencies
 repositories {
     mavenCentral()
-    jcenter()
 }
 dependencies {
     implementation("org.yaml:snakeyaml:1.30")
+    implementation("org.apache.commons:commons-text:1.9")
 
     compileOnly("org.projectlombok:lombok:1.18.24")
     annotationProcessor("org.projectlombok:lombok:1.18.24")

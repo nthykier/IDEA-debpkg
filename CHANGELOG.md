@@ -15,6 +15,7 @@
 - Add inspection for possibly incorrect section field value based on package name.  This inspection
   matches the lintian hint `wrong-section-according-to-package-name`.
 - Add `Build-Profiles` as a known field.
+- Add inspection for detecting misspelled field names.
 
 ### Fixed
 - Typo of the archive section `electronics`, which caused the plugin to mark the correct spelling as an error and

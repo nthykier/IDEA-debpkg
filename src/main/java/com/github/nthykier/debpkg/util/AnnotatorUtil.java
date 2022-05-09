@@ -4,6 +4,7 @@ import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
 import com.github.nthykier.debpkg.deb822.psi.Deb822ElementFactory;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822HangingContValue;
 import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
@@ -169,6 +170,21 @@ public class AnnotatorUtil {
 
             replacement = Deb822ElementFactory.createFieldValuePairFromText(project, builder.toString());
             fieldValuePair.replace(replacement);
+        });
+    }
+
+    public static LocalQuickFix replaceFieldNameFix(@IntentionFamilyName String familyName, String newFieldName) {
+        return replaceFieldNameFix(familyName, familyName, newFieldName);
+    }
+
+    public static Deb822TypeSafeLocalQuickFix<Deb822Field> replaceFieldNameFix(@IntentionName String name, @IntentionFamilyName String familyName, String newFieldName) {
+        return new Deb822TypeSafeLocalQuickFixImpl<>(name, familyName, (project, problemDescriptor) -> {
+            PsiElement problemElement = problemDescriptor.getPsiElement();
+            if (! (problemElement instanceof Deb822Field)) {
+                throw new IncorrectOperationException("Mismatch between element type being removed vs. the element intended for removal");
+            }
+            Deb822Field replacement = Deb822ElementFactory.createFieldValuePairFromText(project, newFieldName + ": Text").getField();
+            problemElement.replace(replacement);
         });
     }
 
