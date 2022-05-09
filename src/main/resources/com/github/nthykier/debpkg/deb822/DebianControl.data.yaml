@@ -510,11 +510,39 @@ fields:
       Package: foo-data
       Replaces: foo (<< 1.2-3~)
       Breaks: foo (<< 1.2-3~)
+      </pre>
 
       <p>Please check the description of the <b>Breaks</b> field for when you would use <b>Breaks</b> vs. <b>Conflicts</b>.  It also covers common uses of <b>Replaces</b>.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_BINARY_NEGATIVE_DEPENDENCY
     supportsSubstvars: true
+
+  - canonicalName: "Build-Profiles"
+    onlyInParagraphType: "Package"
+    description: |
+      <p><b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
+         adviced to leave it at its default until you have a working basic package or lots of time to understand
+         this topic.</em></p>
+
+      <p>Declare that the package will only built when the given build-profiles are satisfied.</p>
+
+      <p>This field is primarily used in combination with build profiles inside the build dependency related fields
+         to reduce the number of build dependencies required during bootstrapping of a new architecture.</p>
+
+      <em>Example:</em>
+      <pre>
+      Package: foo
+      ...
+
+      Package: foo-udeb
+      Package-Type: udeb
+      # Skip building foo-udeb when the build profile "noudeb" is set (e.g., via dpkg-buildpackage -Pnoudeb)
+      Build-Profiles: <!noudeb>
+      </pre>
+
+      Note that there is an official list of "common" build profiles with predefined purposes along with rules for how and when the can be used.
+    valueType: FREE_TEXT_VALUE  # this is the best level of support for now.
+    supportsSubstvars: false
 
   - canonicalName: Uploaders
     onlyInParagraphType: "Source"
