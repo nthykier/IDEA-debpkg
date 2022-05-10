@@ -4,11 +4,9 @@ import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.Deb822LanguageSupport;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Field;
-import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
-import com.github.nthykier.debpkg.deb822.psi.Deb822Visitor;
+import com.github.nthykier.debpkg.deb822.psi.*;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
+import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -21,13 +19,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DCtrlMisspelledFieldsInspection extends AbstractDctrlInspection {
+public class Deb822MisspelledFieldsInspection extends LocalInspectionTool {
 
     private static final LevenshteinDistance EDIT_DISTANCE = new LevenshteinDistance(3);
 
-
-    @Override
-    protected PsiElementVisitor inspectionVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
+    @NotNull
+    public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
+        if (!(holder.getFile() instanceof Deb822File)) {
+            return PsiElementVisitor.EMPTY_VISITOR;
+        }
         KnownFieldTable knownFieldTable = Deb822LanguageSupport.fromDeb822Language(holder.getFile().getLanguage()).getKnownFieldTable();
         List<String> knownFields = knownFieldTable.getAllFieldNames().stream().map(String::toLowerCase).collect(Collectors.toList());
         return new Deb822Visitor() {

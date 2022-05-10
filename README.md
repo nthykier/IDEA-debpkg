@@ -39,6 +39,7 @@ commonly used formats in Debian packaging.
  * Refactor support when renaming binary packages (includes renaming files in `debian/*` but not content
    inside `debian/rules`).
  * Detection of some possible mistakes (package name does not match section/architecture, missing substvars)
+ * Detect misspellings of known fields such as `Depend` being a typo of `Depends`.
 
 Plus the features listed for Generic deb822 files.
 
@@ -56,6 +57,7 @@ Plus the features listed for Generic deb822 files.
  * Spellchecking of relevant fields (e.g. `Comment`, `Disclaimer` and `Source`).
  * Valid paths without wildcards in the `Files` fields are turned into references,
    which in turn enables other features such as "jump to" and Refactor support.
+ * Detect misspellings of known fields such as `Licenses` being a typo of `License`.
 
 Plus the features listed for Generic deb822 files.
 

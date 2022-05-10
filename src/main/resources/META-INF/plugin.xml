@@ -115,13 +115,13 @@
         />
         <localInspection language="DebianControl"
                          groupPathKey="pluginDescriptor.inspection.DebianControl.groupPath"
-                         shortName="DCtrlMisspelledFieldsInspection"
+                         shortName="Deb822MisspelledFields"
                          key="deb822.files.inspection.dctrl-misspelled-fields.name"
                          groupKey="pluginDescriptor.inspection.DebianControl.groupName"
                          enabledByDefault="true"
                          hasStaticDescription="true"
                          level="WARNING"
-                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlMisspelledFieldsInspection"
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.Deb822MisspelledFieldsInspection"
         />
         <localInspection language="DebianControl"
                          groupPathKey="pluginDescriptor.inspection.DebianControl.groupPath"
