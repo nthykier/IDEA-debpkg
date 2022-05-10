@@ -1,0 +1,17 @@
+<html>
+<body>
+<p>Detects possibly missing substvars in dependency fields of package paragraphs in debian/control</p>
+<p>
+    The package paragraphs in <tt>debian/control</tt> should almost always have a dependency on a substitution
+    variable like <tt>${shlibs:Depends}</tt> for architecture dependent packages.  This inspection reports some
+    of these potentially missing substvars.
+</p>
+
+<!-- tooltip end -->
+<p>
+    Limitations: Currently this inspection only covers the <tt>${shlibs:Depends}</tt> substvars for now.  The
+    debhelper related substvars ${misc:Depends} and ${misc:Pre-Depends} are not covered yet.
+</p>
+
+</body>
+</html>

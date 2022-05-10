@@ -123,6 +123,16 @@
                          level="WARNING"
                          implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlMisspelledFieldsInspection"
         />
+        <localInspection language="DebianControl"
+                         groupPathKey="pluginDescriptor.inspection.DebianControl.groupPath"
+                         shortName="DCtrlMissingSubstvarsInDependencyFieldsInspection"
+                         key="deb822.files.inspection.dctrl-missing-substvars-in-dependency-fields.name"
+                         groupKey="pluginDescriptor.inspection.DebianControl.groupName"
+                         enabledByDefault="true"
+                         hasStaticDescription="true"
+                         level="WARNING"
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlMissingSubstvarsInDependencyFieldsInspection"
+        />
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
         <!-- Should have been DebianControl, but we have to work around IDEA, which uses the language of the element

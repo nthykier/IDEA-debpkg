@@ -19,7 +19,7 @@ public class Deb822LexerTest extends TestCase {
                 + "\n"
                 + "Package: foo\n"
                 + "Architecture: any\n"
-                + "Depends: ${misc:Depends}, ${shlib:Depends}\n"
+                + "Depends: ${misc:Depends}, ${shlibs:Depends}\n"
                 + "# Random comment\n"
                 + "Recommends:\n"
                 + " foo,\n"

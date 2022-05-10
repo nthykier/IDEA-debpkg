@@ -21,7 +21,7 @@ commonly used formats in Debian packaging.
  * Bundled spelling dictionary with common Debian package related terms and jargon to avoid some
    false-positive spelling mistakes.
  * Debian and Ubuntu bug numbers in `Closes` and http/https addresses are linkified.
- * A structure view providing a quick nagivation overview for indiviual versions.
+ * A structure view providing a quick navigation overview for individual versions.
    (<kbd>View</kbd> > <kbd>Tool Windows</kbd> > <kbd>Structure</kbd>)
 
 ### debian/control
@@ -38,6 +38,7 @@ commonly used formats in Debian packaging.
  * Warn if a field just duplicates the field of the source paragraph.
  * Refactor support when renaming binary packages (includes renaming files in `debian/*` but not content
    inside `debian/rules`).
+ * Detection of some possible mistakes (package name does not match section/architecture, missing substvars)
 
 Plus the features listed for Generic deb822 files.
 
