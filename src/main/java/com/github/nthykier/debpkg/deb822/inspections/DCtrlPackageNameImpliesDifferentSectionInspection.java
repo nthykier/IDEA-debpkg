@@ -2,10 +2,12 @@ package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
+import com.github.nthykier.debpkg.deb822.psi.Deb822AllParagraphs;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Visitor;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
+import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -64,25 +66,45 @@ public class DCtrlPackageNameImpliesDifferentSectionInspection extends AbstractD
     @Override
     protected PsiElementVisitor inspectionVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         return new Deb822Visitor() {
-            public void visitParagraph(@NotNull Deb822Paragraph deb822Paragraph) {
-                ProgressIndicatorProvider.checkCanceled();
-                if (deb822Paragraph.classifyParagraph().equals(Deb822DialectDebianControlLanguage.PARAGRAPH_TYPE_BINARY_PACKAGE)) {
-                    checkBinaryParagraph(holder, deb822Paragraph);
+            public void visitAllParagraphs(@NotNull Deb822AllParagraphs o) {
+                visitPsiElement(o);
+                String sourceSection = null;
+                boolean seenSourceParagraph = false;
+                for (Deb822Paragraph deb822Paragraph : o.getParagraphList()) {
+                    ProgressIndicatorProvider.checkCanceled();
+                    String classification = deb822Paragraph.classifyParagraph();
+                    if (classification.equals(Deb822DialectDebianControlLanguage.PARAGRAPH_TYPE_SOURCE)) {
+                        assert !seenSourceParagraph;
+                        seenSourceParagraph = true;
+                        sourceSection = deb822Paragraph.getFieldValue("Section");
+                    }
+                    if (classification.equals(Deb822DialectDebianControlLanguage.PARAGRAPH_TYPE_BINARY_PACKAGE)) {
+                        assert seenSourceParagraph;
+                        checkBinaryParagraph(holder, deb822Paragraph, sourceSection);
+                    }
                 }
             }
         };
     }
 
-    private void checkBinaryParagraph(ProblemsHolder holder, Deb822Paragraph deb822Paragraph) {
+    private void checkBinaryParagraph(ProblemsHolder holder, Deb822Paragraph deb822Paragraph, String sourceSection) {
         String sectionValue = deb822Paragraph.getFieldValue("Section");
+        boolean hasSectionField = sectionValue != null;
+        if (sectionValue == null) {
+            sectionValue = sourceSection;
+        }
         if (sectionValue == null || sectionValue.equals("oldlibs")) {
             // oldlibs is a bit of a "free for all".
             return;
         }
         String packageName = deb822Paragraph.getFieldValue("Package");
-        Deb822FieldValuePair sectionFVPair = deb822Paragraph.getFieldValuePair("Section");
+        if (packageName == null) {
+            // if the paragraph does not have a package name, then we have better issues. Let the user deal with those first.
+            return;
+        }
+        Deb822FieldValuePair highlightPVPair = hasSectionField ? deb822Paragraph.getFieldValuePair("Section") : deb822Paragraph.getFieldValuePair("Package");
         String sectionPrefix = "";
-        assert sectionFVPair != null && sectionFVPair.getValueParts() != null;
+        assert highlightPVPair != null && highlightPVPair.getValueParts() != null;
 
         if (sectionValue.contains("/")) {
             String[] parts = sectionValue.split("/", 2);
@@ -96,23 +118,34 @@ public class DCtrlPackageNameImpliesDifferentSectionInspection extends AbstractD
                 .orElse(null);
         if (matchingHeuristic != null && !sectionValue.equals(matchingHeuristic.section)) {
             String newValue = sectionPrefix + matchingHeuristic.section;
+            LocalQuickFix quickFix;
+            if (hasSectionField) {
+                quickFix = AnnotatorUtil.replaceFieldValueReplacementFix(
+                        Deb822Bundle.message("deb822.files.quickfix.fields.set-section-to-new-value.name", newValue),
+                        Deb822Bundle.message("deb822.files.quickfix.fields.set-section-to-new-value.familyName"),
+                        newValue);
+            } else {
+                quickFix = AnnotatorUtil.fieldInsertionQuickFix(
+                        "Section: " + newValue,
+                        "Priority",
+                        "Architecture",
+                        "Description"
+                        );
+            }
             holder.registerProblem(
-                    sectionFVPair,
+                    highlightPVPair,
                     Deb822Bundle.message("deb822.files.inspection.dctrl-package-name-implies-different-section.description", newValue),
                     ProblemHighlightType.WARNING,
-                    sectionFVPair.getValueParts().getTextRangeInParent(),
-                    AnnotatorUtil.replaceFieldValueReplacementFix(
-                            Deb822Bundle.message("deb822.files.quickfix.fields.set-section-to-new-value.name", newValue),
-                            Deb822Bundle.message("deb822.files.quickfix.fields.set-section-to-new-value.familyName"),
-                            newValue)
+                    highlightPVPair.getValueParts().getTextRangeInParent(),
+                    quickFix
             );
         } else if (DEBUG_PACKAGE_HEURISTIC.section.equals(sectionValue) && !DEBUG_PACKAGE_HEURISTIC.packageNamePredicate.test(packageName)) {
             // For the debug section, packages are also expected to be named -dbg/-dbgsym
             holder.registerProblem(
-                    sectionFVPair,
+                    highlightPVPair,
                     Deb822Bundle.message("deb822.files.inspection.dctrl-debug-section-implies-different-package-name.description"),
                     ProblemHighlightType.WARNING,
-                    sectionFVPair.getValueParts().getTextRangeInParent()
+                    highlightPVPair.getValueParts().getTextRangeInParent()
             );
         }
     }
