@@ -116,8 +116,8 @@ public class DCtrlMissingSubstvarsInDependencyFieldsInspection extends AbstractD
                             Deb822KnownField knownField = knownFieldTable.getField(n);
                             assert knownField != null;
                             return AnnotatorUtil.replaceFieldNameFix(
-                                    Deb822Bundle.message("deb822.files.quickfix.dctrl-misspelled-fields.name", knownField.getCanonicalFieldName()),
-                                    Deb822Bundle.message("deb822.files.quickfix.dctrl-misspelled-fields.familyName"),
+                                    Deb822Bundle.message("deb822.files.quickfix.rename-field.name", knownField.getCanonicalFieldName()),
+                                    Deb822Bundle.message("deb822.files.quickfix.rename-field.familyName"),
                                     // requireNonNull is basically an assertion
                                     knownField.getCanonicalFieldName()
                             );

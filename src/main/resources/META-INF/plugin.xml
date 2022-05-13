@@ -113,7 +113,7 @@
                          level="WARNING"
                          implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlUsesObsoleteFieldInspection"
         />
-        <localInspection language="DebianControl"
+        <localInspection language="Deb822"
                          groupPathKey="pluginDescriptor.inspection.DebianControl.groupPath"
                          shortName="Deb822MisspelledFields"
                          key="deb822.files.inspection.dctrl-misspelled-fields.name"
@@ -133,6 +133,15 @@
                          level="WARNING"
                          implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlMissingSubstvarsInDependencyFieldsInspection"
         />
+        <localInspection language="Deb822"
+                         groupPathKey="pluginDescriptor.inspection.DebianControl.groupPath"
+                         shortName="Deb822CanonicalFieldVariant"
+                         key="deb822.files.inspection.canonical-field-variant.name"
+                         groupKey="pluginDescriptor.inspection.DebianControl.groupName"
+                         enabledByDefault="true"
+                         hasStaticDescription="true"
+                         level="WEAK WARNING"
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.Deb822CanonicalFieldVariantInspection"/>
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
         <!-- Should have been DebianControl, but we have to work around IDEA, which uses the language of the element

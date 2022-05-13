@@ -40,6 +40,7 @@ commonly used formats in Debian packaging.
    inside `debian/rules`).
  * Detection of some possible mistakes (package name does not match section/architecture, missing substvars)
  * Detect misspellings of known fields such as `Depend` being a typo of `Depends`.
+ * Detect non-canonical variants of fields (`depends` -> `Depends` or `XC-Package-Type` -> `Package-Type`).
 
 Plus the features listed for Generic deb822 files.
 
@@ -58,6 +59,7 @@ Plus the features listed for Generic deb822 files.
  * Valid paths without wildcards in the `Files` fields are turned into references,
    which in turn enables other features such as "jump to" and Refactor support.
  * Detect misspellings of known fields such as `Licenses` being a typo of `License`.
+ * Detect non-canonical variants of fields (`files` -> `Files`).
 
 Plus the features listed for Generic deb822 files.
 

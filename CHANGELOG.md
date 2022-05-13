@@ -17,6 +17,7 @@
 - Add `Build-Profiles` as a known field.
 - Add inspection for detecting misspelled field names.
 - Add inspection for detecting missing `${shlibs:Depends}` dependency.
+- Add inspection for detecting non-canonical variants of fields (`depends` -> `Depends` or `XC-Package-Type` -> `Package-Type`).
 
 ### Fixed
 - Typo of the archive section `electronics`, which caused the plugin to mark the correct spelling as an error and

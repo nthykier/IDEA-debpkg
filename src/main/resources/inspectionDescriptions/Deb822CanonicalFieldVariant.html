@@ -1,0 +1,19 @@
+<html>
+<body>
+<p>Detects non-canonical variations of field names</p>
+<p>
+    The deb822 file format uses case-insensitive fields, which means that <tt>depends: foo</tt> and
+    <tt>Depends: foo</tt> are treated as the same. However, every published field has a conventional
+    way of being spelled, which provides consistency for reviewers and other developers.
+    This inspection provides quick fixes to align the field name with the canonical variant.
+</p>
+<!-- tooltip end -->
+<p>
+    This inspection generally covers case variants (e.g, the <tt>depends</tt> vs <tt>Depends</tt>
+    example mentioned above) and also unnecessary <tt>X[SBC]-</tt> prefixes (e.g., <tt>XC-Package-Type</tt>
+    vs. <tt>Package-Type</tt>).
+</p>
+
+
+</body>
+</html>

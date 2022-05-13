@@ -70,12 +70,7 @@ public class Deb822MisspelledFieldsInspection extends LocalInspectionTool {
                         matches.stream().map(n -> {
                             Deb822KnownField knownField = knownFieldTable.getField(n);
                             assert knownField != null;
-                            return AnnotatorUtil.replaceFieldNameFix(
-                                    Deb822Bundle.message("deb822.files.quickfix.dctrl-misspelled-fields.name", knownField.getCanonicalFieldName()),
-                                    Deb822Bundle.message("deb822.files.quickfix.dctrl-misspelled-fields.familyName"),
-                                    // requireNonNull is basically an assertion
-                                    knownField.getCanonicalFieldName()
-                            );
+                            return AnnotatorUtil.replaceFieldNameFix(knownField.getCanonicalFieldName());
                         }).toArray(LocalQuickFix[]::new)
 
                 );

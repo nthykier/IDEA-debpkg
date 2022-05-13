@@ -173,8 +173,12 @@ public class AnnotatorUtil {
         });
     }
 
-    public static LocalQuickFix replaceFieldNameFix(@IntentionFamilyName String familyName, String newFieldName) {
-        return replaceFieldNameFix(familyName, familyName, newFieldName);
+    public static LocalQuickFix replaceFieldNameFix(String newFieldName) {
+        return replaceFieldNameFix(
+                Deb822Bundle.message("deb822.files.quickfix.rename-field.name", newFieldName),
+                Deb822Bundle.message("deb822.files.quickfix.rename-field.familyName"),
+                newFieldName
+        );
     }
 
     public static Deb822TypeSafeLocalQuickFix<Deb822Field> replaceFieldNameFix(@IntentionName String name, @IntentionFamilyName String familyName, String newFieldName) {
