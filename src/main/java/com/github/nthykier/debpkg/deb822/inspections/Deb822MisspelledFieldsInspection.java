@@ -54,7 +54,7 @@ public class Deb822MisspelledFieldsInspection extends LocalInspectionTool {
             if (!matches.isEmpty()) {
                 holder.registerProblem(
                         field,
-                        Deb822Bundle.message("deb822.files.inspection.dctrl-misspelled-fields.description"),
+                        Deb822Bundle.message("deb822.files.inspection.misspelled-field.description"),
                         ProblemHighlightType.WARNING,
                         matches.stream().map(n -> {
                             Deb822KnownField knownField = knownFieldTable.getField(n);

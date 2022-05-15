@@ -116,7 +116,7 @@
         <localInspection language="Deb822"
                          groupPathKey="pluginDescriptor.inspection.DebianControl.groupPath"
                          shortName="Deb822MisspelledFields"
-                         key="deb822.files.inspection.dctrl-misspelled-fields.name"
+                         key="deb822.files.inspection.misspelled-field.name"
                          groupKey="pluginDescriptor.inspection.DebianControl.groupName"
                          enabledByDefault="true"
                          hasStaticDescription="true"
