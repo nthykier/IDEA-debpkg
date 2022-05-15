@@ -295,7 +295,19 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (COMMENT | HANGING_CONT_VALUE_TOKEN)+
+  // HANGING_CONT_VALUE_TOKEN
+  public static boolean hanging_cont_value(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "hanging_cont_value")) return false;
+    if (!nextTokenIs(b, HANGING_CONT_VALUE_TOKEN)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, HANGING_CONT_VALUE_TOKEN);
+    exit_section_(b, m, HANGING_CONT_VALUE, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // (COMMENT | hanging_cont_value)+
   static boolean ignorable_value_noise(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ignorable_value_noise")) return false;
     if (!nextTokenIs(b, "", COMMENT, HANGING_CONT_VALUE_TOKEN)) return false;
@@ -311,12 +323,12 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // COMMENT | HANGING_CONT_VALUE_TOKEN
+  // COMMENT | hanging_cont_value
   private static boolean ignorable_value_noise_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ignorable_value_noise_0")) return false;
     boolean r;
     r = consumeToken(b, COMMENT);
-    if (!r) r = consumeToken(b, HANGING_CONT_VALUE_TOKEN);
+    if (!r) r = hanging_cont_value(b, l + 1);
     return r;
   }
 

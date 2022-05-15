@@ -15,6 +15,7 @@ public interface Deb822Types {
   IElementType FIELD_VALUE_PAIR = new Deb822ElementType("FIELD_VALUE_PAIR");
   IElementType GPG_SIGNATURE = new Deb822ElementType("GPG_SIGNATURE");
   IElementType GPG_SIGNED = new Deb822ElementType("GPG_SIGNED");
+  IElementType HANGING_CONT_VALUE = new Deb822ElementType("HANGING_CONT_VALUE");
   IElementType PARAGRAPH = new Deb822ElementType("PARAGRAPH");
   IElementType SUBSTVAR = new Deb822ElementType("SUBSTVAR");
   IElementType VALUE = new Deb822ElementType("VALUE");
@@ -62,6 +63,9 @@ public interface Deb822Types {
       }
       else if (type == GPG_SIGNED) {
         return new Deb822GpgSignedImpl(node);
+      }
+      else if (type == HANGING_CONT_VALUE) {
+        return new Deb822HangingContValueImpl(node);
       }
       else if (type == PARAGRAPH) {
         return new Deb822ParagraphImpl(node);

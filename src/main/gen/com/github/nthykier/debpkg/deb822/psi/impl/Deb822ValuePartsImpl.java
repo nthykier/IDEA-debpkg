@@ -34,6 +34,12 @@ public class Deb822ValuePartsImpl extends AbstractDeb822ValueParts implements De
 
   @Override
   @NotNull
+  public List<Deb822HangingContValue> getHangingContValueList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822HangingContValue.class);
+  }
+
+  @Override
+  @NotNull
   public List<Deb822Substvar> getSubstvarList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822Substvar.class);
   }

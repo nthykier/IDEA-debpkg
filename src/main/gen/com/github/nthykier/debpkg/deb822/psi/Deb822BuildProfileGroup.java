@@ -10,4 +10,7 @@ public interface Deb822BuildProfileGroup extends PsiElement {
   @NotNull
   List<Deb822BuildProfile> getBuildProfileList();
 
+  @NotNull
+  List<Deb822HangingContValue> getHangingContValueList();
+
 }

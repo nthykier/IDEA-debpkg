@@ -11,32 +11,20 @@ import static com.github.nthykier.debpkg.deb822.psi.Deb822Types.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.deb822.psi.*;
 
-public class Deb822BuildProfileGroupImpl extends ASTWrapperPsiElement implements Deb822BuildProfileGroup {
+public class Deb822HangingContValueImpl extends ASTWrapperPsiElement implements Deb822HangingContValue {
 
-  public Deb822BuildProfileGroupImpl(@NotNull ASTNode node) {
+  public Deb822HangingContValueImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull Deb822Visitor visitor) {
-    visitor.visitBuildProfileGroup(this);
+    visitor.visitHangingContValue(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof Deb822Visitor) accept((Deb822Visitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @NotNull
-  public List<Deb822BuildProfile> getBuildProfileList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822BuildProfile.class);
-  }
-
-  @Override
-  @NotNull
-  public List<Deb822HangingContValue> getHangingContValueList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822HangingContValue.class);
   }
 
 }

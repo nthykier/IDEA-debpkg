@@ -11,6 +11,9 @@ public interface Deb822ValueParts extends PsiElement {
   List<Deb822BuildProfileGroup> getBuildProfileGroupList();
 
   @NotNull
+  List<Deb822HangingContValue> getHangingContValueList();
+
+  @NotNull
   List<Deb822Substvar> getSubstvarList();
 
   @NotNull

@@ -71,7 +71,10 @@ build_profile ::= '!'? BUILD_PROFILE_TOKEN {
   methods=[getProfileName getProfileNameNode isNegated]
 }
 
-private ignorable_value_noise ::= (COMMENT | HANGING_CONT_VALUE_TOKEN)+
+private ignorable_value_noise ::= (COMMENT | hanging_cont_value)+
+
+// Here for the Deb822Annotator
+hanging_cont_value ::= HANGING_CONT_VALUE_TOKEN;
 
 value ::= VALUE_TOKEN {
   extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822Value"
