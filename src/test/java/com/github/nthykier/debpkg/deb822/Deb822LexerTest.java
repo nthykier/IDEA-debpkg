@@ -1,6 +1,7 @@
 package com.github.nthykier.debpkg.deb822;
 
 import com.github.nthykier.debpkg.LexerTestUtil;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.intellij.psi.tree.IElementType;
 import junit.framework.TestCase;
@@ -12,13 +13,17 @@ import java.util.List;
 
 public class Deb822LexerTest extends TestCase {
 
-    public void testSimpleDeb822File() throws IOException {
+    public void testSimpleDebianControlFile() throws IOException {
         String content = "Source: foo\n"
                 + "Section: bar\n"
                 + "# Random comment\n"
                 + "\n"
                 + "Package: foo\n"
                 + "Architecture: any\n"
+                + "Build-Profiles: <!nofoo>\n"
+                + " <bar baz\n"
+                + "# Random inline comment!\n"
+                + " !foobar>\n"
                 + "Depends: ${misc:Depends}, ${shlibs:Depends}\n"
                 + "# Random comment\n"
                 + "Recommends:\n"
@@ -30,7 +35,7 @@ public class Deb822LexerTest extends TestCase {
                 + "# inline comment in description\n"
                 + " Following line\n"
                 ;
-        Deb822Lexer lexer = new Deb822Lexer(null);
+        Deb822Lexer lexer = new Deb822Lexer(null, Deb822DialectDebianControlLanguage.INSTANCE);
         List<IElementType> expected = Arrays.asList(
                 /* Field Source */
                 Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,
@@ -42,6 +47,9 @@ public class Deb822LexerTest extends TestCase {
                 Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,
                 /* Field Architecture */
                 Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,
+                /* Field Build-Profiles */
+                Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.ANGLE_BRACKET_OPEN, Deb822Types.NEGATION, Deb822Types.BUILD_PROFILE_TOKEN, Deb822Types.ANGLE_BRACKET_CLOSE,
+                /* cont */ Deb822Types.ANGLE_BRACKET_OPEN,  Deb822Types.BUILD_PROFILE_TOKEN,  Deb822Types.BUILD_PROFILE_TOKEN, Deb822Types.COMMENT, Deb822Types.NEGATION, Deb822Types.BUILD_PROFILE_TOKEN, Deb822Types.ANGLE_BRACKET_CLOSE,
                 /* Field Depends */
                 Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.SUBSTVAR_TOKEN, Deb822Types.COMMA, Deb822Types.SUBSTVAR_TOKEN,
                 Deb822Types.COMMENT,
@@ -104,7 +112,7 @@ public class Deb822LexerTest extends TestCase {
                 "=3gec\n" +
                 "-----END PGP SIGNATURE-----\n"
                 ;
-        Deb822Lexer lexer = new Deb822Lexer(null);
+        Deb822Lexer lexer = new Deb822Lexer(null, Deb822Language.INSTANCE);
         List<IElementType> expected = Arrays.asList(
                 Deb822Types.GPG_BEGIN_SIGNED_MESSAGE,
                 Deb822Types.GPG_ARMOR_HEADER,
@@ -164,7 +172,7 @@ public class Deb822LexerTest extends TestCase {
                 "         ${misc:Depends},\n" +
                 "Description: debhelper add-on ...\n" +
                 " This package ...\n";
-        Deb822Lexer lexer = new Deb822Lexer(null);
+        Deb822Lexer lexer = new Deb822Lexer(null, Deb822Language.INSTANCE);
         List<IElementType> expected = Arrays.asList(
                 /* Field Package */
                 Deb822Types.FIELD_NAME, Deb822Types.SEPARATOR, Deb822Types.VALUE_TOKEN,

@@ -12,6 +12,14 @@ public class Deb822Visitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitBuildProfile(@NotNull Deb822BuildProfile o) {
+    visitPsiElement(o);
+  }
+
+  public void visitBuildProfileGroup(@NotNull Deb822BuildProfileGroup o) {
+    visitPsiElement(o);
+  }
+
   public void visitField(@NotNull Deb822Field o) {
     visitFieldBase(o);
   }
@@ -25,10 +33,6 @@ public class Deb822Visitor extends PsiElementVisitor {
   }
 
   public void visitGpgSigned(@NotNull Deb822GpgSigned o) {
-    visitPsiElement(o);
-  }
-
-  public void visitHangingContValue(@NotNull Deb822HangingContValue o) {
     visitPsiElement(o);
   }
 

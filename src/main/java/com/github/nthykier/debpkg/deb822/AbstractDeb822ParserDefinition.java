@@ -32,7 +32,8 @@ public abstract class AbstractDeb822ParserDefinition implements ParserDefinition
 
     @Override
     public @NotNull Lexer createLexer(Project project) {
-        return new Deb822LexerAdapter();
+        assert this.fileType.getLanguage() instanceof Deb822LanguageSupport;
+        return new Deb822LexerAdapter((Deb822LanguageSupport) this.fileType.getLanguage());
     }
 
     @Override

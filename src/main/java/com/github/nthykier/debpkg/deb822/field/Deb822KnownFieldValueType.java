@@ -3,6 +3,9 @@ package com.github.nthykier.debpkg.deb822.field;
 import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.TokenSet;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.intellij.sdk.language.Deb822Lexer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -11,35 +14,36 @@ import java.util.stream.Collectors;
 
 import static com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueTypeUtil.*;
 
+@RequiredArgsConstructor
 public enum Deb822KnownFieldValueType {
 
     /**
      * The field contains exactly one value but value is not constrained to a list of predefined values.
      * The value cannot contain space or comma.
      */
-    SINGLE_TRIVIAL_VALUE,
+    SINGLE_TRIVIAL_VALUE(Deb822Lexer.SEPARATOR_BEFORE_VALUE),
 
     /**
      * The field contains exactly one keyword (there is a fixed set of values allowed for the field).
      */
-    SINGLE_KEYWORD,
+    SINGLE_KEYWORD(Deb822Lexer.SEPARATOR_BEFORE_VALUE),
 
     /**
-     * The field contains one ore more values separated by space.  Values <i>may</i> (but are not
+     * The field contains one or more values separated by space.  Values <i>may</i> (but are not
      * required) to match an optional predefined list of keywords.  Unknown values can be validated
      * against a separate value validator.
      */
-    SPACE_SEPARATED_VALUE_LIST,
+    SPACE_SEPARATED_VALUE_LIST(Deb822Lexer.SEPARATOR_BEFORE_VALUE),
 
     /**
-     * The field contains one ore more values separated by comma.  Values <i>may</i> (but are not
+     * The field contains one or more values separated by comma.  Values <i>may</i> (but are not
      * required) to match an optional predefined list of keywords.  Unknown values can be validated
      * against a separate value validator.
      *
      * This variant does <i>not</i> accept trailing commas.  Use
      * {@link #COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK} for that.
      */
-    COMMA_SEPARATED_VALUE_LIST,
+    COMMA_SEPARATED_VALUE_LIST(Deb822Lexer.SEPARATOR_BEFORE_VALUE),
 
     /**
      * This is similar to {@link #COMMA_SEPARATED_VALUE_LIST} but accepts values with trailing
@@ -47,20 +51,28 @@ public enum Deb822KnownFieldValueType {
      *
      * @see #COMMA_SEPARATED_VALUE_LIST
      */
-    COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK,
+    COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK(Deb822Lexer.SEPARATOR_BEFORE_VALUE),
+
+    /**
+     * The field contains Build-Profiles (e.g., &gt;nofoo&lt;)
+     */
+    BUILD_PROFILES_FIELD(Deb822Lexer.SEPARATOR_BEFORE_BUILD_PROFILES),
 
     /**
      * The field is not known to contain structured data or is known to be a "free-text" field a la
      * the Description field.  This is the default for unknown field types.
      */
-    FREE_TEXT_VALUE;
+    FREE_TEXT_VALUE(Deb822Lexer.SEPARATOR_BEFORE_VALUE),
+    ;
 
+    @Getter
+    private final int initialValueParsingLexerState;
 
     public @NotNull List<List<ASTNode>> splitValue(@NotNull Deb822ValueParts valueParts) {
         List<List<ASTNode>> result;
         List<ASTNode> valueElements = Arrays.asList(valueParts.getNode().getChildren(TokenSet.ANY));
 
-        if (this == FREE_TEXT_VALUE) {
+        if (this == FREE_TEXT_VALUE || this == BUILD_PROFILES_FIELD) {
             return Collections.singletonList(valueElements.stream().filter(IS_COMMENT).collect(Collectors.toList()));
         }
 

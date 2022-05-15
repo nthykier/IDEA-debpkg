@@ -15,6 +15,12 @@
   tokenTypeClass="com.github.nthykier.debpkg.deb822.psi.Deb822TokenType"
 
   name("value_parts")="Value or Substvars"
+
+  tokens = [
+      NEGATION='!'
+      ANGLE_BRACKET_OPEN='<'
+      ANGLE_BRACKET_CLOSE='>'
+  ]
 }
 
 deb822file ::= COMMENT* gpg_signed? all_paragraphs gpg_signature? COMMENT*
@@ -53,11 +59,19 @@ field ::= FIELD_NAME {
   extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822Field"
   implements="com.github.nthykier.debpkg.deb822.psi.Deb822FieldBase"
 }
-value_parts ::= COMMENT* hanging_cont_value? (value|COMMA|substvar) (hanging_cont_value|COMMENT|value|COMMA|substvar)* {
+
+value_parts ::= ignorable_value_noise? (value|substvar|COMMA) (ignorable_value_noise|value|substvar|COMMA)*
+              | ignorable_value_noise? build_profile_group+ ignorable_value_noise? {
   extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822ValueParts"
 }
 
-hanging_cont_value ::= HANGING_CONT_VALUE_TOKEN+
+build_profile_group ::= ('<' ignorable_value_noise? build_profile (ignorable_value_noise|build_profile)* '>')
+
+build_profile ::= '!'? BUILD_PROFILE_TOKEN {
+  methods=[getProfileName getProfileNameNode isNegated]
+}
+
+private ignorable_value_noise ::= (COMMENT | HANGING_CONT_VALUE_TOKEN)+
 
 value ::= VALUE_TOKEN {
   extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822Value"

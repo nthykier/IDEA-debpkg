@@ -10,6 +10,7 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
@@ -37,12 +38,14 @@ class Deb822InsertFieldQuickFix implements LocalQuickFix {
 
     @Override
     public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-        PsiElement newField = Deb822ElementFactory.createFieldValuePairFromText(project, fieldContent);
-        Deb822Paragraph paragraph = Deb822PsiImplUtil.getAncestorOfType(descriptor.getPsiElement(), Deb822Paragraph.class);
+        PsiElement offendingElement = descriptor.getPsiElement();
+        FileType fileType = offendingElement.getContainingFile().getFileType();
+        PsiElement newField = Deb822ElementFactory.createFieldValuePairFromText(project, fileType, fieldContent);
+        Deb822Paragraph paragraph = Deb822PsiImplUtil.getAncestorOfType(offendingElement, Deb822Paragraph.class);
         // A Deb822FieldValuePair does not contain a trailing newline; force it in to avoid breaking the next field
-        // The "Foo: bar" part is only there to avoid a parser error from missing a field / paragraph.  Without it
+        // The "Foo: bar" part is only there to avoid a parser error from missing a field / paragraph.  Without it,
         // we get a Psi Error element rather than the newline whitespace element that we want.
-        PsiElement whitespace = Deb822ElementFactory.createFile(project, "\nFoo: bar\n").getFirstChild();
+        PsiElement whitespace = Deb822ElementFactory.createFile(project, fileType, "\nFoo: bar\n").getFirstChild();
         Deb822FieldValuePair insertRelativeTo = null;
 
         if (paragraph == null) {

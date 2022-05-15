@@ -1,6 +1,7 @@
 package com.github.nthykier.debpkg.deb822.dialects.dep5;
 
 import com.github.nthykier.debpkg.deb822.Deb822LexerAdapter;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianCopyrightLanguage;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
@@ -16,7 +17,7 @@ public class Dep5FindUsagesProvider implements FindUsagesProvider {
     @Nullable
     @Override
     public WordsScanner getWordsScanner() {
-        return new DefaultWordsScanner(new Deb822LexerAdapter(),
+        return new DefaultWordsScanner(new Deb822LexerAdapter(Deb822DialectDebianCopyrightLanguage.INSTANCE),
                 TokenSet.EMPTY,
                 TokenSet.create(Deb822Types.COMMENT),
                 TokenSet.create(Deb822Types.VALUE_TOKEN));

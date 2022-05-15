@@ -29,7 +29,7 @@ public class Deb822SyntaxHighlighter extends SyntaxHighlighterBase {
 
     @Override
     public @NotNull Lexer getHighlightingLexer() {
-        return new Deb822LexerAdapter();
+        return new Deb822LexerAdapter(Deb822Language.INSTANCE);
     }
 
     @NotNull

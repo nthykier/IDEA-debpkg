@@ -1,15 +1,17 @@
 package com.github.nthykier.debpkg.deb822.dialects;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
-import com.github.nthykier.debpkg.deb822.field.*;
-import com.github.nthykier.debpkg.deb822.Deb822KnownFieldsAndValues;
 import com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighter;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldKeyword;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
+import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.github.nthykier.debpkg.util.Deb822TypeSafeLocalQuickFix;
-import com.intellij.codeInspection.*;
+import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
@@ -20,8 +22,9 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.github.nthykier.debpkg.util.CommonPsiUtil.isCorrectFileLanguage;
 
@@ -55,9 +58,9 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         multiarchValue = multiarchValueParts.getText().trim();
         if (arch.equals("all") && multiarchValue.equals("same")) {
             Deb822TypeSafeLocalQuickFix<Deb822ValueParts> quickfixer =
-                    AnnotatorUtil.replacementQuickFixer(
+                    AnnotatorUtil.replacementQuickFix(
                             Deb822Bundle.message("deb822.files.quickfix.fields.arch-all-multi-arch-same.name"),
-                            (Project p) -> Deb822ElementFactory.createValuePartsFromText(p, "Multi-Arch: foreign")
+                            (Project p, ProblemDescriptor pd) -> Deb822ElementFactory.createValuePartsFromText(p, pd.getPsiElement().getContainingFile().getFileType(), "Multi-Arch: foreign")
                     );
 
             AnnotatorUtil.createAnnotationWithQuickFix(
@@ -129,7 +132,7 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
         Deb822KnownFieldValueType fieldValueType = knownField.getFieldValueType();
         List<List<ASTNode>> parts;
 
-        if (fieldValueType == Deb822KnownFieldValueType.FREE_TEXT_VALUE) {
+        if (fieldValueType == Deb822KnownFieldValueType.FREE_TEXT_VALUE || fieldValueType == Deb822KnownFieldValueType.BUILD_PROFILES_FIELD) {
             return;
         }
         parts = fieldValueType.splitValue(valueParts);
@@ -194,9 +197,9 @@ public class Deb822DialectDebianControlAnnotator implements Annotator {
                 }
                 if (field.getCanonicalFieldName().equals("Priority") && value.equals("extra")) {
                     Deb822TypeSafeLocalQuickFix<Deb822ValueParts> quickfixer =
-                            AnnotatorUtil.replacementQuickFixer(
+                            AnnotatorUtil.replacementQuickFix(
                                     Deb822Bundle.message("deb822.files.quickfix.fields.priority-extra-is-obsolete.name"),
-                                    (Project p) -> Deb822ElementFactory.createValuePartsFromText(p, "Priority: optional")
+                                    (p, pd) -> Deb822ElementFactory.createValuePartsFromText(p, pd.getPsiElement().getContainingFile().getFileType(), "Priority: optional")
                             );
 
                     AnnotatorUtil.createAnnotationWithQuickFix(

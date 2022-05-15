@@ -7,14 +7,12 @@ import com.github.nthykier.debpkg.dch.psi.DchVisitor;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.intellij.codeInspection.*;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import static com.github.nthykier.debpkg.dch.psi.DchSignoffDateSupport.PREFERRED_DATE_FORMAT;
@@ -74,9 +72,9 @@ public class DchInvalidSignoffDateInspection extends LocalInspectionTool {
         }
         if (parsedDate != null) {
             String correctlyFormatted = parsedDate.format(PREFERRED_DATE_FORMAT);
-            quickFix = AnnotatorUtil.replacementQuickFixer(
+            quickFix = AnnotatorUtil.replacementQuickFix(
                     Deb822Bundle.message("deb822.files.quickfix.fields.invalid-signoff-date-format.name"),
-                    project -> DchElementFactory.createSignoffDate(project, correctlyFormatted)
+                    (project, pd) -> DchElementFactory.createSignoffDate(project, correctlyFormatted)
             );
         }
 

@@ -5,15 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface Deb822ValueParts extends PsiElement {
+public interface Deb822BuildProfileGroup extends PsiElement {
 
   @NotNull
-  List<Deb822BuildProfileGroup> getBuildProfileGroupList();
-
-  @NotNull
-  List<Deb822Substvar> getSubstvarList();
-
-  @NotNull
-  List<Deb822Value> getValueList();
+  List<Deb822BuildProfile> getBuildProfileList();
 
 }

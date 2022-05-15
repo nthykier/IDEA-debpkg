@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class AnnotatorUtil {
@@ -121,9 +122,15 @@ public class AnnotatorUtil {
         annotationBuilder.create();
     }
 
+
     @NotNull
-    public static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> replacementQuickFixer(@IntentionFamilyName  String familyName, final Function<Project, T> factoryMethod) {
-        return psiReplacement(familyName, factoryMethod);
+    public static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> replacementQuickFix(@IntentionFamilyName String familyName, final BiFunction<Project, ProblemDescriptor, T> factoryMethod) {
+        return replacementQuickFix(familyName, familyName, factoryMethod);
+    }
+
+    @NotNull
+    public static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> replacementQuickFix(@IntentionName String name, @IntentionFamilyName  String familyName, final BiFunction<Project, ProblemDescriptor, T> factoryMethod) {
+        return psiReplacement(name, familyName, factoryMethod);
     }
 
     @NotNull
@@ -168,7 +175,7 @@ public class AnnotatorUtil {
 
             contextReplacer.accept(problemDescriptor, fieldValuePair, builder);
 
-            replacement = Deb822ElementFactory.createFieldValuePairFromText(project, builder.toString());
+            replacement = Deb822ElementFactory.createFieldValuePairFromText(project, problemElement.getContainingFile().getFileType(), builder.toString());
             fieldValuePair.replace(replacement);
         });
     }
@@ -187,7 +194,7 @@ public class AnnotatorUtil {
             if (! (problemElement instanceof Deb822Field)) {
                 throw new IncorrectOperationException("Mismatch between element type being removed vs. the element intended for removal");
             }
-            Deb822Field replacement = Deb822ElementFactory.createFieldValuePairFromText(project, newFieldName + ": Text").getField();
+            Deb822Field replacement = Deb822ElementFactory.createFieldValuePairFromText(project, problemElement.getContainingFile().getFileType(), newFieldName + ": Text").getField();
             problemElement.replace(replacement);
         });
     }
@@ -220,7 +227,7 @@ public class AnnotatorUtil {
                     replacementValue += "\n";
                 }
             }
-            replacement = Deb822ElementFactory.createFieldValuePairFromText(project, fieldValuePair.getField().getFieldName() + ":" + replacementValue);
+            replacement = Deb822ElementFactory.createFieldValuePairFromText(project, problemElement.getContainingFile().getFileType(), fieldValuePair.getField().getFieldName() + ":" + replacementValue);
             fieldValuePair.replace(replacement);
         });
     }
@@ -250,21 +257,25 @@ public class AnnotatorUtil {
     @RequiredArgsConstructor(staticName = "of")
     public static class GenericTypeSafeQuickfix<T extends PsiElement> implements Deb822TypeSafeLocalQuickFix<T> {
 
+        @IntentionName
+        @Getter
+        private final String name;
+
         @IntentionFamilyName
         @Getter
         private final String familyName;
-        private final Function<Project, T> replacementGenerator;
+        private final BiFunction<Project, ProblemDescriptor, T> replacementGenerator;
         private final TriConsumer<Project, ProblemDescriptor, T> fixerWithReplacement;
 
         @NotNull
-        protected T getCorrectedElement(@NotNull Project project) {
-            return Objects.requireNonNull(this.replacementGenerator.apply(project),"Bug in "
+        protected T getCorrectedElement(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+            return Objects.requireNonNull(this.replacementGenerator.apply(project, descriptor),"Bug in "
                     + this.getClass().getCanonicalName() + " - Replacement is null");
         }
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            T replacement = getCorrectedElement(project);
+            T replacement = getCorrectedElement(project, descriptor);
             Objects.requireNonNull(replacement, "Bug in "
                     + this.getClass().getCanonicalName() + " - Replacement is null");
 
@@ -272,8 +283,8 @@ public class AnnotatorUtil {
         }
     }
 
-    private static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> psiReplacement(@IntentionFamilyName String familyName, Function<Project, T> replacementGenerator) {
-        return GenericTypeSafeQuickfix.of(familyName, replacementGenerator, (p, descriptor, replacement) -> {
+    private static <T extends PsiElement> Deb822TypeSafeLocalQuickFix<T> psiReplacement(@IntentionName String name, @IntentionFamilyName String familyName, BiFunction<Project, ProblemDescriptor, T> replacementGenerator) {
+        return GenericTypeSafeQuickfix.of(name, familyName, replacementGenerator, (p, descriptor, replacement) -> {
             PsiElement originalElement = descriptor.getPsiElement();
             originalElement.replace(replacement);
         });

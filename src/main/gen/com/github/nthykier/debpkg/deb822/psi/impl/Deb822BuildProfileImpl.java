@@ -8,16 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.nthykier.debpkg.deb822.psi.Deb822Types.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.nthykier.debpkg.deb822.psi.*;
 
-public class Deb822ValuePartsImpl extends AbstractDeb822ValueParts implements Deb822ValueParts {
+public class Deb822BuildProfileImpl extends ASTWrapperPsiElement implements Deb822BuildProfile {
 
-  public Deb822ValuePartsImpl(@NotNull ASTNode node) {
+  public Deb822BuildProfileImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull Deb822Visitor visitor) {
-    visitor.visitValueParts(this);
+    visitor.visitBuildProfile(this);
   }
 
   @Override
@@ -27,21 +28,18 @@ public class Deb822ValuePartsImpl extends AbstractDeb822ValueParts implements De
   }
 
   @Override
-  @NotNull
-  public List<Deb822BuildProfileGroup> getBuildProfileGroupList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822BuildProfileGroup.class);
+  public @NotNull String getProfileName() {
+    return Deb822PsiImplUtil.getProfileName(this);
   }
 
   @Override
-  @NotNull
-  public List<Deb822Substvar> getSubstvarList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822Substvar.class);
+  public @NotNull ASTNode getProfileNameNode() {
+    return Deb822PsiImplUtil.getProfileNameNode(this);
   }
 
   @Override
-  @NotNull
-  public List<Deb822Value> getValueList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822Value.class);
+  public boolean isNegated() {
+    return Deb822PsiImplUtil.isNegated(this);
   }
 
 }

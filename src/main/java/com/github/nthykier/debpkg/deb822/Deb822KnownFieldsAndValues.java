@@ -171,6 +171,7 @@ public class Deb822KnownFieldsAndValues {
                             + " (should it have been a SINGLE_VALUE instead?)");
                 }
                 break;
+            case BUILD_PROFILES_FIELD:
             case COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK:
             case COMMA_SEPARATED_VALUE_LIST:
             case SPACE_SEPARATED_VALUE_LIST:

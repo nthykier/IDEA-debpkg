@@ -29,7 +29,7 @@ public class Deb822FieldValuePairElementManipulator extends AbstractElementManip
             throw new IncorrectOperationException("Newlines in original text not supported");
         }
         builder.replace(range.getStartOffset(), range.getEndOffset(), newContent);
-        replacement = Deb822ElementFactory.createFieldValuePairFromText(element.getProject(), builder.toString());
+        replacement = Deb822ElementFactory.createFieldValuePairFromText(element.getProject(), element.getContainingFile().getFileType(), builder.toString());
         return (Deb822FieldValuePair)element.replace(replacement);
     }
 }

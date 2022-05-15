@@ -72,7 +72,7 @@ public class AbstractDeb822ValueParts extends ASTWrapperPsiElement implements Ps
 
     @Override
     public PsiLanguageInjectionHost updateText(@NotNull String text) {
-        Deb822ValueParts valueParts = Deb822ElementFactory.createValuePartsFromText(this.getProject(), "Foo: " + text);
+        Deb822ValueParts valueParts = Deb822ElementFactory.createValuePartsFromText(this.getProject(), getContainingFile().getFileType(), "Foo: " + text);
         CheckUtil.checkWritable(this);
         this.getNode().replaceAllChildrenToChildrenOf(valueParts.getNode());
         return this;

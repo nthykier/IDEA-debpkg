@@ -118,7 +118,7 @@ public abstract class AbstractDeb822Paragraph extends ASTWrapperPsiElement imple
 
   @Override
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
-    Deb822ValueParts valueParts = Deb822ElementFactory.createValuePartsFromText(getProject(), "Foo: " + name);
+    Deb822ValueParts valueParts = Deb822ElementFactory.createValuePartsFromText(getProject(), getContainingFile().getFileType(),  "Foo: " + name);
     Deb822ValueParts original = (Deb822ValueParts)this.getNameIdentifier();
     if (original == null) {
       throw new IncorrectOperationException("Unnamed");

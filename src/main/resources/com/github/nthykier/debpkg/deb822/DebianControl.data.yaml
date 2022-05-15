@@ -541,7 +541,7 @@ fields:
       </pre>
 
       Note that there is an official list of "common" build profiles with predefined purposes along with rules for how and when the can be used.
-    valueType: FREE_TEXT_VALUE  # this is the best level of support for now.
+    valueType: BUILD_PROFILES_FIELD
     supportsSubstvars: false
 
   - canonicalName: Uploaders

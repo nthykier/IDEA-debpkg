@@ -76,6 +76,21 @@ public class Deb822PsiImplUtil {
     }
 
 
+    public static @NotNull ASTNode getProfileNameNode(@NotNull Deb822BuildProfile buildProfile) {
+        PsiElement lastChild = buildProfile.getLastChild();
+        assert lastChild.getNode().getElementType().equals(Deb822Types.BUILD_PROFILE_TOKEN);
+        return lastChild.getNode();
+    }
+
+    public static @NotNull String getProfileName(@NotNull Deb822BuildProfile buildProfile) {
+        return getProfileNameNode(buildProfile).getText();
+    }
+
+
+    public static boolean isNegated(@NotNull Deb822BuildProfile buildProfile) {
+        return buildProfile.textContains('!');
+    }
+
     @NotNull
     public static String getTextFromCompositeWrappingAToken(@NotNull PsiElement element,
                                                             @NotNull TokenSet tokenTypes) {

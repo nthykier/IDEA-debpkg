@@ -14,7 +14,8 @@
 - Add `DM-Upload-Allowed` as known field and an inspection suggesting removing it as it is obsolete.
 - Add inspection for possibly incorrect section field value based on package name.  This inspection
   matches the lintian hint `wrong-section-according-to-package-name`.
-- Add `Build-Profiles` as a known field.
+- Add `Build-Profiles` as a known field and validation of known build profiles used in that field.
+  (Build profiles used in build-dependency fields are still not checked).
 - Add inspection for detecting misspelled field names.
 - Add inspection for detecting missing `${shlibs:Depends}` dependency.
 - Add inspection for detecting non-canonical variants of fields (`depends` -> `Depends` or `XC-Package-Type` -> `Package-Type`).
@@ -27,6 +28,7 @@
 - Internal/Chore: Update the CI dependency on `actions/setup-java`.
 - Internal/Chore: Bump lombok dependency to 1.18.24.
 - Internal/Chore: Rewrite how problem descriptors are managed internally.
+- Internal: Optimize the deb822 lexer by removing some redundant states.
 
 ## [0.0.15]
 ### Added

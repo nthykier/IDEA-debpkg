@@ -6,7 +6,12 @@ package org.intellij.sdk.language;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.TokenType;import com.intellij.spellchecker.tokenizer.Tokenizer;
+import com.intellij.psi.TokenType;
+import com.intellij.spellchecker.tokenizer.Tokenizer;
+import com.github.nthykier.debpkg.deb822.Deb822LanguageSupport;
+import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
+import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
 
 
 /**
@@ -24,12 +29,15 @@ public class Deb822Lexer implements FlexLexer {
 
   /** lexical states */
   public static final int YYINITIAL = 0;
-  public static final int WAITING_FOR_SEPARATOR = 2;
-  public static final int MAYBE_CONT_VALUE = 4;
-  public static final int PARSING_VALUE = 6;
-  public static final int GPG_PARSE_ARMORED_HEADERS = 8;
-  public static final int GPG_BEGIN_SIGNATURE_ARMORED_HEADERS = 10;
-  public static final int GPG_SIGNATURE_BLOB = 12;
+  public static final int GPG_PARSE_ARMORED_HEADERS = 2;
+  public static final int GPG_BEGIN_SIGNATURE_ARMORED_HEADERS = 4;
+  public static final int GPG_SIGNATURE_BLOB = 6;
+  public static final int SEPARATOR_BEFORE_VALUE = 8;
+  public static final int MAYBE_CONT_VALUE = 10;
+  public static final int PARSING_VALUE = 12;
+  public static final int SEPARATOR_BEFORE_BUILD_PROFILES = 14;
+  public static final int MAYBE_CONT_BUILD_PROFILES = 16;
+  public static final int PARSING_BUILD_PROFILES = 18;
 
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -38,7 +46,8 @@ public class Deb822Lexer implements FlexLexer {
    * l is of the form l = 2*k, k a non negative integer
    */
   private static final int ZZ_LEXSTATE[] = { 
-     0,  1,  2,  2,  3,  4,  5,  5,  6,  7,  6,  8,  9, 10
+     0,  1,  2,  3,  2,  4,  5,  6,  7,  7,  8,  9, 10, 10,  7,  7, 
+     8,  9, 11, 11
   };
 
   /** 
@@ -60,11 +69,11 @@ public class Deb822Lexer implements FlexLexer {
 
   /* The ZZ_CMAP_A table has 640 entries */
   static final char ZZ_CMAP_A[] = zzUnpackCMap(
-    "\11\33\1\14\1\1\1\0\1\3\1\5\22\33\1\2\2\15\1\4\1\6\5\15\1\34\1\35\1\36\1\11"+
-    "\1\15\1\35\12\10\1\13\2\15\1\35\3\15\1\27\1\16\1\10\1\25\1\17\1\10\1\20\1"+
-    "\10\1\21\3\10\1\26\1\22\1\10\1\23\1\10\1\32\1\24\1\30\1\31\5\10\4\15\1\35"+
-    "\1\15\32\10\1\7\1\15\1\12\1\15\6\33\1\0\32\33\1\0\337\33\1\0\177\33\13\0\35"+
-    "\33\2\0\5\33\1\0\57\33\1\0\40\33");
+    "\11\34\1\15\1\1\1\0\1\3\1\5\22\34\1\2\1\42\1\16\1\4\1\6\5\16\1\35\1\36\1\40"+
+    "\1\11\1\14\1\37\12\10\1\13\1\16\1\41\1\37\1\43\2\16\1\30\1\17\1\10\1\26\1"+
+    "\20\1\10\1\21\1\10\1\22\3\10\1\27\1\23\1\10\1\24\1\10\1\33\1\25\1\31\1\32"+
+    "\5\10\4\16\1\36\1\16\32\10\1\7\1\16\1\12\1\14\6\34\1\0\32\34\1\0\337\34\1"+
+    "\0\177\34\13\0\35\34\2\0\5\34\1\0\57\34\1\0\40\34");
 
   /** 
    * Translates DFA states to action switch labels.
@@ -72,16 +81,16 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\13\0\1\1\1\2\1\3\1\1\1\4\1\1\1\2"+
-    "\1\5\1\6\1\1\1\6\1\7\1\1\1\10\1\11"+
-    "\2\10\1\12\3\1\1\13\1\14\1\2\1\1\2\15"+
-    "\3\0\1\3\1\0\1\16\7\0\1\15\2\0\1\17"+
-    "\1\20\1\15\1\0\1\15\1\0\1\15\1\0\1\15"+
-    "\1\0\1\15\1\0\1\15\60\0\1\21\3\0\1\22"+
-    "\4\0\1\23";
+    "\14\0\1\1\1\2\1\3\1\1\1\4\4\1\1\5"+
+    "\1\6\1\2\1\1\2\7\1\2\1\10\1\11\1\1"+
+    "\1\11\1\12\1\1\1\13\1\14\2\13\1\15\1\16"+
+    "\1\17\1\20\1\21\1\22\7\0\1\7\1\0\1\3"+
+    "\1\0\1\23\3\0\1\24\1\7\1\0\1\25\1\0"+
+    "\1\7\1\0\1\7\1\0\1\7\1\0\1\7\1\0"+
+    "\1\7\60\0\1\26\3\0\1\27\4\0\1\30";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[125];
+    int [] result = new int[131];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -106,25 +115,26 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\37\0\76\0\135\0\174\0\233\0\272\0\331"+
-    "\0\370\0\u0117\0\u0136\0\u0155\0\u0174\0\u0193\0\u01b2\0\u01d1"+
-    "\0\u01f0\0\u020f\0\u0155\0\u0155\0\u022e\0\u024d\0\u026c\0\u026c"+
-    "\0\u028b\0\u0155\0\u02aa\0\u02c9\0\u0155\0\u02e8\0\u0307\0\u0326"+
-    "\0\u02e8\0\u02e8\0\u0155\0\u0345\0\u0364\0\u0383\0\u01b2\0\u03a2"+
-    "\0\u022e\0\u0155\0\u024d\0\u026c\0\u026c\0\u03c1\0\u02e8\0\u0307"+
-    "\0\u03e0\0\u0326\0\u0345\0\u03ff\0\u041e\0\u043d\0\u0155\0\u0155"+
-    "\0\u045c\0\u047b\0\u049a\0\u04b9\0\u04d8\0\u04f7\0\u0516\0\u0535"+
-    "\0\u0554\0\u0573\0\u0592\0\u05b1\0\u05d0\0\u05ef\0\u060e\0\u062d"+
-    "\0\u064c\0\u066b\0\u068a\0\u06a9\0\u06c8\0\u06e7\0\u0706\0\u0725"+
-    "\0\u0744\0\u0763\0\u0782\0\u07a1\0\u07c0\0\u07df\0\u07fe\0\u081d"+
-    "\0\u083c\0\u085b\0\u087a\0\u0899\0\u08b8\0\u08d7\0\u08f6\0\u0915"+
-    "\0\u0934\0\u0953\0\u0972\0\u0991\0\u09b0\0\u09cf\0\u09ee\0\u0a0d"+
-    "\0\u0a2c\0\u0a4b\0\u0a6a\0\u0a89\0\u0aa8\0\u0ac7\0\u0ae6\0\u0b05"+
-    "\0\u0b24\0\u0b43\0\u0b62\0\u0155\0\u0b81\0\u0ba0\0\u0bbf\0\u0155"+
-    "\0\u0bde\0\u0bfd\0\u0c1c\0\u0c3b\0\u0155";
+    "\0\0\0\44\0\110\0\154\0\220\0\264\0\330\0\374"+
+    "\0\u0120\0\u0144\0\u0168\0\u018c\0\u01b0\0\u01d4\0\u01f8\0\u021c"+
+    "\0\u0240\0\u0264\0\u0288\0\u02ac\0\u02d0\0\u0288\0\u0288\0\u01b0"+
+    "\0\u02f4\0\u0318\0\u033c\0\u0360\0\u01b0\0\u01b0\0\u0384\0\u03a8"+
+    "\0\u03cc\0\u03cc\0\u03f0\0\u01b0\0\u0414\0\u0438\0\u01b0\0\u01b0"+
+    "\0\u045c\0\u01b0\0\u01b0\0\u01b0\0\u021c\0\u0480\0\u0288\0\u02ac"+
+    "\0\u04a4\0\u02d0\0\u02f4\0\u04c8\0\u0384\0\u01b0\0\u03a8\0\u03cc"+
+    "\0\u03cc\0\u04ec\0\u0510\0\u01b0\0\u0534\0\u0558\0\u01b0\0\u057c"+
+    "\0\u05a0\0\u05c4\0\u05e8\0\u060c\0\u0630\0\u0654\0\u0678\0\u069c"+
+    "\0\u06c0\0\u06e4\0\u0708\0\u072c\0\u0750\0\u0774\0\u0798\0\u07bc"+
+    "\0\u07e0\0\u0804\0\u0828\0\u084c\0\u0870\0\u0894\0\u08b8\0\u08dc"+
+    "\0\u0900\0\u0924\0\u0948\0\u096c\0\u0990\0\u09b4\0\u09d8\0\u09fc"+
+    "\0\u0a20\0\u0a44\0\u0a68\0\u0a8c\0\u0ab0\0\u0ad4\0\u0af8\0\u0b1c"+
+    "\0\u0b40\0\u0b64\0\u0b88\0\u0bac\0\u0bd0\0\u0bf4\0\u0c18\0\u0c3c"+
+    "\0\u0c60\0\u0c84\0\u0ca8\0\u0ccc\0\u0cf0\0\u0d14\0\u0d38\0\u0d5c"+
+    "\0\u0d80\0\u01b0\0\u0da4\0\u0dc8\0\u0dec\0\u01b0\0\u0e10\0\u0e34"+
+    "\0\u0e58\0\u0e7c\0\u01b0";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[125];
+    int [] result = new int[131];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -147,61 +157,65 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\14\1\15\2\14\1\16\33\14\1\15\2\17\1\16"+
-    "\1\14\3\20\1\21\1\20\1\14\1\17\16\20\1\14"+
-    "\3\20\2\14\2\22\7\14\1\23\1\22\23\14\1\24"+
-    "\2\14\1\25\33\14\1\26\1\27\1\30\1\25\1\14"+
-    "\3\20\1\14\1\20\1\14\1\30\16\20\1\14\3\20"+
-    "\1\31\1\32\1\22\1\33\1\31\1\14\1\34\5\31"+
-    "\1\33\21\31\1\35\1\14\1\36\2\14\1\37\1\14"+
-    "\6\37\1\14\17\37\1\40\2\37\1\14\1\41\2\14"+
-    "\1\37\1\14\6\37\1\14\17\37\1\40\2\37\1\14"+
-    "\1\42\2\14\1\37\1\14\6\37\1\14\17\37\1\40"+
-    "\2\37\1\14\1\43\2\44\4\14\2\45\2\14\1\44"+
-    "\1\14\15\45\2\14\1\45\2\14\1\43\2\44\4\14"+
-    "\1\45\1\46\2\14\1\44\1\14\15\45\2\14\1\45"+
-    "\1\14\40\0\1\15\35\0\1\16\1\0\3\16\1\0"+
-    "\31\16\1\0\1\15\2\47\10\0\1\47\26\0\1\20"+
-    "\1\0\5\20\2\0\16\20\1\0\3\20\11\0\1\50"+
-    "\27\0\2\22\10\0\1\22\22\0\1\51\1\52\3\51"+
-    "\1\0\31\51\1\0\1\53\1\54\1\55\10\0\1\55"+
-    "\23\0\1\53\2\55\10\0\1\55\22\0\1\31\2\0"+
-    "\2\31\2\0\27\31\1\0\1\31\1\0\1\22\1\33"+
-    "\1\31\2\0\5\31\1\33\21\31\10\0\1\56\30\0"+
-    "\1\36\32\0\1\57\6\0\1\60\1\0\5\60\1\61"+
-    "\1\0\22\60\1\0\1\36\2\0\1\60\1\0\5\60"+
-    "\1\61\1\0\17\60\1\62\2\60\1\0\1\43\2\63"+
-    "\10\0\1\63\32\0\2\45\4\0\15\45\2\0\1\45"+
-    "\11\0\1\45\1\64\4\0\15\45\2\0\1\45\12\0"+
-    "\1\65\35\0\1\66\1\0\1\67\3\0\15\66\4\0"+
-    "\1\61\1\70\35\61\10\0\1\45\1\71\4\0\15\45"+
-    "\2\0\1\45\12\0\1\72\35\0\2\66\1\67\1\66"+
-    "\2\0\15\66\14\0\1\45\1\73\4\0\15\45\2\0"+
-    "\1\45\12\0\1\74\35\0\1\45\1\75\4\0\15\45"+
-    "\2\0\1\45\17\0\1\76\30\0\2\45\4\0\1\45"+
-    "\1\77\13\45\2\0\1\45\20\0\1\100\27\0\2\45"+
-    "\4\0\4\45\1\101\10\45\2\0\1\45\21\0\1\102"+
-    "\26\0\2\45\4\0\7\45\1\103\5\45\2\0\1\45"+
-    "\22\0\1\104\17\0\1\105\5\0\2\45\4\0\15\45"+
-    "\2\0\1\45\23\0\1\106\37\0\1\107\15\0\1\110"+
-    "\54\0\1\111\41\0\1\112\36\0\1\113\33\0\1\114"+
-    "\20\0\1\115\57\0\1\116\37\0\1\117\14\0\1\120"+
-    "\55\0\1\121\41\0\1\122\32\0\1\123\37\0\1\124"+
-    "\37\0\1\125\34\0\1\126\45\0\1\127\31\0\1\130"+
-    "\44\0\1\131\25\0\1\132\7\0\1\133\40\0\1\134"+
-    "\32\0\1\135\41\0\1\136\40\0\1\137\6\0\1\140"+
-    "\65\0\1\141\24\0\1\142\45\0\1\143\42\0\1\144"+
-    "\15\0\1\145\44\0\1\146\36\0\1\147\30\0\1\150"+
-    "\51\0\1\151\23\0\1\152\36\0\1\153\51\0\1\154"+
-    "\23\0\1\155\36\0\1\156\54\0\1\157\20\0\1\160"+
-    "\36\0\1\161\45\0\1\162\27\0\1\163\26\0\1\164"+
-    "\1\161\11\0\1\161\41\0\1\165\30\0\1\166\36\0"+
-    "\1\167\26\0\1\170\1\166\11\0\1\166\33\0\1\171"+
-    "\36\0\1\172\36\0\1\173\36\0\1\174\26\0\1\175"+
-    "\1\174\11\0\1\174\22\0";
+    "\1\15\1\16\2\15\1\17\40\15\1\16\2\20\1\17"+
+    "\1\15\3\21\1\22\1\21\1\15\1\21\1\20\16\21"+
+    "\1\15\7\21\1\15\1\23\2\15\1\24\1\15\7\24"+
+    "\1\15\17\24\1\25\6\24\1\15\1\26\2\15\1\24"+
+    "\1\15\7\24\1\15\17\24\1\25\6\24\1\15\1\27"+
+    "\2\15\1\24\1\15\7\24\1\15\17\24\1\25\6\24"+
+    "\1\15\1\30\2\31\4\15\2\32\3\15\1\31\1\15"+
+    "\15\32\2\15\2\32\5\15\1\30\2\31\4\15\1\32"+
+    "\1\33\3\15\1\31\1\15\15\32\2\15\2\32\6\15"+
+    "\2\34\7\15\1\35\1\15\1\34\27\15\1\36\2\15"+
+    "\1\37\40\15\1\40\1\41\1\42\1\37\1\15\3\21"+
+    "\1\15\1\21\1\15\1\21\1\42\16\21\1\15\7\21"+
+    "\1\43\1\44\1\34\1\45\1\43\1\15\1\46\6\43"+
+    "\1\45\22\43\1\47\3\43\1\15\1\50\2\34\4\15"+
+    "\1\51\4\15\1\34\1\15\15\51\5\15\1\52\1\53"+
+    "\1\54\45\0\1\16\42\0\1\17\1\0\3\17\1\0"+
+    "\36\17\1\0\1\16\2\55\11\0\1\55\32\0\1\21"+
+    "\1\0\5\21\1\0\1\21\1\0\16\21\1\0\7\21"+
+    "\11\0\1\56\33\0\1\23\33\0\1\57\12\0\1\60"+
+    "\1\0\5\60\1\61\1\60\1\0\26\60\1\0\1\23"+
+    "\2\0\1\60\1\0\5\60\1\61\1\60\1\0\17\60"+
+    "\1\62\6\60\1\0\1\30\2\63\11\0\1\63\36\0"+
+    "\2\32\5\0\15\32\2\0\2\32\14\0\1\32\1\64"+
+    "\5\0\15\32\2\0\2\32\6\0\2\34\11\0\1\34"+
+    "\26\0\1\65\1\66\3\65\1\0\36\65\1\0\1\67"+
+    "\1\70\1\71\11\0\1\71\27\0\1\67\2\71\11\0"+
+    "\1\71\26\0\1\43\2\0\2\43\2\0\31\43\1\0"+
+    "\4\43\1\0\1\34\1\45\1\43\2\0\6\43\1\45"+
+    "\22\43\1\0\3\43\7\0\1\72\44\0\2\51\2\0"+
+    "\1\51\2\0\15\51\2\0\1\51\16\0\1\73\32\0"+
+    "\1\61\1\74\42\61\10\0\1\32\1\75\5\0\15\32"+
+    "\2\0\2\32\14\0\1\76\1\0\1\77\4\0\15\76"+
+    "\21\0\1\100\42\0\1\32\1\101\5\0\15\32\2\0"+
+    "\2\32\14\0\2\76\1\77\1\76\3\0\15\76\21\0"+
+    "\1\102\42\0\1\32\1\103\5\0\15\32\2\0\2\32"+
+    "\23\0\1\104\34\0\2\32\5\0\1\32\1\105\13\32"+
+    "\2\0\2\32\24\0\1\106\33\0\2\32\5\0\4\32"+
+    "\1\107\10\32\2\0\2\32\25\0\1\110\32\0\2\32"+
+    "\5\0\7\32\1\111\5\32\2\0\2\32\26\0\1\112"+
+    "\23\0\1\113\5\0\2\32\5\0\15\32\2\0\2\32"+
+    "\27\0\1\114\44\0\1\115\21\0\1\116\62\0\1\117"+
+    "\46\0\1\120\43\0\1\121\40\0\1\122\24\0\1\123"+
+    "\65\0\1\124\44\0\1\125\20\0\1\126\63\0\1\127"+
+    "\46\0\1\130\37\0\1\131\44\0\1\132\44\0\1\133"+
+    "\41\0\1\134\52\0\1\135\36\0\1\136\51\0\1\137"+
+    "\32\0\1\140\7\0\1\141\45\0\1\142\37\0\1\143"+
+    "\46\0\1\144\45\0\1\145\12\0\1\146\73\0\1\147"+
+    "\31\0\1\150\52\0\1\151\47\0\1\152\21\0\1\153"+
+    "\52\0\1\154\43\0\1\155\34\0\1\156\57\0\1\157"+
+    "\27\0\1\160\43\0\1\161\57\0\1\162\27\0\1\163"+
+    "\43\0\1\164\62\0\1\165\24\0\1\166\43\0\1\167"+
+    "\53\0\1\170\33\0\1\171\33\0\1\172\1\167\12\0"+
+    "\1\167\46\0\1\173\34\0\1\174\43\0\1\175\33\0"+
+    "\1\176\1\174\12\0\1\174\37\0\1\177\43\0\1\200"+
+    "\43\0\1\201\43\0\1\202\33\0\1\203\1\202\12\0"+
+    "\1\202\26\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[3162];
+    int [] result = new int[3744];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -239,14 +253,14 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\13\0\1\11\6\1\2\11\5\1\1\11\2\1\1\11"+
-    "\5\1\1\11\3\1\3\0\1\11\1\0\1\1\7\0"+
-    "\1\1\2\0\2\11\1\1\1\0\1\1\1\0\1\1"+
-    "\1\0\1\1\1\0\1\1\1\0\1\1\60\0\1\11"+
-    "\3\0\1\11\4\0\1\11";
+    "\14\0\1\11\12\1\1\11\4\1\2\11\5\1\1\11"+
+    "\2\1\2\11\1\1\3\11\7\0\1\1\1\0\1\11"+
+    "\1\0\1\1\3\0\1\11\1\1\1\0\1\11\1\0"+
+    "\1\1\1\0\1\1\1\0\1\1\1\0\1\1\1\0"+
+    "\1\1\60\0\1\11\3\0\1\11\4\0\1\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[125];
+    int [] result = new int[131];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -301,13 +315,47 @@ public class Deb822Lexer implements FlexLexer {
   /** denotes if the user-EOF-code has already been executed */
   private boolean zzEOFDone;
 
+  /* user code: */
+    private final Deb822LanguageSupport languageSupport;
+    private final KnownFieldTable knownFieldTable;
+
+
+    private IElementType parsedFieldName() {
+        Deb822KnownField knownField = knownFieldTable.getField(yytext().toString());
+        Deb822KnownFieldValueType valueType = Deb822KnownFieldValueType.FREE_TEXT_VALUE;
+        if (knownField != null && knownField.getCanonicalFieldName().equals("Build-Profiles")) {
+            valueType = knownField.getFieldValueType();
+        }
+        yybegin(valueType.getInitialValueParsingLexerState());
+        return Deb822Types.FIELD_NAME;
+    }
+
+    private void nextValueParsingState() {
+        int newState;
+        switch(zzLexicalState) {
+            case SEPARATOR_BEFORE_VALUE:
+            case MAYBE_CONT_VALUE:
+                newState = PARSING_VALUE;
+                break;
+            case SEPARATOR_BEFORE_BUILD_PROFILES:
+            case MAYBE_CONT_BUILD_PROFILES:
+                newState = PARSING_BUILD_PROFILES;
+                break;
+            default:
+                throw new IllegalStateException("The nextValueParsingState was called in the wrong context");
+        }
+        yybegin(newState);
+    }
+
 
   /**
    * Creates a new scanner
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  public Deb822Lexer(java.io.Reader in) {
+  public Deb822Lexer(java.io.Reader in, Deb822LanguageSupport languageSupport) {
+      this.languageSupport = languageSupport;
+    this.knownFieldTable = languageSupport.getKnownFieldTable();
     this.zzReader = in;
   }
 
@@ -596,97 +644,122 @@ public class Deb822Lexer implements FlexLexer {
             { return TokenType.BAD_CHARACTER;
             } 
             // fall through
-          case 20: break;
+          case 25: break;
           case 2: 
             { return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 21: break;
+          case 26: break;
           case 3: 
             { return Deb822Types.COMMENT;
             } 
             // fall through
-          case 22: break;
-          case 4: 
-            { yybegin(WAITING_FOR_SEPARATOR); return Deb822Types.FIELD_NAME;
-            } 
-            // fall through
-          case 23: break;
-          case 5: 
-            { yybegin(PARSING_VALUE); return Deb822Types.SEPARATOR;
-            } 
-            // fall through
-          case 24: break;
-          case 6: 
-            { yybegin(YYINITIAL); return Deb822Types.PARAGRAPH_FINISH;
-            } 
-            // fall through
-          case 25: break;
-          case 7: 
-            { yybegin(PARSING_VALUE); return TokenType.WHITE_SPACE;
-            } 
-            // fall through
-          case 26: break;
-          case 8: 
-            { return Deb822Types.VALUE_TOKEN;
-            } 
-            // fall through
           case 27: break;
-          case 9: 
-            { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE;
+          case 4: 
+            { return parsedFieldName();
             } 
             // fall through
           case 28: break;
-          case 10: 
-            { return Deb822Types.COMMA;
-            } 
-            // fall through
-          case 29: break;
-          case 11: 
+          case 5: 
             { yybegin(YYINITIAL); return Deb822Types.GPG_ARMOR_HEADERS_END;
             } 
             // fall through
-          case 30: break;
-          case 12: 
+          case 29: break;
+          case 6: 
             { yybegin(GPG_SIGNATURE_BLOB); return Deb822Types.GPG_ARMOR_HEADERS_END;
             } 
             // fall through
-          case 31: break;
-          case 13: 
+          case 30: break;
+          case 7: 
             { return Deb822Types.GPG_SIGNATURE_BLOB_PART;
             } 
             // fall through
+          case 31: break;
+          case 8: 
+            { nextValueParsingState(); return Deb822Types.SEPARATOR;
+            } 
+            // fall through
           case 32: break;
-          case 14: 
-            { yybegin(PARSING_VALUE); return Deb822Types.HANGING_CONT_VALUE_TOKEN;
+          case 9: 
+            { yybegin(YYINITIAL); return Deb822Types.PARAGRAPH_FINISH;
             } 
             // fall through
           case 33: break;
-          case 15: 
-            { return Deb822Types.SUBSTVAR_TOKEN;
+          case 10: 
+            { nextValueParsingState(); return TokenType.WHITE_SPACE;
             } 
             // fall through
           case 34: break;
-          case 16: 
-            { return Deb822Types.GPG_ARMOR_HEADER;
+          case 11: 
+            { return Deb822Types.VALUE_TOKEN;
             } 
             // fall through
           case 35: break;
-          case 17: 
-            { yybegin(GPG_PARSE_ARMORED_HEADERS); return Deb822Types.GPG_END_SIGNATURE;
+          case 12: 
+            { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE;
             } 
             // fall through
           case 36: break;
-          case 18: 
-            { yybegin(GPG_BEGIN_SIGNATURE_ARMORED_HEADERS); return Deb822Types.GPG_BEGIN_SIGNATURE;
+          case 13: 
+            { return Deb822Types.COMMA;
             } 
             // fall through
           case 37: break;
-          case 19: 
-            { yybegin(GPG_PARSE_ARMORED_HEADERS); return Deb822Types.GPG_BEGIN_SIGNED_MESSAGE;
+          case 14: 
+            { yybegin(MAYBE_CONT_BUILD_PROFILES); return TokenType.WHITE_SPACE;
             } 
             // fall through
           case 38: break;
+          case 15: 
+            { return Deb822Types.BUILD_PROFILE_TOKEN;
+            } 
+            // fall through
+          case 39: break;
+          case 16: 
+            { return Deb822Types.ANGLE_BRACKET_OPEN;
+            } 
+            // fall through
+          case 40: break;
+          case 17: 
+            { return Deb822Types.NEGATION;
+            } 
+            // fall through
+          case 41: break;
+          case 18: 
+            { return Deb822Types.ANGLE_BRACKET_CLOSE;
+            } 
+            // fall through
+          case 42: break;
+          case 19: 
+            { nextValueParsingState(); return Deb822Types.HANGING_CONT_VALUE_TOKEN;
+            } 
+            // fall through
+          case 43: break;
+          case 20: 
+            { return Deb822Types.GPG_ARMOR_HEADER;
+            } 
+            // fall through
+          case 44: break;
+          case 21: 
+            { return Deb822Types.SUBSTVAR_TOKEN;
+            } 
+            // fall through
+          case 45: break;
+          case 22: 
+            { yybegin(GPG_PARSE_ARMORED_HEADERS); return Deb822Types.GPG_END_SIGNATURE;
+            } 
+            // fall through
+          case 46: break;
+          case 23: 
+            { yybegin(GPG_BEGIN_SIGNATURE_ARMORED_HEADERS); return Deb822Types.GPG_BEGIN_SIGNATURE;
+            } 
+            // fall through
+          case 47: break;
+          case 24: 
+            { yybegin(GPG_PARSE_ARMORED_HEADERS); return Deb822Types.GPG_BEGIN_SIGNED_MESSAGE;
+            } 
+            // fall through
+          case 48: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

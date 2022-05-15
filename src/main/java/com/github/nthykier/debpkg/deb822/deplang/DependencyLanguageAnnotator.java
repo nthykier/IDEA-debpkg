@@ -189,9 +189,9 @@ public class DependencyLanguageAnnotator implements Annotator {
                     .create();
             } else {
                 Deb822TypeSafeLocalQuickFix<DepLangVersionOperator> quickfixer =
-                        AnnotatorUtil.replacementQuickFixer(
+                        AnnotatorUtil.replacementQuickFix(
                                 Deb822Bundle.message("deb822.files.quickfix.fields.incorrect-version-operator-in-dependency-with-known-replacement.name"),
-                                (Project p) -> DepLangElementFactory.createVersionPart(p, "debhelper (" + replacement + " 1.0)").getVersionOperator()
+                                (p, pd) -> DepLangElementFactory.createVersionPart(p, "debhelper (" + replacement + " 1.0)").getVersionOperator()
                         );
 
                 AnnotatorUtil.createAnnotationWithQuickFix(

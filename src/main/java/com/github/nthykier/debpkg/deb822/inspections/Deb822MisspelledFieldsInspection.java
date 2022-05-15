@@ -6,22 +6,19 @@ import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
+import com.github.nthykier.debpkg.util.StringUtil;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.util.SmartList;
-import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Deb822MisspelledFieldsInspection extends LocalInspectionTool {
-
-    private static final LevenshteinDistance EDIT_DISTANCE = new LevenshteinDistance(3);
 
     @NotNull
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
@@ -39,29 +36,21 @@ public class Deb822MisspelledFieldsInspection extends LocalInspectionTool {
     }
 
     private void checkParagraph(ProblemsHolder holder, @NotNull Deb822Paragraph deb822Paragraph, KnownFieldTable knownFieldTable, List<String> knownFieldNames) {
-        SmartList<String> matches = new SmartList<>();
         for (Deb822FieldValuePair valuePair : deb822Paragraph.getFieldValuePairList()) {
             Deb822Field field = valuePair.getField();
             if (field.getDeb822KnownField() != null) {
                 // Already known, no need to check for typos
                 continue;
             }
-            matches.clear();
             String fieldName = field.getFieldName().toLowerCase();
             if (knownFieldTable.getAutoStripXPrefix()) {
-                // Strip the "X-" prefix to avoid it hiding a match (e.g. "XC-Pakcage-Type" should be detected as Package-Type)
+                // Strip the "X-" prefix to avoid it hiding a match (e.g. the typo in "XC-Pakcage-Type" should be detected as Package-Type)
                 String stripped = KnownFieldTable.withXPrefixStripped(fieldName);
                 if (stripped != null) {
                     fieldName = stripped;
                 }
             }
-            for (String knownFieldName : knownFieldNames) {
-                int distance = EDIT_DISTANCE.apply(fieldName, knownFieldName);
-                if (distance < 0) {
-                    continue;
-                }
-                matches.add(knownFieldName);
-            }
+            List<String> matches = StringUtil.possibleMisspellingOf(fieldName, knownFieldNames, false);
             if (!matches.isEmpty()) {
                 holder.registerProblem(
                         field,
