@@ -1,6 +1,7 @@
 package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
+import com.github.nthykier.debpkg.deb822.Deb822DataSets;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.github.nthykier.debpkg.util.StringUtil;
@@ -13,30 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class DCtrlMissingDefaultBuildProfilesInspection extends AbstractDctrlInspection {
+public class DCtrlUnknownBuildProfilesInspection extends AbstractDctrlInspection {
 
     // Set.of in Java 11.
-    private static final Set<String> KNOWN_PROFILES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            "cross",
-            "stage1",
-            "stage2",
-            "nobiarch",
-            "nocheck",
-            "nocil",
-            "nodoc",
-            "nogolang",
-            "noinsttest",
-            "nojava",
-            "noperl",
-            "nopython",
-            "noruby",
-            "nolua",
-            "noguile",
-            "noocaml",
-            "nowasm",
-            "nowindows",
-            "noudeb"
-    )));
+    private static final Set<String> KNOWN_PROFILES = Deb822DataSets.getDataSet("build-profiles");
 
 
     private static final Pattern PER_PACKAGE_PROFILE_PATTERN = Pattern.compile("pkg[.][a-z0-9][a-z0-9.+-]+[.][a-z0-9-]+");

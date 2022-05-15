@@ -144,13 +144,13 @@
                          implementationClass="com.github.nthykier.debpkg.deb822.inspections.Deb822CanonicalFieldVariantInspection"/>
         <localInspection language="DebianControl"
                          groupPathKey="pluginDescriptor.inspection.DebianControl.groupPath"
-                         shortName="DCtrlMissingDefaultBuildProfiles"
+                         shortName="DCtrlUnknownBuildProfiles"
                          key="deb822.files.inspection.canonical-field-variant.name"
                          groupKey="pluginDescriptor.inspection.DebianControl.groupName"
                          enabledByDefault="true"
                          hasStaticDescription="true"
                          level="WARNING"
-                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlMissingDefaultBuildProfilesInspection"/>
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlUnknownBuildProfilesInspection"/>
 
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
