@@ -24,15 +24,12 @@ public class Deb822Lexer implements FlexLexer {
 
   /** lexical states */
   public static final int YYINITIAL = 0;
-  public static final int WAITING_FOR_SEPATOR = 2;
-  public static final int PARSING_INITIAL_VALUE_AFTER_SEPARATOR = 4;
-  public static final int PARSING_INITIAL_VALUE = 6;
-  public static final int MAYBE_CONT_VALUE = 8;
-  public static final int SEEN_INITIAL_VALUE = 10;
-  public static final int PARSING_CONT_VALUE = 12;
-  public static final int GPG_PARSE_ARMORED_HEADERS = 14;
-  public static final int GPG_BEGIN_SIGNATURE_ARMORED_HEADERS = 16;
-  public static final int GPG_SIGNATURE_BLOB = 18;
+  public static final int WAITING_FOR_SEPARATOR = 2;
+  public static final int MAYBE_CONT_VALUE = 4;
+  public static final int PARSING_VALUE = 6;
+  public static final int GPG_PARSE_ARMORED_HEADERS = 8;
+  public static final int GPG_BEGIN_SIGNATURE_ARMORED_HEADERS = 10;
+  public static final int GPG_SIGNATURE_BLOB = 12;
 
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -41,8 +38,7 @@ public class Deb822Lexer implements FlexLexer {
    * l is of the form l = 2*k, k a non negative integer
    */
   private static final int ZZ_LEXSTATE[] = { 
-     0,  1,  2,  2,  3,  3,  4,  4,  5,  6,  7,  7,  7,  7,  8,  9, 
-     8, 10, 11, 12
+     0,  1,  2,  2,  3,  4,  5,  5,  6,  7,  6,  8,  9, 10
   };
 
   /** 
@@ -64,11 +60,11 @@ public class Deb822Lexer implements FlexLexer {
 
   /* The ZZ_CMAP_A table has 640 entries */
   static final char ZZ_CMAP_A[] = zzUnpackCMap(
-    "\11\34\1\14\1\1\1\16\1\3\1\5\22\34\1\2\2\15\1\4\1\6\5\15\1\35\1\36\1\37\1"+
-    "\11\1\15\1\36\12\10\1\13\2\15\1\36\3\15\1\30\1\17\1\10\1\26\1\20\1\10\1\21"+
-    "\1\10\1\22\3\10\1\27\1\23\1\10\1\24\1\10\1\33\1\25\1\31\1\32\5\10\4\15\1\36"+
-    "\1\15\32\10\1\7\1\15\1\12\1\15\6\34\1\16\32\34\1\0\337\34\1\0\177\34\13\0"+
-    "\35\34\2\16\5\34\1\0\57\34\1\0\40\34");
+    "\11\33\1\14\1\1\1\0\1\3\1\5\22\33\1\2\2\15\1\4\1\6\5\15\1\34\1\35\1\36\1\11"+
+    "\1\15\1\35\12\10\1\13\2\15\1\35\3\15\1\27\1\16\1\10\1\25\1\17\1\10\1\20\1"+
+    "\10\1\21\3\10\1\26\1\22\1\10\1\23\1\10\1\32\1\24\1\30\1\31\5\10\4\15\1\35"+
+    "\1\15\32\10\1\7\1\15\1\12\1\15\6\33\1\0\32\33\1\0\337\33\1\0\177\33\13\0\35"+
+    "\33\2\0\5\33\1\0\57\33\1\0\40\33");
 
   /** 
    * Translates DFA states to action switch labels.
@@ -76,18 +72,16 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\15\0\1\1\1\2\1\3\1\1\1\4\1\1\1\2"+
-    "\1\5\1\6\1\7\2\10\1\6\1\11\1\1\1\6"+
-    "\1\12\1\1\1\12\1\13\1\1\3\14\1\15\3\1"+
-    "\1\16\1\17\1\2\1\1\2\20\3\0\1\21\1\0"+
-    "\4\21\1\0\1\22\1\0\1\23\7\0\1\20\2\0"+
-    "\1\24\1\25\1\0\1\23\2\0\1\26\1\27\1\20"+
-    "\1\0\1\23\1\20\1\0\1\20\1\0\1\20\1\0"+
-    "\1\20\1\0\1\20\60\0\1\30\3\0\1\31\4\0"+
-    "\1\32";
+    "\13\0\1\1\1\2\1\3\1\1\1\4\1\1\1\2"+
+    "\1\5\1\6\1\1\1\6\1\7\1\1\1\10\1\11"+
+    "\2\10\1\12\3\1\1\13\1\14\1\2\1\1\2\15"+
+    "\3\0\1\3\1\0\1\16\7\0\1\15\2\0\1\17"+
+    "\1\20\1\15\1\0\1\15\1\0\1\15\1\0\1\15"+
+    "\1\0\1\15\1\0\1\15\60\0\1\21\3\0\1\22"+
+    "\4\0\1\23";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[148];
+    int [] result = new int[125];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -112,28 +106,25 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\40\0\100\0\140\0\200\0\240\0\300\0\340"+
-    "\0\u0100\0\u0120\0\u0140\0\u0160\0\u0180\0\u01a0\0\u01c0\0\u01e0"+
-    "\0\u0200\0\u0220\0\u0240\0\u0260\0\u01a0\0\u0280\0\u01a0\0\u02a0"+
-    "\0\u02c0\0\u02e0\0\u01a0\0\u0300\0\u0320\0\u01a0\0\u0340\0\u0360"+
-    "\0\u0380\0\u0380\0\u03a0\0\u03c0\0\u03e0\0\u01a0\0\u0400\0\u0420"+
-    "\0\u0440\0\u0400\0\u0400\0\u01a0\0\u0460\0\u0480\0\u04a0\0\u0200"+
-    "\0\u04c0\0\u04e0\0\u01a0\0\u0300\0\u0300\0\u0500\0\u0320\0\u0280"+
-    "\0\u0340\0\u01a0\0\u0520\0\u0380\0\u0380\0\u0540\0\u0400\0\u0420"+
-    "\0\u0560\0\u0440\0\u0460\0\u0580\0\u05a0\0\u05c0\0\u01a0\0\u01a0"+
-    "\0\u05e0\0\u0600\0\u0600\0\u0620\0\u01a0\0\u01a0\0\u0640\0\u0660"+
-    "\0\u01a0\0\u0680\0\u06a0\0\u06c0\0\u06e0\0\u0700\0\u0720\0\u0740"+
-    "\0\u0760\0\u0780\0\u07a0\0\u07c0\0\u07e0\0\u0800\0\u0820\0\u0840"+
-    "\0\u0860\0\u0880\0\u08a0\0\u08c0\0\u08e0\0\u0900\0\u0920\0\u0940"+
-    "\0\u0960\0\u0980\0\u09a0\0\u09c0\0\u09e0\0\u0a00\0\u0a20\0\u0a40"+
-    "\0\u0a60\0\u0a80\0\u0aa0\0\u0ac0\0\u0ae0\0\u0b00\0\u0b20\0\u0b40"+
-    "\0\u0b60\0\u0b80\0\u0ba0\0\u0bc0\0\u0be0\0\u0c00\0\u0c20\0\u0c40"+
-    "\0\u0c60\0\u0c80\0\u0ca0\0\u0cc0\0\u0ce0\0\u0d00\0\u0d20\0\u0d40"+
-    "\0\u0d60\0\u0d80\0\u01a0\0\u0da0\0\u0dc0\0\u0de0\0\u01a0\0\u0e00"+
-    "\0\u0e20\0\u0e40\0\u0e60\0\u01a0";
+    "\0\0\0\37\0\76\0\135\0\174\0\233\0\272\0\331"+
+    "\0\370\0\u0117\0\u0136\0\u0155\0\u0174\0\u0193\0\u01b2\0\u01d1"+
+    "\0\u01f0\0\u020f\0\u0155\0\u0155\0\u022e\0\u024d\0\u026c\0\u026c"+
+    "\0\u028b\0\u0155\0\u02aa\0\u02c9\0\u0155\0\u02e8\0\u0307\0\u0326"+
+    "\0\u02e8\0\u02e8\0\u0155\0\u0345\0\u0364\0\u0383\0\u01b2\0\u03a2"+
+    "\0\u022e\0\u0155\0\u024d\0\u026c\0\u026c\0\u03c1\0\u02e8\0\u0307"+
+    "\0\u03e0\0\u0326\0\u0345\0\u03ff\0\u041e\0\u043d\0\u0155\0\u0155"+
+    "\0\u045c\0\u047b\0\u049a\0\u04b9\0\u04d8\0\u04f7\0\u0516\0\u0535"+
+    "\0\u0554\0\u0573\0\u0592\0\u05b1\0\u05d0\0\u05ef\0\u060e\0\u062d"+
+    "\0\u064c\0\u066b\0\u068a\0\u06a9\0\u06c8\0\u06e7\0\u0706\0\u0725"+
+    "\0\u0744\0\u0763\0\u0782\0\u07a1\0\u07c0\0\u07df\0\u07fe\0\u081d"+
+    "\0\u083c\0\u085b\0\u087a\0\u0899\0\u08b8\0\u08d7\0\u08f6\0\u0915"+
+    "\0\u0934\0\u0953\0\u0972\0\u0991\0\u09b0\0\u09cf\0\u09ee\0\u0a0d"+
+    "\0\u0a2c\0\u0a4b\0\u0a6a\0\u0a89\0\u0aa8\0\u0ac7\0\u0ae6\0\u0b05"+
+    "\0\u0b24\0\u0b43\0\u0b62\0\u0155\0\u0b81\0\u0ba0\0\u0bbf\0\u0155"+
+    "\0\u0bde\0\u0bfd\0\u0c1c\0\u0c3b\0\u0155";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[148];
+    int [] result = new int[125];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -156,75 +147,61 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\16\1\17\2\16\1\20\34\16\1\17\2\21\1\20"+
-    "\1\16\3\22\1\23\1\22\1\16\1\21\1\22\1\16"+
-    "\15\22\1\16\3\22\2\16\2\24\7\16\1\25\1\24"+
-    "\23\16\1\26\1\27\1\30\1\31\1\26\1\16\1\32"+
-    "\5\26\1\30\22\26\1\33\1\26\1\27\1\34\1\35"+
-    "\1\26\1\16\1\32\5\26\1\34\22\26\1\33\1\16"+
-    "\1\36\2\16\1\37\34\16\1\40\1\41\1\42\1\37"+
-    "\1\16\3\22\1\16\1\22\1\16\1\42\1\22\1\16"+
-    "\15\22\1\16\3\22\1\43\1\27\1\24\1\44\1\43"+
-    "\1\16\1\45\5\43\1\44\22\43\1\46\1\16\1\47"+
-    "\2\16\1\50\1\16\6\50\1\16\1\50\1\16\16\50"+
-    "\1\51\2\50\1\16\1\52\2\16\1\50\1\16\6\50"+
-    "\1\16\1\50\1\16\16\50\1\51\2\50\1\16\1\53"+
-    "\2\16\1\50\1\16\6\50\1\16\1\50\1\16\16\50"+
-    "\1\51\2\50\1\16\1\54\2\55\4\16\2\56\2\16"+
-    "\1\55\2\16\15\56\2\16\1\56\2\16\1\54\2\55"+
-    "\4\16\1\56\1\57\2\16\1\55\2\16\15\56\2\16"+
-    "\1\56\1\16\41\0\1\17\36\0\1\20\1\0\3\20"+
-    "\1\0\32\20\1\0\1\17\2\60\10\0\1\60\27\0"+
-    "\1\22\1\0\5\22\2\0\1\22\1\0\15\22\1\0"+
-    "\3\22\11\0\1\61\30\0\2\24\10\0\1\24\23\0"+
-    "\1\26\2\0\2\26\2\0\5\26\1\0\22\26\3\0"+
-    "\2\30\10\0\1\30\23\0\1\26\1\0\1\30\1\31"+
-    "\1\26\2\0\5\26\1\30\22\26\10\0\1\62\31\0"+
-    "\1\63\1\64\1\65\1\0\1\66\6\0\1\64\1\0"+
-    "\1\63\21\0\1\26\1\63\1\64\1\67\1\26\1\66"+
-    "\1\0\5\26\1\64\1\26\1\70\20\26\1\0\1\71"+
-    "\1\72\3\71\1\0\32\71\1\0\1\73\1\74\1\75"+
-    "\10\0\1\75\24\0\1\73\2\75\10\0\1\75\23\0"+
-    "\1\43\2\0\2\43\2\0\30\43\1\0\1\43\1\0"+
-    "\1\24\1\44\1\43\2\0\5\43\1\44\22\43\10\0"+
-    "\1\76\31\0\1\47\33\0\1\77\6\0\1\100\1\0"+
-    "\5\100\1\101\1\0\1\100\1\0\21\100\1\0\1\47"+
-    "\2\0\1\100\1\0\5\100\1\101\1\0\1\100\1\0"+
-    "\16\100\1\102\2\100\1\0\1\54\2\103\10\0\1\103"+
-    "\33\0\2\56\5\0\15\56\2\0\1\56\11\0\1\56"+
-    "\1\104\5\0\15\56\2\0\1\56\12\0\1\105\36\0"+
-    "\1\106\1\0\1\107\4\0\15\106\5\0\1\110\37\0"+
-    "\1\111\1\112\1\113\10\0\1\113\33\0\1\114\1\0"+
-    "\1\115\4\0\15\114\4\0\1\101\1\116\36\101\10\0"+
-    "\1\56\1\117\5\0\15\56\2\0\1\56\12\0\1\120"+
-    "\36\0\2\106\1\107\1\106\3\0\15\106\6\0\1\121"+
-    "\36\0\1\111\2\113\10\0\1\113\33\0\2\114\1\115"+
-    "\1\114\3\0\15\114\14\0\1\56\1\122\5\0\15\56"+
-    "\2\0\1\56\12\0\1\123\36\0\1\56\1\124\5\0"+
-    "\15\56\2\0\1\56\20\0\1\125\30\0\2\56\5\0"+
-    "\1\56\1\126\13\56\2\0\1\56\21\0\1\127\27\0"+
-    "\2\56\5\0\4\56\1\130\10\56\2\0\1\56\22\0"+
-    "\1\131\26\0\2\56\5\0\7\56\1\132\5\56\2\0"+
-    "\1\56\23\0\1\133\17\0\1\134\5\0\2\56\5\0"+
-    "\15\56\2\0\1\56\24\0\1\135\40\0\1\136\15\0"+
-    "\1\137\56\0\1\140\42\0\1\141\37\0\1\142\34\0"+
-    "\1\143\20\0\1\144\61\0\1\145\40\0\1\146\14\0"+
-    "\1\147\57\0\1\150\42\0\1\151\33\0\1\152\40\0"+
-    "\1\153\40\0\1\154\35\0\1\155\46\0\1\156\32\0"+
-    "\1\157\45\0\1\160\26\0\1\161\7\0\1\162\41\0"+
-    "\1\163\33\0\1\164\42\0\1\165\41\0\1\166\6\0"+
-    "\1\167\67\0\1\170\25\0\1\171\46\0\1\172\43\0"+
-    "\1\173\15\0\1\174\46\0\1\175\37\0\1\176\30\0"+
-    "\1\177\53\0\1\200\23\0\1\201\37\0\1\202\53\0"+
-    "\1\203\23\0\1\204\37\0\1\205\56\0\1\206\20\0"+
-    "\1\207\37\0\1\210\47\0\1\211\27\0\1\212\27\0"+
-    "\1\213\1\210\11\0\1\210\43\0\1\214\30\0\1\215"+
-    "\37\0\1\216\27\0\1\217\1\215\11\0\1\215\34\0"+
-    "\1\220\37\0\1\221\37\0\1\222\37\0\1\223\27\0"+
-    "\1\224\1\223\11\0\1\223\23\0";
+    "\1\14\1\15\2\14\1\16\33\14\1\15\2\17\1\16"+
+    "\1\14\3\20\1\21\1\20\1\14\1\17\16\20\1\14"+
+    "\3\20\2\14\2\22\7\14\1\23\1\22\23\14\1\24"+
+    "\2\14\1\25\33\14\1\26\1\27\1\30\1\25\1\14"+
+    "\3\20\1\14\1\20\1\14\1\30\16\20\1\14\3\20"+
+    "\1\31\1\32\1\22\1\33\1\31\1\14\1\34\5\31"+
+    "\1\33\21\31\1\35\1\14\1\36\2\14\1\37\1\14"+
+    "\6\37\1\14\17\37\1\40\2\37\1\14\1\41\2\14"+
+    "\1\37\1\14\6\37\1\14\17\37\1\40\2\37\1\14"+
+    "\1\42\2\14\1\37\1\14\6\37\1\14\17\37\1\40"+
+    "\2\37\1\14\1\43\2\44\4\14\2\45\2\14\1\44"+
+    "\1\14\15\45\2\14\1\45\2\14\1\43\2\44\4\14"+
+    "\1\45\1\46\2\14\1\44\1\14\15\45\2\14\1\45"+
+    "\1\14\40\0\1\15\35\0\1\16\1\0\3\16\1\0"+
+    "\31\16\1\0\1\15\2\47\10\0\1\47\26\0\1\20"+
+    "\1\0\5\20\2\0\16\20\1\0\3\20\11\0\1\50"+
+    "\27\0\2\22\10\0\1\22\22\0\1\51\1\52\3\51"+
+    "\1\0\31\51\1\0\1\53\1\54\1\55\10\0\1\55"+
+    "\23\0\1\53\2\55\10\0\1\55\22\0\1\31\2\0"+
+    "\2\31\2\0\27\31\1\0\1\31\1\0\1\22\1\33"+
+    "\1\31\2\0\5\31\1\33\21\31\10\0\1\56\30\0"+
+    "\1\36\32\0\1\57\6\0\1\60\1\0\5\60\1\61"+
+    "\1\0\22\60\1\0\1\36\2\0\1\60\1\0\5\60"+
+    "\1\61\1\0\17\60\1\62\2\60\1\0\1\43\2\63"+
+    "\10\0\1\63\32\0\2\45\4\0\15\45\2\0\1\45"+
+    "\11\0\1\45\1\64\4\0\15\45\2\0\1\45\12\0"+
+    "\1\65\35\0\1\66\1\0\1\67\3\0\15\66\4\0"+
+    "\1\61\1\70\35\61\10\0\1\45\1\71\4\0\15\45"+
+    "\2\0\1\45\12\0\1\72\35\0\2\66\1\67\1\66"+
+    "\2\0\15\66\14\0\1\45\1\73\4\0\15\45\2\0"+
+    "\1\45\12\0\1\74\35\0\1\45\1\75\4\0\15\45"+
+    "\2\0\1\45\17\0\1\76\30\0\2\45\4\0\1\45"+
+    "\1\77\13\45\2\0\1\45\20\0\1\100\27\0\2\45"+
+    "\4\0\4\45\1\101\10\45\2\0\1\45\21\0\1\102"+
+    "\26\0\2\45\4\0\7\45\1\103\5\45\2\0\1\45"+
+    "\22\0\1\104\17\0\1\105\5\0\2\45\4\0\15\45"+
+    "\2\0\1\45\23\0\1\106\37\0\1\107\15\0\1\110"+
+    "\54\0\1\111\41\0\1\112\36\0\1\113\33\0\1\114"+
+    "\20\0\1\115\57\0\1\116\37\0\1\117\14\0\1\120"+
+    "\55\0\1\121\41\0\1\122\32\0\1\123\37\0\1\124"+
+    "\37\0\1\125\34\0\1\126\45\0\1\127\31\0\1\130"+
+    "\44\0\1\131\25\0\1\132\7\0\1\133\40\0\1\134"+
+    "\32\0\1\135\41\0\1\136\40\0\1\137\6\0\1\140"+
+    "\65\0\1\141\24\0\1\142\45\0\1\143\42\0\1\144"+
+    "\15\0\1\145\44\0\1\146\36\0\1\147\30\0\1\150"+
+    "\51\0\1\151\23\0\1\152\36\0\1\153\51\0\1\154"+
+    "\23\0\1\155\36\0\1\156\54\0\1\157\20\0\1\160"+
+    "\36\0\1\161\45\0\1\162\27\0\1\163\26\0\1\164"+
+    "\1\161\11\0\1\161\41\0\1\165\30\0\1\166\36\0"+
+    "\1\167\26\0\1\170\1\166\11\0\1\166\33\0\1\171"+
+    "\36\0\1\172\36\0\1\173\36\0\1\174\26\0\1\175"+
+    "\1\174\11\0\1\174\22\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[3712];
+    int [] result = new int[3162];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -262,16 +239,14 @@ public class Deb822Lexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\15\0\1\11\6\1\1\11\1\1\1\11\3\1\1\11"+
-    "\2\1\1\11\7\1\1\11\5\1\1\11\3\1\3\0"+
-    "\1\11\1\0\4\1\1\0\1\11\1\0\1\1\7\0"+
-    "\1\1\2\0\2\11\1\0\1\1\2\0\2\11\1\1"+
-    "\1\0\1\11\1\1\1\0\1\1\1\0\1\1\1\0"+
-    "\1\1\1\0\1\1\60\0\1\11\3\0\1\11\4\0"+
-    "\1\11";
+    "\13\0\1\11\6\1\2\11\5\1\1\11\2\1\1\11"+
+    "\5\1\1\11\3\1\3\0\1\11\1\0\1\1\7\0"+
+    "\1\1\2\0\2\11\1\1\1\0\1\1\1\0\1\1"+
+    "\1\0\1\1\1\0\1\1\1\0\1\1\60\0\1\11"+
+    "\3\0\1\11\4\0\1\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[148];
+    int [] result = new int[125];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -621,138 +596,97 @@ public class Deb822Lexer implements FlexLexer {
             { return TokenType.BAD_CHARACTER;
             } 
             // fall through
-          case 27: break;
+          case 20: break;
           case 2: 
             { return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 28: break;
+          case 21: break;
           case 3: 
-            { yybegin(YYINITIAL); return Deb822Types.COMMENT;
-            } 
-            // fall through
-          case 29: break;
-          case 4: 
-            { yybegin(WAITING_FOR_SEPATOR); return Deb822Types.FIELD_NAME;
-            } 
-            // fall through
-          case 30: break;
-          case 5: 
-            { yybegin(PARSING_INITIAL_VALUE_AFTER_SEPARATOR); return Deb822Types.SEPARATOR;
-            } 
-            // fall through
-          case 31: break;
-          case 6: 
-            { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.VALUE_TOKEN;
-            } 
-            // fall through
-          case 32: break;
-          case 7: 
-            { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE;
-            } 
-            // fall through
-          case 33: break;
-          case 8: 
-            { yybegin(PARSING_INITIAL_VALUE); return TokenType.WHITE_SPACE;
-            } 
-            // fall through
-          case 34: break;
-          case 9: 
-            { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.COMMA;
-            } 
-            // fall through
-          case 35: break;
-          case 10: 
-            { yybegin(YYINITIAL); return Deb822Types.PARAGRAPH_FINISH;
-            } 
-            // fall through
-          case 36: break;
-          case 11: 
-            { yybegin(PARSING_CONT_VALUE); return TokenType.WHITE_SPACE;
-            } 
-            // fall through
-          case 37: break;
-          case 12: 
-            { return Deb822Types.VALUE_TOKEN;
-            } 
-            // fall through
-          case 38: break;
-          case 13: 
-            { return Deb822Types.COMMA;
-            } 
-            // fall through
-          case 39: break;
-          case 14: 
-            { yybegin(YYINITIAL); return Deb822Types.GPG_ARMOR_HEADERS_END;
-            } 
-            // fall through
-          case 40: break;
-          case 15: 
-            { yybegin(GPG_SIGNATURE_BLOB); return Deb822Types.GPG_ARMOR_HEADERS_END;
-            } 
-            // fall through
-          case 41: break;
-          case 16: 
-            { return Deb822Types.GPG_SIGNATURE_BLOB_PART;
-            } 
-            // fall through
-          case 42: break;
-          case 17: 
-            // lookahead expression with fixed lookahead length
-            zzMarkedPos = Character.offsetByCodePoints
-                (zzBufferL/*, zzStartRead, zzEndRead - zzStartRead*/, zzMarkedPos, -1);
-            { return TokenType.WHITE_SPACE;
-            } 
-            // fall through
-          case 43: break;
-          case 18: 
             { return Deb822Types.COMMENT;
             } 
             // fall through
-          case 44: break;
-          case 19: 
-            { yybegin(PARSING_CONT_VALUE); return Deb822Types.HANGING_CONT_VALUE_TOKEN;
+          case 22: break;
+          case 4: 
+            { yybegin(WAITING_FOR_SEPARATOR); return Deb822Types.FIELD_NAME;
             } 
             // fall through
-          case 45: break;
-          case 20: 
-            { yybegin(SEEN_INITIAL_VALUE); return Deb822Types.SUBSTVAR_TOKEN;
+          case 23: break;
+          case 5: 
+            { yybegin(PARSING_VALUE); return Deb822Types.SEPARATOR;
             } 
             // fall through
-          case 46: break;
-          case 21: 
-            // lookahead expression with fixed lookahead length
-            zzMarkedPos = Character.offsetByCodePoints
-                (zzBufferL/*, zzStartRead, zzEndRead - zzStartRead*/, zzMarkedPos, -2);
-            { return TokenType.WHITE_SPACE;
+          case 24: break;
+          case 6: 
+            { yybegin(YYINITIAL); return Deb822Types.PARAGRAPH_FINISH;
             } 
             // fall through
-          case 47: break;
-          case 22: 
+          case 25: break;
+          case 7: 
+            { yybegin(PARSING_VALUE); return TokenType.WHITE_SPACE;
+            } 
+            // fall through
+          case 26: break;
+          case 8: 
+            { return Deb822Types.VALUE_TOKEN;
+            } 
+            // fall through
+          case 27: break;
+          case 9: 
+            { yybegin(MAYBE_CONT_VALUE); return TokenType.WHITE_SPACE;
+            } 
+            // fall through
+          case 28: break;
+          case 10: 
+            { return Deb822Types.COMMA;
+            } 
+            // fall through
+          case 29: break;
+          case 11: 
+            { yybegin(YYINITIAL); return Deb822Types.GPG_ARMOR_HEADERS_END;
+            } 
+            // fall through
+          case 30: break;
+          case 12: 
+            { yybegin(GPG_SIGNATURE_BLOB); return Deb822Types.GPG_ARMOR_HEADERS_END;
+            } 
+            // fall through
+          case 31: break;
+          case 13: 
+            { return Deb822Types.GPG_SIGNATURE_BLOB_PART;
+            } 
+            // fall through
+          case 32: break;
+          case 14: 
+            { yybegin(PARSING_VALUE); return Deb822Types.HANGING_CONT_VALUE_TOKEN;
+            } 
+            // fall through
+          case 33: break;
+          case 15: 
             { return Deb822Types.SUBSTVAR_TOKEN;
             } 
             // fall through
-          case 48: break;
-          case 23: 
+          case 34: break;
+          case 16: 
             { return Deb822Types.GPG_ARMOR_HEADER;
             } 
             // fall through
-          case 49: break;
-          case 24: 
+          case 35: break;
+          case 17: 
             { yybegin(GPG_PARSE_ARMORED_HEADERS); return Deb822Types.GPG_END_SIGNATURE;
             } 
             // fall through
-          case 50: break;
-          case 25: 
+          case 36: break;
+          case 18: 
             { yybegin(GPG_BEGIN_SIGNATURE_ARMORED_HEADERS); return Deb822Types.GPG_BEGIN_SIGNATURE;
             } 
             // fall through
-          case 51: break;
-          case 26: 
+          case 37: break;
+          case 19: 
             { yybegin(GPG_PARSE_ARMORED_HEADERS); return Deb822Types.GPG_BEGIN_SIGNED_MESSAGE;
             } 
             // fall through
-          case 52: break;
+          case 38: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }
