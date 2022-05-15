@@ -9,6 +9,8 @@
 # debpkg Changelog
 
 ## [Unreleased]
+
+## [0.0.16]
 ### Added
 - Add inspection for possibly incorrect architecture field value based on package name.
 - Add `DM-Upload-Allowed` as known field and an inspection suggesting removing it as it is obsolete.
