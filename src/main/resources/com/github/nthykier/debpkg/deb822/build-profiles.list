@@ -1,0 +1,21 @@
+# List of known standard build profiles (excluding the pkg.<source>.<name> pattern)
+
+cross
+stage1
+stage2
+nobiarch
+nocheck
+nocil
+nodoc
+nogolang
+noinsttest
+nojava
+noperl
+nopython
+noruby
+nolua
+noguile
+noocaml
+nowasm
+nowindows
+noudeb

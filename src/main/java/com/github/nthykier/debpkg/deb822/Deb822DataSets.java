@@ -10,17 +10,17 @@ import java.util.function.Supplier;
 
 public class Deb822DataSets {
 
-    private static final Map<String, List<String>> dataListCache = new ConcurrentSkipListMap<>();
-    private static final Map<String, Supplier<List<String>>> virtualDataLists;
+    private static final Map<String, Set<String>> dataListCache = new ConcurrentSkipListMap<>();
+    private static final Map<String, Supplier<Set<String>>> virtualDataLists;
 
-    public static @NotNull List<@NotNull String> getDataList(@NotNull String name) {
-        return dataListCache.computeIfAbsent(name, Deb822DataSets::loadDataList);
+    public static @NotNull Set<@NotNull String> getDataSet(@NotNull String name) {
+        return dataListCache.computeIfAbsent(name, Deb822DataSets::loadDataSet);
     }
 
-    private static @NotNull List<@NotNull String> loadDataList(@NotNull String name) {
-        Supplier<List<String>> virtualDataSet = virtualDataLists.get(name);
+    private static @NotNull Set<@NotNull String> loadDataSet(@NotNull String name) {
+        Supplier<Set<String>> virtualDataSet = virtualDataLists.get(name);
         if (virtualDataSet == null) {
-            ArrayList<String> dataset = new ArrayList<>();
+            Set<String> dataset = new LinkedHashSet<>();
             try (BufferedReader reader = openResource(name + ".list")) {
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -32,9 +32,7 @@ public class Deb822DataSets {
             } catch (IOException e) {
                 throw new IllegalArgumentException("Could not read dataset " + name, e);
             }
-
-            dataset.trimToSize();
-            return Collections.unmodifiableList(dataset);
+            return Collections.unmodifiableSet(dataset);
         }
         return virtualDataSet.get();
     }
@@ -47,10 +45,10 @@ public class Deb822DataSets {
         return new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
     }
 
-    private static List<String> virtualArchiveSectionsWithComponents() {
-        List<String> sections = getDataList("archive-sections");
-        List<String> components = getDataList("components");
-        ArrayList<String> combined = new ArrayList<>((sections.size() + 1) * components.size());
+    private static Set<String> virtualArchiveSectionsWithComponents() {
+        Set<String> sections = getDataSet("archive-sections");
+        Set<String> components = getDataSet("components");
+        Set<String> combined = new LinkedHashSet<>((sections.size() + 1) * components.size());
         combined.addAll(sections);
         for (String component : components) {
             String prefix = component + "/";
@@ -58,12 +56,11 @@ public class Deb822DataSets {
                 combined.add(prefix + section);
             }
         }
-        combined.trimToSize();
-        return Collections.unmodifiableList(combined);
+        return Collections.unmodifiableSet(combined);
     }
 
     static {
-        virtualDataLists = Collections.unmodifiableMap(new HashMap<String, Supplier<List<String>>>(){{
+        virtualDataLists = Collections.unmodifiableMap(new HashMap<String, Supplier<Set<String>>>(){{
             put("virtual/archive-sections-with-components", Deb822DataSets::virtualArchiveSectionsWithComponents);
         }});
     }

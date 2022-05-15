@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.github.nthykier.debpkg.deb822.Deb822YamlDataFileParserUtil.*;
 import static com.github.nthykier.debpkg.deb822.field.KnownFields.ANY_PARAGRAPH_TYPES;
@@ -108,14 +109,15 @@ public class Deb822KnownFieldsAndValues {
         Map<String, Deb822KnownFieldKeyword> keywordMap;
         boolean allKeywordsKnown = false;
         if (keywordReference != null) {
-            List<String> dataSet = Deb822DataSets.getDataList(keywordReference);
+            Collection<String> dataSet = Deb822DataSets.getDataSet(keywordReference);
             if (!keywordList.isEmpty()) {
                 throw new IllegalArgumentException("Field " + canonicalName
                         + " has both keywordList and keywordListFromDataSet.  Please use at most one of them");
             }
-            keywordList = dataSet;
-        }
-        if (!keywordList.isEmpty()) {
+            keywordMap = dataSet.stream()
+                    .map(w -> new Deb822KnownFieldKeywordImpl(w, null, false))
+                    .collect(Collectors.toMap(Deb822KnownFieldKeyword::getValueName, Function.identity()));
+        } else if (!keywordList.isEmpty()) {
             allKeywordsKnown = true;
             if (keywordList.get(keywordList.size() - 1).equals("...")) {
                 allKeywordsKnown = false;
