@@ -9,6 +9,8 @@
 # debpkg Changelog
 
 ## [Unreleased]
+
+## [0.0.17]
 ### Changed
 - Bump the compat range for IDE to support 2022.2 at the cost of 2020.1
 - Internal/Chore: Update build time dependency on `gradle-intellij-plugin`.
