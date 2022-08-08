@@ -51,6 +51,10 @@ changelog {
 sourceSets["main"].java.srcDir("src/main/gen")
 
 tasks {
+    wrapper {
+        gradleVersion = properties("gradleVersion")
+    }
+
     // Set the JVM compatibility versions
     properties("javaVersion").let {
         withType<JavaCompile> {

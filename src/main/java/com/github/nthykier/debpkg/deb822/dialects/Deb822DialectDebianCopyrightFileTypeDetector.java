@@ -33,9 +33,4 @@ public class Deb822DialectDebianCopyrightFileTypeDetector implements FileTypeReg
         return Deb822DialectDebianCopyrightFileType.INSTANCE;
     }
 
-    @SuppressWarnings({"deprecated"})
-    @Override
-    public int getVersion() {
-        return 0;
-    }
 }
