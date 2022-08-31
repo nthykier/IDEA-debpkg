@@ -1,0 +1,341 @@
+fields:
+  - canonicalName: Tests
+    description: |
+      <p>This field names the tests which are defined by this stanza, and map
+      to executables/scripts in the test directory. All of the other
+      fields in the same stanza apply to all of the named tests. Either
+      this field or <b>Test-Command:</b> must be present.</p>
+
+      <p>Test names are separated by comma and/or whitespace and should
+      contain only characters which are legal in package names. It is
+      permitted, but not encouraged, to use upper-case characters as well.</p>
+    valueType: COMMA_SEPARATED_VALUE_LIST
+    supportsSubstvars: false
+
+  - canonicalName: Test-Command
+    description: |
+      <p>If your test only contains a shell command or two, or you want to
+         re-use an existing upstream test executable and just need to wrap it
+         with some command like <b>dbus-launch</b> or <b>env</b>, you can use this
+         field to specify the shell command directly. It will be run under
+         <b>bash -e</b>. This is mutually exclusive with the <b>Tests:</b> field.</p>
+
+      <p>This is also useful for running the same script under different
+         interpreters and/or with different dependencies, such as
+         <b>Test-Command: python debian/tests/mytest.py</b> and
+         <b>Test-Command: python3 debian/tests/mytest.py</b>.</p>
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+  - canonicalName: Restrictions
+    description: |
+      <p>Declares some restrictions or problems with the tests defined in
+         this stanza. Depending on the test environment capabilities, user
+         requests, and so on, restrictions can cause tests to be skipped or
+         can cause the test to be run in a different manner. Tests which
+         declare unknown restrictions will be skipped.</p>
+
+         <p>Restrictions are separated by commas and/or whitespace.</p>
+    valueType: SPACE_SEPARATED_VALUE_LIST
+    keywordList:
+      - value: "rw-build-tree"
+        description: |
+          <p>The test(s) needs write access to the built source tree (so it may
+             need to be copied first). Even with this restriction, the test is
+             not allowed to make any change to the built source tree which (i)
+             isn't cleaned up by debian/rules clean, (ii) affects the future
+             results of any test, or (iii) affects binary packages produced by
+             the build tree in the future.</p>
+      - value: "breaks-testbed"
+        description: |
+          <p>The test, when run, is liable to break the testbed system. This
+             includes causing data loss, causing services that the machine is
+             running to malfunction, or permanently disabling services; it does
+             not include causing services on the machine to temporarily fail.</p>
+
+             <p>When this restriction is present the test will usually be skipped
+             unless the testbed's virtualisation arrangements are sufficiently
+             powerful, or alternatively if the user explicitly requests.</p>
+      - value: "needs-root"
+        description: |
+          <p>The test script must be run as root.</p>
+
+                 <p>While running tests with this restriction, some test runners will
+                 set the <b>AUTOPKGTEST_NORMAL_USER</b> environment variable to the name
+                 of an ordinary user account. If so, the test script may drop
+                 privileges from root to that user, for example via the <b>runuser</b>
+                 command. Test scripts must not assume that this environment variable
+                 will always be set.</p>
+
+                 <p>For tests that declare both the <b>needs-root</b> and <b>isolation-machine</b>
+                 restrictions, the test may assume that it has "global root" with full
+                 control over the kernel that is running the test, and not just root
+                 in a container (more formally, it has uid 0 and full capabilities in
+                 the initial user namespace as defined in <b>user_namespaces(7)</b>).
+                 For example, it can expect that mounting block devices will succeed.</p>
+
+                 <p>For tests that declare the <b>needs-root</b> restriction but not the
+                 <b>isolation-machine</b> restriction, the test will be run as uid 0 in
+                 a user namespace with a reasonable range of system and user uids
+                 available, but will not necessarily have full control over the kernel,
+                 and in particular it is not guaranteed to have elevated capabilities
+                 in the initial user namespace as defined by <b>user_namespaces(7)</b>.
+                 For example, it might be run in a namespace where uid 0 is mapped to
+                 an ordinary uid in the initial user namespace, or it might run in a
+                 Docker-style container where global uid 0 is used but its ability to
+                 carry out operations that affect the whole system is restricted by
+                 capabilities and system call filtering.  Tests requiring particular
+                 privileges should use the <b>skippable</b> restriction to check for
+                 required functionality at runtime.</p>
+      - value: "build-needed"
+        description: |
+          <p>The tests need to be run from a built source tree. The test runner
+             will build the source tree (honouring the source package's build
+             dependencies), before running the tests. However, the tests are
+             <em>not</em> entitled to assume that the source package's build
+             dependencies will be installed when the test is run.</p>
+
+             <p>Please use this considerately, as for large builds it unnecessarily
+             builds the entire project when you only need a tiny subset (like the
+             tests/ subdirectory). It is often possible to run <b>make -C tests</b>
+             instead, or copy the test code to <b>$AUTOPKGTEST_TMP</b> and build it
+             there with some custom commands. This cuts down the load on the
+             Continuous Integration servers and also makes tests more robust as
+             it prevents accidentally running them against the built source tree
+             instead of the installed packages.
+             </p>
+      - value: "allow-stderr"
+        description: |
+          <p>Output to stderr is not considered a failure. This is useful for
+             tests which write e. g. lots of logging to stderr.</p>
+      - value: "isolation-container"
+        description: |
+          <p>The test wants to start services or open network TCP ports. This
+                 commonly fails in a simple chroot/schroot, so tests need to be run
+                 in their own container (e. g. autopkgtest-virt-lxc) or their own
+                 machine/VM (e. g. autopkgtest-virt-qemu or autopkgtest-virt-null).
+                 When running the test in a virtualization server which does not
+                 provide this (like autopkgtest-schroot) it will be skipped.</p>
+
+                 <p>Tests may assume that this restriction implies that process 1 in the
+                 container's process namespace is a system service manager (init system)
+                 such as systemd or sysvinit + sysv-rc, and therefore system services
+                 are available via the <b>service(8)</b>, <b>invoke-rc.d(8)</b> and
+                 <b>update-rc.d(8))</b> interfaces.</p>
+
+                 <p>Tests must not assume that a specific init system is in use: a
+                 dependency such as <b>systemd-sysv</b> or <b>sysvinit-core</b> does not work
+                 in practice, because switching the init system often cannot be done
+                 automatically. Tests that require a specific init system should use the
+                 <b>skippable</b> restriction, and skip the test if the required init system
+                 was not detected.</p>
+
+                 <p>Many implementations of the <b>isolation-container</b> restriction will
+                 also provide <b>systemd-logind(8)</b> or a compatible interface, but this
+                 is not guaranteed. Tests requiring a login session registered with
+                 logind should declare a dependency on <b>default-logind | logind</b>
+                 or on a more specific implementation of <b>logind</b>, and should use the
+                 <b>skippable</b> restriction to exit gracefully if its functionality is
+                 not available at runtime.</p>
+      - value: "isolation-machine"
+        description: |
+          <p>The test wants to interact with the kernel, reboot the machine, or
+             other things which fail in a simple schroot and even a container.
+             Those tests need to be run in their own machine/VM (e. g.
+             autopkgtest-virt-qemu or autopkgtest-virt-null). When running the
+             test in a virtualization server which does not provide this it will
+             be skipped.</p>
+
+             <p>This restriction also provides the same facilities as
+             <b>isolation-container</b>.</p>
+      - value: "needs-reboot"
+        description: |
+          <p>The test wants to reboot the machine using <b>/tmp/autopkgtest-reboot</b>.</p>
+      - value: "needs-internet"
+        description: |
+          <p>The test needs unrestricted internet access, e.g. to download test data
+             that's not shipped as a package, or to test a protocol implementation
+             against a test server. Please also see the note about Network access later
+             in this document.</p>
+      - value: "needs-recommends"
+        description: |
+          <p><em>Deprecated:</em> Please use <b>@recommends@</b> in your test <b>Depends:</b> instead.</p>
+      - value: "flaky"
+        description: |
+          <p>The test is expected to fail intermittently, and is not suitable for
+             gating continuous integration. This indicates a bug in either the
+             package under test, a dependency or the test itself, but such bugs
+             can be difficult to fix, and it is often difficult to know when the
+             bug has been fixed without running the test for a while. If a
+             <b>flaky</b> test succeeds, it will be treated like any other
+             successful test, but if it fails it will be treated as though it
+             had been skipped.</p>
+      - value: "skippable"
+        description: |
+          <p>The test might need to be skipped for reasons that cannot be
+             described by an existing restriction such as isolation-machine or
+             breaks-testbed, but must instead be detected at runtime. If the
+             test exits with status 77 (a convention borrowed from Automake), it
+             will be treated as though it had been skipped. If it exits with any
+             other status, its success or failure will be derived from the exit
+             status and stderr as usual. Test authors must be careful to ensure
+             that <b>skippable</b> tests never exit with status 77 for reasons that
+             should be treated as a failure.</p>
+      - value: "skip-not-installable"
+        description: |
+          <p>This restrictions may cause a test to miss a regression due to
+             installability issues, so use with caution. If one only wants to
+             skip certain architectures, use the <b>Architecture</b> field for
+             that.</p>
+
+             <p>This test might have test dependencies that can't be fulfilled in
+             all suites or in derivatives. Therefore, when apt-get installs the
+             test dependencies, it will fail. Don't treat this as a test
+             failure, but instead treat it as if the test was skipped.</p>
+      - value: "hint-testsuite-triggers"
+        description: |
+          <p>This test exists purely as a hint to suggest when rerunning the
+             tests is likely to be useful.  Specifically, it exists to
+             influence the way dpkg-source generates the Testsuite-Triggers
+             .dsc header from test metadata: the Depends for this test are
+             to be added to Testsuite-Triggers.  (Just as they are for any other
+             test.)</p>
+
+             <p>The test with the hint-testsuite-triggers restriction should not
+             actually be run.</p>
+
+             <p>The packages listed as Depends for this test are usually indirect
+             dependencies, updates to which are considered to pose a risk of
+             regressions in other tests defined in this package.</p>
+
+             <p>There is currently no way to specify this hint on a per-test
+             basis; but in any case the debian.org machinery is not able to
+             think about triggering individual tests.</p>
+      - value: "superficial"
+        description: |
+          <p>The test does not provide significant test coverage, so if it
+             passes, that does not necessarily mean that the package under test
+             is actually functional. If a <b>superficial</b> test fails, it will be
+             treated like any other failing test, but if it succeeds, this is
+             only a weak indication of success. Continuous integration systems
+             should treat a package where all non-superficial tests are skipped as
+             equivalent to a package where all tests are skipped.</p>
+          
+             <p>For example, a C library might have a superficial test that simply
+             compiles, links and executes a "hello world" program against the
+             library under test but does not attempt to make use of the library's
+             functionality, while a Python or Perl library might have a
+             superficial test that runs <b>import foo</b> or <b>require Foo;</b> but
+             does not attempt to use the library beyond that.</p>
+
+  - canonicalName: Features
+    description: |
+      <p>Declares some additional capabilities or good properties of the
+         tests defined in this stanza. Any unknown features declared will be
+         completely ignored.</p>
+
+      <p>Features are separated by commas and/or whitespace.</p>
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+
+  - canonicalName: Depends
+    description: |
+      <p>Declares that the specified packages must be installed for the test
+         to go ahead. This supports all features of dpkg dependencies, including
+         the architecture qualifiers (see
+         https://www.debian.org/doc/debian-policy/ch-relationships.html),
+         plus the following extensions:</p>
+
+         <p><b>@</b> stands for the package(s) generated by the source package
+         containing the tests; each dependency (strictly, or-clause, which
+         may contain <b>|</b>'s but not commas) containing <b>@</b> is replicated
+         once for each such binary package, with the binary package name
+         substituted for each <b>@</b> (but normally <b>@</b> should occur only
+         once and without a version restriction).</p>
+
+         <p><b>@builddeps@</b> will be replaced by the package's
+         <b>Build-Depends:</b>, <b>Build-Depends-Indep:</b>, <b>Build-Depends-Arch:</b>, and
+         <b>build-essential</b>. This is useful if you have many build
+         dependencies which are only necessary for running the test suite and
+         you don't want to replicate them in the test <b>Depends:</b>. However,
+         please use this sparingly, as this can easily lead to missing binary
+         package dependencies being overlooked if they get pulled in via
+         build dependencies.</p>
+
+         <p><b>@recommends@</b> stands for all the packages listed in the
+         <b>Recommends:</b> fields of all the binary packages mentioned in the
+         <b>debian/control</b> file. Please note that variables are stripped,
+         so if some required test dependencies aren't explicitly mentioned,
+         they may not be installed.</p>
+
+         <p>If no Depends field is present, <b>Depends: @</b> is assumed. Note that
+         the source tree's Build-Dependencies are *not* necessarily
+         installed, and if you specify any Depends, no binary packages from
+         the source are installed unless explicitly requested.</p>
+    valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
+    valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_DEPENDENCY
+    supportsSubstvars: false
+
+  - canonicalName: Tests-Directory
+    valueType: FREE_TEXT_VALUE
+    description: |
+      <p>Replaces the path segment <b>debian/tests</b> in the filenames of the
+         test programs with <b>path</b>. I. e., the tests are run by executing
+         <b>built/source/tree/path/testname</b>. <b>path</b> must be a relative
+         path and is interpreted starting from the root of the built source
+         tree.</p>
+
+         <p>This allows tests to live outside the debian/ metadata area, so that
+         they can more palatably be shared with non-Debian distributions.</p>
+
+  - canonicalName: Classes
+    description: |
+      <p>Most package tests should work in a minimal environment and are
+      usually not hardware specific. However, some packages like the
+      kernel, X.org, or graphics drivers should be tested on particular
+      hardware, and also run on a set of different platforms rather than
+      just a single virtual testbeds.</p>
+
+      <p>This field can specify a list of abstract class names such as
+      <b>desktop</b> or <b>graphics-driver</b>. Consumers of autopkgtest can then
+      map these class names to particular machines/platforms/policies.
+      Unknown class names should be ignored.</p>
+
+      <p>This is purely an informational field for autopkgtest itself and
+      will be ignored.</p>
+
+      <p>Classes are separated by commas and/or whitespace.</p>
+    valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
+
+  - canonicalName: Architecture
+    description: |
+      <p>When package tests are only supported on a limited set of
+         architectures, or are known to not work on a particular (set of)
+         architecture(s), this field can be used to define the supported
+         architectures. The autopkgtest will be skipped when the
+         architecture of the testbed doesn't match the content of this
+         field. The format is the same as in debian/control, with the
+         understanding that <b>all</b> is not allowed, and <b>any</b> means that
+         the test will be run on every architecture, which is the default
+         when not specifying this field at all.</p>
+    valueType: SPACE_SEPARATED_VALUE_LIST
+    warnIfDefault: true
+    defaultValue: "any"
+    keywordList:
+      - value: "all"
+        description: |
+          <p>The package is an architecture independent package.  This is typically fitting for packages containing only scripts, data or documentatition.</p>
+
+          <p>This name <b>all</b> refers to the fact that the package can be used for <em>all</em> architectures at the same.  Though note that it is still subject to the rules of the <b>Multi-Arch</b> field.</p>
+        isExclusive: true
+      - value: "any"
+        description: |
+          <p>The package is an architecture dependent package and need to be compiled for each and every architecture it.</p>
+
+          <p>The name <b>any</b> refers to the fact that this is an architecture <em>wildcard</em> matching <em>any machine architecture</em> supported by dpkg.</p>
+      # Permit unknown values; we do not have a full list of architectures handy
+      - ...
+    supportsSubstvars: false
+

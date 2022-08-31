@@ -29,10 +29,10 @@ commonly used formats in Debian packaging.
  * Basic syntax highlighting with syntactical validation plus highlight of known field values.
  * Basic (incomplete) validation of field values.
  * Completion of field names, known values for fields and known substitution variables.
- * Documentation for fields, known values in fields and known substitution variables ("CTRL + mouse-over")
+ * Documentation for fields, known values in fields and known substitution variables ("mouse-over")
  * Spellchecking of relevant fields (e.g. `Description`).
  * Check fields are placed in a paragraph where it makes sense.
- * Folding of long field values with `Description` folded by default.
+ * Folding of long field values with `Description` folded by default (also includes comments).
  * Validate dependency fields for use of unsupported version operators (e.g. in `Provides`) or build profile
    restrictions (in any binary package relation field).
  * Warn if a field just duplicates the field of the source paragraph.
@@ -44,14 +44,27 @@ commonly used formats in Debian packaging.
 
 Plus the features listed for Generic deb822 files.
 
+### debian/tests/control
+
+* Basic syntax highlighting with syntactical validation plus highlight of known field values.
+  (Missing enforcement of `Tests` vs. `Test-Command`)
+* Basic (incomplete) validation of field values.
+* Completion of field names and known values for fields.
+* Documentation for fields, known values in fields ("mouse-over")
+* Folding of long field values (also includes comments).
+* Detect misspellings of known fields such as `Depend` being a typo of `Depends`.
+* Detect non-canonical variants of fields (`depends` -> `Depends` or `XC-Package-Type` -> `Package-Type`).
+
+Plus the features listed for Generic deb822 files.
+
 ### debian/copyright
 
  * Conditional detection as a Deb822 file based on the presence of the `Format:` field.  The matching is
    conditional as `debian/copyright` to avoid false-positives for projects that do not use the
    machine-readable Debian copyright format (also known as DEP-5).
  * Completion of field names of common known fields plus file names in the `Files:` field.
- * Documentation for some known fields ("CTRL + mouse-over")
- * Folding of long field values with `License` and `Copyright` folded by default.
+ * Documentation for some known fields ("mouse-over")
+ * Folding of long field values with `License` and `Copyright` folded by default (also includes comments).
  * Check fields are placed in a paragraph where it makes sense.
  * Basic verification of patterns in the `Files` field.  The plugin only partly supports wildcards
    and will err on the side of assuming a wildcard matches when in doubt.
@@ -107,8 +120,6 @@ in the `debian` directory (such as `debian/control` and
 edited) will only be auto-detected if the file uses the common pattern for
 that file type (e.g. NAME_VERSION_ARCH.changes).  This is deliberate to
 reduce false positives in case other plugins react to similar extensions.
-There is also `debian/rules` which requires an extra dependency. Please
-see the Installation section below.
 
 Alternatively, you can set the file type manually by using IDEA's
 <kbd>Associate with File Type...</kbd> feature.
@@ -127,10 +138,6 @@ the relevant editor actions.
 
   Download the [latest release](https://github.com/nthykier/IDEA-debpkg/releases/latest) and install it manually using
   <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-
-### Optionally
-
-Install the [Makefile Language plugin] to enable features for `debian/rules` files.
 
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].

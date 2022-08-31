@@ -9,6 +9,16 @@
 # debpkg Changelog
 
 ## [Unreleased]
+### Added
+- Recognise `debian/tests/control` automatically as a deb822 file
+- Recognise the standard fields and most common values for `debian/control/tests`. However, no `debian/control/tests`
+  specific validation has been added (e.g., the plugin not catch that `Tests` and `Test-Command` are mutually
+  exclusive).
+
+### Changed
+- Chore: Bump snakeyaml dependency to 1.31.
+- Internal/Chore: Update build time dependency on `gradle-intellij-plugin`.
+- Internal/Chore: Update the CI dependency on `actions/cache`.
 
 ## [0.0.17]
 ### Changed

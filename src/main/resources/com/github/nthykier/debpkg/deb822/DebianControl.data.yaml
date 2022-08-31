@@ -118,7 +118,7 @@ fields:
       <em>Example</em>:
       <pre>Standards-Version: 4.5.2</pre>
 
-      <p>Note that the last version part (the <em>X</em> in 4.5.2.<em>X</em>) is typically omitted as it
+      <p>Note that the last version part (the <em>.X</em> in 4.5.2<em>.X</em>) is typically omitted as it
       is used solely for editioral changes to the policy (e.g. typo fixes).</p>
     valueType: SINGLE_TRIVIAL_VALUE
     valueValidation: /^\d+[.]\d+[.]\d+(?:[.]\d+)$/

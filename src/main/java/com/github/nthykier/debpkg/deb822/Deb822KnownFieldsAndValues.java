@@ -3,6 +3,7 @@ package com.github.nthykier.debpkg.deb822;
 import com.github.nthykier.debpkg.deb822.deplang.DependencyLanguage;
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianCopyrightLanguage;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianTestsControlLanguage;
 import com.github.nthykier.debpkg.deb822.field.*;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldImpl;
 import com.github.nthykier.debpkg.deb822.field.impl.Deb822KnownFieldKeywordImpl;
@@ -27,6 +28,7 @@ public class Deb822KnownFieldsAndValues {
 
     private static final Map<String, Deb822KnownField> DCTRL_KNOWN_FIELDS = new HashMap<>();
     private static final Map<String, Deb822KnownField> DCOPY_KNOWN_FIELDS = new HashMap<>();
+    private static final Map<String, Deb822KnownField> DTCTRL_KNOWN_FIELDS = new HashMap<>();
 
     private static final KeywordInformation EMPTY_KEYWORD_INFORMATION = KeywordInformation.of(Collections.emptyMap(), false);
 
@@ -46,6 +48,8 @@ public class Deb822KnownFieldsAndValues {
             return new KnownFieldTableImpl(DCTRL_KNOWN_FIELDS, true, CLASSIFICATION_FIELD_NAMING_RULE);
         } else if (language.is(Deb822DialectDebianCopyrightLanguage.INSTANCE)) {
             return new KnownFieldTableImpl(DCOPY_KNOWN_FIELDS);
+        } else if (language.is(Deb822DialectDebianTestsControlLanguage.INSTANCE)) {
+            return new KnownFieldTableImpl(DTCTRL_KNOWN_FIELDS);
         } else if (language.isKindOf(Deb822Language.INSTANCE)) {
             return KnownFieldTable.NULL_TABLE;
         }
@@ -60,6 +64,7 @@ public class Deb822KnownFieldsAndValues {
     private static void loadKnownFieldDefinitions() {
         loadKnownFieldDefinitionsFromResource("DebianControl.data.yaml", DCTRL_KNOWN_FIELDS);
         loadKnownFieldDefinitionsFromResource("DebianCopyright.data.yaml", DCOPY_KNOWN_FIELDS);
+        loadKnownFieldDefinitionsFromResource("DebianTestsControl.data.yaml", DTCTRL_KNOWN_FIELDS);
     }
 
     private static void loadKnownFieldDefinitionsFromResource(String resourceName,
