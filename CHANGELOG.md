@@ -16,6 +16,7 @@
   exclusive).
 
 ### Changed
+- When completing known values for a field with multiple values, no longer suggest values already present.
 - Which fields support substvars (notably, default to "no substvars" by default).
 - Chore: Bump snakeyaml dependency to 1.31.
 - Internal/Chore: Update build time dependency on `gradle-intellij-plugin`.

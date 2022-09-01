@@ -16,9 +16,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Deb822CodeCompletionContributor extends CompletionContributor implements DumbAware {
@@ -80,7 +78,18 @@ public class Deb822CodeCompletionContributor extends CompletionContributor imple
                         if (knownField == null || !knownField.hasKnownValues()) {
                             return;
                         }
-                        resultSet.addAllElements(knownField.getKnownKeywords().stream().map(LookupElementBuilder::create).collect(Collectors.toList()));
+                        Set<String> alreadyUsed;
+                        if (fieldValuePair.getValueParts() != null) {
+                            alreadyUsed = fieldValuePair.getValueParts().getValueList().stream()
+                                    .map(PsiElement::getText)
+                                    .collect(Collectors.toSet());
+                        } else {
+                            alreadyUsed = Collections.emptySet();
+                        }
+                        resultSet.addAllElements(knownField.getKnownKeywords().stream()
+                                .filter(kw -> !alreadyUsed.contains(kw))
+                                .map(LookupElementBuilder::create)
+                                .collect(Collectors.toList()));
                     }
                 }
         );
