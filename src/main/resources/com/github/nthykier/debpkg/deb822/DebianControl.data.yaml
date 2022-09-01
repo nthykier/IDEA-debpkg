@@ -26,6 +26,7 @@ fields:
     valueType: SINGLE_KEYWORD
     warnIfDefault: true
     onlyInParagraphType: "Package"
+    supportsSubstvars: false
     defaultValue: "deb"
     # aliases: ["X-Package-Type", "XC-Package-Type"]
     keywordList:
@@ -39,6 +40,7 @@ fields:
   - canonicalName: Essential
     valueType: SINGLE_KEYWORD
     onlyInParagraphType: "Package"
+    supportsSubstvars: true
     description: |
       <p><b>Special-purpose only</b>.  <em>This field is a special purpose field and is rarely needed. You are recommended to omit unless you know you need it.</em></p>
 
@@ -75,6 +77,7 @@ fields:
       <p>The field works similar to <b>Protected</b> except that dpkg does not support the field.  On the plus side, it is supported in older releases (e.g. Debian buster and earlier) and can be useful for backwards compatibility with these releases.</p>
     warnIfDefault: true
     defaultValue: "no"
+    supportsSubstvars: true
     keywordList:
       - value: "yes"
         description: |
@@ -98,6 +101,7 @@ fields:
 
       <p>This field is useful for the small subset of packages that are not essential but if installed tends to be very important for the system to function.  Examples include this is useful for packages such as init systems and boot loaders, where uninstalling it might break the system.  On the other hand, you can have "systems" (e.g. containers or chroots) that do not need a boot loader nor an init system, so they are not <em>Essential</em>.</p>
     warnIfDefault: true
+    supportsSubstvars: true
     defaultValue: "no"
     keywordList:
       - value: "yes"
@@ -241,6 +245,7 @@ fields:
       <p>For more details about the Debian Maintainer concept and how the field was used, please see
          <a href="https://www.debian.org/vote/2007/vote_003">General Resolution: Endorse the concept of Debian Maintainers</a></p>
     warnIfDefault: true
+    supportsSubstvars: false
     keywordList:
       - value: "yes"
         description: |
@@ -567,6 +572,7 @@ fields:
       <p>see <a>https://packages.debian.org/unstable</a> for more details about the sections.</p>
     valueType: SINGLE_KEYWORD
     keywordListFromDataSet: "virtual/archive-sections-with-components"
+    supportsSubstvars: false
 
   - canonicalName: Testsuite
     onlyInParagraphType: "Source"
@@ -584,6 +590,7 @@ fields:
       <em>Example</em>:
       <pre>Homepage: https://www.janes-tools.org/frob-cleaner</pre>
     valueType: FREE_TEXT_VALUE
+    supportsSubstvars: false
 
   - canonicalName: Multi-Arch
     onlyInParagraphType: "Package"
@@ -656,6 +663,7 @@ fields:
       </p>
     valueType: SINGLE_KEYWORD
     defaultValue: "no"
+    supportsSubstvars: false
     keywordList:
 
       - value: "no"
@@ -714,6 +722,7 @@ fields:
 
       <p>Unless you know you need a different value, you should choose <b>optional</b> for your packages.</p>
     defaultValue: "optional"
+    supportsSubstvars: false
     keywordList:
       - value: "required"
         description: |
@@ -885,6 +894,7 @@ fields:
     valueType: FREE_TEXT_VALUE
     foldedByDefault: true
     spellcheckValue: true
+    supportsSubstvars: true
 
 substvars:
   - name: "${Arch}"

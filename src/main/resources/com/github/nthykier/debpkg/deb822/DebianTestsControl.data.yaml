@@ -10,7 +10,6 @@ fields:
       contain only characters which are legal in package names. It is
       permitted, but not encouraged, to use upper-case characters as well.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST
-    supportsSubstvars: false
 
   - canonicalName: Test-Command
     description: |
@@ -25,7 +24,6 @@ fields:
          <b>Test-Command: python debian/tests/mytest.py</b> and
          <b>Test-Command: python3 debian/tests/mytest.py</b>.</p>
     valueType: FREE_TEXT_VALUE
-    supportsSubstvars: false
 
   - canonicalName: Restrictions
     description: |
@@ -236,8 +234,6 @@ fields:
 
       <p>Features are separated by commas and/or whitespace.</p>
     valueType: FREE_TEXT_VALUE
-    supportsSubstvars: false
-
 
   - canonicalName: Depends
     description: |
@@ -275,7 +271,6 @@ fields:
          the source are installed unless explicitly requested.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_DEPENDENCY
-    supportsSubstvars: false
 
   - canonicalName: Tests-Directory
     valueType: FREE_TEXT_VALUE
@@ -307,7 +302,6 @@ fields:
 
       <p>Classes are separated by commas and/or whitespace.</p>
     valueType: FREE_TEXT_VALUE
-    supportsSubstvars: false
 
   - canonicalName: Architecture
     description: |
@@ -337,5 +331,4 @@ fields:
           <p>The name <b>any</b> refers to the fact that this is an architecture <em>wildcard</em> matching <em>any machine architecture</em> supported by dpkg.</p>
       # Permit unknown values; we do not have a full list of architectures handy
       - ...
-    supportsSubstvars: false
 

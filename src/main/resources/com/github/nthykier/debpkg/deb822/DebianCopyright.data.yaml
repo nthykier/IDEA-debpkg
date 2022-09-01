@@ -95,7 +95,6 @@ fields:
     onlyInParagraphType:
       - "Files"
       - "License"
-    supportsSubstvars: false
 
   - canonicalName: Copyright
     onlyInParagraphType:
@@ -112,7 +111,6 @@ fields:
          Copyright 2010-2020 John Doe
       </pre>
     valueType: FREE_TEXT_VALUE
-    supportsSubstvars: false
     foldedByDefault: true
     # Usually this is "Copyright 2020 Some name" where the spellchecker does not know the name.  So we deliberately
     # skip checking here.
@@ -126,7 +124,6 @@ fields:
       - "Files"
       - "License"
       - "Header"
-    supportsSubstvars: false
     foldedByDefault: true
     # Copy-waste of legal text and you are not allowed to change the terms.  Not much we can do here.
     spellcheckValue: false

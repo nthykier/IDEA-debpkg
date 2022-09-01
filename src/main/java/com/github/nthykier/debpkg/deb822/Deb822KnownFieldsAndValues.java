@@ -152,7 +152,7 @@ public class Deb822KnownFieldsAndValues {
         String docs = getOptionalString(fieldDef, "description", null);
         String defaultValue = getOptionalString(fieldDef, "defaultValue", null);
         KeywordInformation keywordInformation = getKeywordInformation(fieldDef, canonicalName);
-        boolean supportsSubstvars = getBool(fieldDef, "supportsSubstvars", true);
+        boolean supportsSubstvars = getBool(fieldDef, "supportsSubstvars", false);
         boolean warnIfDefault = getBool(fieldDef, "warnIfDefault", false);
         boolean isFoldedByDefault = getBool(fieldDef, "foldedByDefault", false);
         boolean spellcheckField = getBool(fieldDef, "spellcheckValue", false);
