@@ -1,11 +1,13 @@
 package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.github.nthykier.debpkg.util.ASTNodeStringConverter;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 public class DCtrlFieldDuplicatesSourceParagraphInspection extends AbstractDctrlInspection {
+
+    public DCtrlFieldDuplicatesSourceParagraphInspection() {
+        super(Deb822DialectDebianControlLanguage.INSTANCE);
+    }
 
     public boolean runForWholeFile() {
         return true;

@@ -47,7 +47,6 @@ Plus the features listed for Generic deb822 files.
 ### debian/tests/control
 
 * Basic syntax highlighting with syntactical validation plus highlight of known field values.
-  (Missing enforcement of `Tests` vs. `Test-Command`)
 * Basic (incomplete) validation of field values.
 * Completion of field names and known values for fields.
 * Documentation for fields, known values in fields ("mouse-over")

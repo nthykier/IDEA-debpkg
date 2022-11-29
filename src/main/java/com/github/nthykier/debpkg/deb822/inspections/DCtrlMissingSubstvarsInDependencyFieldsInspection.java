@@ -10,6 +10,7 @@ import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -22,6 +23,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DCtrlMissingSubstvarsInDependencyFieldsInspection extends AbstractDctrlInspection {
+
+    public DCtrlMissingSubstvarsInDependencyFieldsInspection() {
+        super(Deb822DialectDebianControlLanguage.INSTANCE);
+    }
 
     @Override
     protected PsiElementVisitor inspectionVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {

@@ -2,11 +2,13 @@ package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.Deb822DataSets;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.psi.*;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.github.nthykier.debpkg.util.StringUtil;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +23,10 @@ public class DCtrlUnknownBuildProfilesInspection extends AbstractDctrlInspection
 
 
     private static final Pattern PER_PACKAGE_PROFILE_PATTERN = Pattern.compile("pkg[.][a-z0-9][a-z0-9.+-]+[.][a-z0-9-]+");
+
+    public DCtrlUnknownBuildProfilesInspection() {
+        super(Deb822DialectDebianControlLanguage.INSTANCE);
+    }
 
     @NotNull
     public PsiElementVisitor inspectionVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {

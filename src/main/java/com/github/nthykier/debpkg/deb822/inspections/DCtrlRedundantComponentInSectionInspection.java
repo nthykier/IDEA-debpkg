@@ -1,6 +1,7 @@
 package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822File;
@@ -8,6 +9,7 @@ import com.github.nthykier.debpkg.deb822.psi.Deb822ValueParts;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Visitor;
 import com.intellij.codeInspection.*;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElementVisitor;
@@ -16,6 +18,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class DCtrlRedundantComponentInSectionInspection extends AbstractDctrlInspection {
+
+    public DCtrlRedundantComponentInSectionInspection() {
+        super(Deb822DialectDebianControlLanguage.INSTANCE);
+    }
 
     @NotNull
     public PsiElementVisitor inspectionVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {

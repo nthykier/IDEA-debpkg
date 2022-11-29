@@ -1,12 +1,14 @@
 package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
+import com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianControlLanguage;
 import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Paragraph;
 import com.github.nthykier.debpkg.deb822.psi.Deb822Visitor;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +20,10 @@ public class DCtrlUsesObsoleteFieldInspection extends AbstractDctrlInspection {
     private static final String[] DEPRECATED_FIELDS_NO_REPLACEMENT = {
             "DM-Upload-Allowed"
     };
+
+    public DCtrlUsesObsoleteFieldInspection() {
+        super(Deb822DialectDebianControlLanguage.INSTANCE);
+    }
 
     @NotNull
     public PsiElementVisitor inspectionVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {

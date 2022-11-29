@@ -155,6 +155,19 @@
                          level="WARNING"
                          implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlUnknownBuildProfilesInspection"/>
 
+
+
+        <localInspection language="DebianTestsControl"
+                         groupPathKey="pluginDescriptor.inspection.DebianTestsControl.groupPath"
+                         shortName="DTCtrlDuplicateTestDefinition"
+                         key="deb822.files.inspection.dtctrl-tests-and-test-commands-mutually-exclusive.name"
+                         groupKey="pluginDescriptor.inspection.DebianTestsControl.groupName"
+                         enabledByDefault="true"
+                         hasStaticDescription="true"
+                         level="ERROR"
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.DTCtrlDuplicateTestDefinitionInspection"/>
+
+
         <annotator language="Deb822" id="DEB822_BASIC_SCANNER" order="first"
                    implementationClass="com.github.nthykier.debpkg.deb822.Deb822Annotator" />
         <!-- Should have been DebianControl, but we have to work around IDEA, which uses the language of the element

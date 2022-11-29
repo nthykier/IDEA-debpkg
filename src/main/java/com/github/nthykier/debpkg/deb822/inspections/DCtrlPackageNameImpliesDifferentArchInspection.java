@@ -8,6 +8,7 @@ import com.github.nthykier.debpkg.deb822.psi.Deb822Visitor;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.psi.PsiElementVisitor;
 import lombok.Data;
@@ -23,6 +24,10 @@ public class DCtrlPackageNameImpliesDifferentArchInspection extends AbstractDctr
             Heuristic.of("Documentation package (-doc/-docs)", p -> p.endsWith("-doc") || p.endsWith("-docs")),
             Heuristic.of("Dictionary/wordlist package for aspell (aspell-[a-z]{2} and similar)", Pattern.compile("^aspell-[a-z]{2}(?:-.*)?$")),
     };
+
+    public DCtrlPackageNameImpliesDifferentArchInspection() {
+        super(Deb822DialectDebianControlLanguage.INSTANCE);
+    }
 
     @Override
     protected PsiElementVisitor inspectionVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {

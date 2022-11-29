@@ -10,6 +10,7 @@ import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.psi.PsiElementVisitor;
 import lombok.Data;
@@ -62,6 +63,11 @@ public class DCtrlPackageNameImpliesDifferentSectionInspection extends AbstractD
             Heuristic.of( "libdevel", startsWith("lib").and(endsWith("-dev", "-headers"))),
             Heuristic.of( "libs", Pattern.compile("^lib.*\\d[ad]?$")),
     };
+
+
+    public DCtrlPackageNameImpliesDifferentSectionInspection() {
+        super(Deb822DialectDebianControlLanguage.INSTANCE);
+    }
 
     @Override
     protected PsiElementVisitor inspectionVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
