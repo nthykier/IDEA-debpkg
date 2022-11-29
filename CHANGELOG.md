@@ -13,6 +13,7 @@
 - Recognise `debian/tests/control` automatically as a deb822 file
 - Recognise the standard fields and most common values for `debian/control/tests`.
 - In `debian/tests/control`, show an error if `Tests` and `Test-Command` fields are used in the same paragraph.
+- In `debian/tests/control`, show a warning if the `needs-internet` restriction is used without `flaky`.
 
 ### Fixed
 - Corrected display name of the inspection for non-standard Build-Profiles.

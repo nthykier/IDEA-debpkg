@@ -7,7 +7,7 @@ import com.intellij.psi.PsiNameIdentifierOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import java.util.*;
 
 public interface Deb822ParagraphSupport extends PsiElement, PsiNameIdentifierOwner {
 
@@ -58,6 +58,14 @@ public interface Deb822ParagraphSupport extends PsiElement, PsiNameIdentifierOwn
       return null;
     }
     return pair.getFieldValue();
+  }
+
+  default Set<String> readFieldAsAutopkgtestSet(@NotNull String fieldName) {
+    String value = getFieldValue(fieldName);
+    if (value == null) {
+      return Collections.emptySet();
+    }
+    return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(value.split("\\s+|\\s*,\\s*"))));
   }
 
   /**

@@ -1,0 +1,11 @@
+<html>
+<body>
+<p>Detects possible missing "flaky" restriction</p>
+<p>
+    All tests in <var>debian/tests/control</var> that can randomly fail must be declared as
+    <var>flaky</var>.  This inspection detects if a test is not declared as <var>flaky</var>,
+    but seems like it ought to have been based on other metadata (such as needing internet
+    access, since internet access is never 100% reliable).
+</p>
+</body>
+</html>
