@@ -148,7 +148,7 @@
         <localInspection language="DebianControl"
                          groupPathKey="pluginDescriptor.inspection.DebianControl.groupPath"
                          shortName="DCtrlUnknownBuildProfiles"
-                         key="deb822.files.inspection.canonical-field-variant.name"
+                         key="deb822.files.inspection.dctrl-unknown-build-profile.name"
                          groupKey="pluginDescriptor.inspection.DebianControl.groupName"
                          enabledByDefault="true"
                          hasStaticDescription="true"

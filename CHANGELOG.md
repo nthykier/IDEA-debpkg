@@ -15,6 +15,9 @@
   specific validation has been added (e.g., the plugin not catch that `Tests` and `Test-Command` are mutually
   exclusive).
 
+### Fixed
+- Corrected display name of the inspection for non-standard Build-Profiles.
+
 ### Changed
 - When completing known values for a field with multiple values, no longer suggest values already present.
 - Which fields support substvars (notably, default to "no substvars" by default).
