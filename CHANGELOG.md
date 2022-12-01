@@ -19,11 +19,13 @@
 - Corrected display name of the inspection for non-standard Build-Profiles.
 
 ### Changed
+- Bump the compat range for IDE to support 2022.3
 - When completing known values for a field with multiple values, no longer suggest values already present.
 - Which fields support substvars (notably, default to "no substvars" by default).
 - Chore: Bump snakeyaml dependency to 1.31.
+- Internal/Chore: Update runtime dependency on `commons-text` and `snakeyaml`.
 - Internal/Chore: Update build time dependency on `gradle-intellij-plugin`.
-- Internal/Chore: Update the CI dependency on `actions/cache`.
+- Internal/Chore: Update the CI dependency on `actions/cache`, `actions/setup-java`, and `gradle/wrapper-validation-action`.
 
 ## [0.0.17]
 ### Changed
