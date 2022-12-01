@@ -9,6 +9,8 @@
 # debpkg Changelog
 
 ## [Unreleased]
+
+## [0.0.18]
 ### Added
 - Recognise `debian/tests/control` automatically as a deb822 file
 - Recognise the standard fields and most common values for `debian/control/tests`.
