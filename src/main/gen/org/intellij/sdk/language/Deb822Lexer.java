@@ -7,11 +7,12 @@ import com.github.nthykier.debpkg.deb822.psi.Deb822Types;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
-import com.intellij.spellchecker.tokenizer.Tokenizer;
 import com.github.nthykier.debpkg.deb822.Deb822LanguageSupport;
 import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
 import com.github.nthykier.debpkg.deb822.field.Deb822KnownFieldValueType;
+
+import java.util.Arrays;
 
 
 /**
@@ -314,6 +315,10 @@ public class Deb822Lexer implements FlexLexer {
   private boolean zzEOFDone;
 
   /* user code: */
+    private static final int[] NEXT_VALUE_PARSING_STATE_TABLE = buildNextValueParsingStateTable();
+    private static final int INVALID_STATE = -1;
+
+
     private final Deb822LanguageSupport languageSupport;
     private final KnownFieldTable knownFieldTable;
 
@@ -321,7 +326,7 @@ public class Deb822Lexer implements FlexLexer {
     private IElementType parsedFieldName() {
         Deb822KnownField knownField = knownFieldTable.getField(yytext().toString());
         Deb822KnownFieldValueType valueType = Deb822KnownFieldValueType.FREE_TEXT_VALUE;
-        if (knownField != null && knownField.getCanonicalFieldName().equals("Build-Profiles")) {
+        if (knownField != null) {
             valueType = knownField.getFieldValueType();
         }
         yybegin(valueType.getInitialValueParsingLexerState());
@@ -330,20 +335,31 @@ public class Deb822Lexer implements FlexLexer {
 
     private void nextValueParsingState() {
         int newState;
-        switch(zzLexicalState) {
-            case SEPARATOR_BEFORE_VALUE:
-            case MAYBE_CONT_VALUE:
-                newState = PARSING_VALUE;
-                break;
-            case SEPARATOR_BEFORE_BUILD_PROFILES:
-            case MAYBE_CONT_BUILD_PROFILES:
-                newState = PARSING_BUILD_PROFILES;
-                break;
-            default:
+        if (zzLexicalState < 0 || zzLexicalState >= NEXT_VALUE_PARSING_STATE_TABLE.length) {
+            newState = INVALID_STATE;
+        } else {
+            newState = NEXT_VALUE_PARSING_STATE_TABLE[zzLexicalState];
+        }
+        if (newState == INVALID_STATE) {
                 throw new IllegalStateException("The nextValueParsingState was called in the wrong context");
         }
         yybegin(newState);
     }
+
+    private static int[] buildNextValueParsingStateTable() {
+        int[] table = new int[ZZ_LEXSTATE.length];
+        Arrays.fill(table, INVALID_STATE);
+
+        table[SEPARATOR_BEFORE_VALUE] = PARSING_VALUE;
+        table[MAYBE_CONT_VALUE] = PARSING_VALUE;
+
+        table[SEPARATOR_BEFORE_BUILD_PROFILES] = PARSING_BUILD_PROFILES;
+        table[MAYBE_CONT_BUILD_PROFILES] = PARSING_BUILD_PROFILES;
+
+        return table;
+    }
+
+
 
 
   /**
