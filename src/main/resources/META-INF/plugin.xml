@@ -155,6 +155,17 @@
                          level="WARNING"
                          implementationClass="com.github.nthykier.debpkg.deb822.inspections.DCtrlUnknownBuildProfilesInspection"/>
 
+        <localInspection
+                         language="DebianControl"
+                         groupPathKey="pluginDescriptor.inspection.DebianControl.groupPath"
+                         shortName="Deb822EmptyField"
+                         key="deb822.files.inspection.deb822-empty-field-inspection.name"
+                         groupKey="pluginDescriptor.inspection.DebianControl.groupName"
+                         enabledByDefault="true"
+                         hasStaticDescription="true"
+                         level="ERROR"
+                         implementationClass="com.github.nthykier.debpkg.deb822.inspections.Deb822EmptyFieldInspection"/>
+
 
 
         <localInspection language="DebianTestsControl"

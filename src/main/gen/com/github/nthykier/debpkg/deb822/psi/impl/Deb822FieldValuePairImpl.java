@@ -35,6 +35,12 @@ public class Deb822FieldValuePairImpl extends ASTWrapperPsiElement implements De
   }
 
   @Override
+  @NotNull
+  public List<Deb822HangingContValue> getHangingContValueList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, Deb822HangingContValue.class);
+  }
+
+  @Override
   @Nullable
   public Deb822ValueParts getValueParts() {
     return findChildByClass(Deb822ValueParts.class);

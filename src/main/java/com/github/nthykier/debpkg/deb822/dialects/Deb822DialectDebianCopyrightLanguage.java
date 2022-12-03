@@ -38,4 +38,8 @@ public class Deb822DialectDebianCopyrightLanguage extends Language implements De
         return DEBIAN_COPYRIGHT_PARAGRAPH_CLASSIFIER;
     }
 
+    @Override
+    public boolean supportsEmptyFields() {
+        return true;
+    }
 }

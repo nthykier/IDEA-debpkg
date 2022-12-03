@@ -25,6 +25,10 @@ public interface Deb822LanguageSupport {
     @NotNull
     KnownFieldTable getKnownFieldTable();
 
+    default boolean supportsEmptyFields() {
+        return false;
+    }
+
     static @NotNull Deb822LanguageSupport fromPsiElement(@NotNull PsiElement element) {
         return fromDeb822Language(element.getContainingFile().getLanguage());
     }

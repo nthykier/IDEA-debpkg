@@ -9,6 +9,9 @@
 # debpkg Changelog
 
 ## [Unreleased]
+### Changed
+- Avoid parse errors on empty fields as some deb822 files allow them.  It will trigger a warning or an error
+  depending on the file (via an inspection).
 
 ## [0.0.18]
 ### Added

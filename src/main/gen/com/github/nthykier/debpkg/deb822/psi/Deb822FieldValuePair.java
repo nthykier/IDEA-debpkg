@@ -12,6 +12,9 @@ public interface Deb822FieldValuePair extends ContributedReferenceHost {
   @NotNull
   Deb822Field getField();
 
+  @NotNull
+  List<Deb822HangingContValue> getHangingContValueList();
+
   @Nullable
   Deb822ValueParts getValueParts();
 

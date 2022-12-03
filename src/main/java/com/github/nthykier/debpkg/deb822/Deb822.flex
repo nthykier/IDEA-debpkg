@@ -143,7 +143,7 @@ FIELD_CHARACTER=[\u0021-\u0039\u003b-\u007e]
 <MAYBE_CONT_VALUE, MAYBE_CONT_BUILD_PROFILES>{
 {END_OF_LINE_COMMENT}{NEWLINE}                                                     { return Deb822Types.COMMENT; }
 /* Cope with some common missing " ." patterns */
-^{NEWLINE}?({WHITE_SPACE}*{NEWLINE})+{SINGLE_SPACE}                                { nextValueParsingState(); return Deb822Types.HANGING_CONT_VALUE_TOKEN; }
+^{SINGLE_SPACE}+{NEWLINE}                                                          { return Deb822Types.HANGING_CONT_VALUE_TOKEN; }
 
 ^{SINGLE_SPACE}                                                                    { nextValueParsingState(); return TokenType.WHITE_SPACE; }
 ^{FIRST_FIELD_CHARACTER}{FIELD_CHARACTER}*                                         { return parsedFieldName(); }

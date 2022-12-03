@@ -30,4 +30,8 @@ public class Deb822DialectDebianControlLanguage extends Language implements Deb8
         return DEBIAN_CONTROL_PARAGRAPH_CLASSIFIER;
     }
 
+    @Override
+    public boolean supportsEmptyFields() {
+        return true;
+    }
 }

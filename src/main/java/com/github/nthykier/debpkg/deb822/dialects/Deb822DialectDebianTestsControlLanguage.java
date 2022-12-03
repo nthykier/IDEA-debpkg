@@ -28,4 +28,9 @@ public class Deb822DialectDebianTestsControlLanguage extends Language implements
         return DEBIAN_TESTS_CONTROL_PARAGRAPH_CLASSIFIER;
     }
 
+    @Override
+    public boolean supportsEmptyFields() {
+        return true;
+    }
+
 }
