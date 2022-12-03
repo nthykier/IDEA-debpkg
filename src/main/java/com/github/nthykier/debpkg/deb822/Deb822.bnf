@@ -46,7 +46,8 @@ private armor_headers ::= GPG_ARMOR_HEADER* GPG_ARMOR_HEADERS_END {
 private gpg_signature_blob ::= GPG_SIGNATURE_BLOB_PART*
 
 
-field_value_pair ::= field SEPARATOR ignorable_value_noise? value_parts? {
+field_value_pair ::= field SEPARATOR value_parts
+                 | field SEPARATOR ignorable_value_noise? {
   pin=2
 /*  extends="com.github.nthykier.debpkg.deb822.psi.impl.Deb822FieldValueElementImpl" */
   implements="com.intellij.psi.ContributedReferenceHost"
@@ -60,8 +61,8 @@ field ::= FIELD_NAME {
   implements="com.github.nthykier.debpkg.deb822.psi.Deb822FieldBase"
 }
 
-value_parts ::= (value|substvar|COMMA) (ignorable_value_noise|value|substvar|COMMA)*
-              | build_profile_group+ ignorable_value_noise? {
+value_parts ::= ignorable_value_noise? (value|substvar|COMMA) (ignorable_value_noise|value|substvar|COMMA)*
+              | ignorable_value_noise? build_profile_group+ ignorable_value_noise? {
   extends="com.github.nthykier.debpkg.deb822.psi.impl.AbstractDeb822ValueParts"
 }
 

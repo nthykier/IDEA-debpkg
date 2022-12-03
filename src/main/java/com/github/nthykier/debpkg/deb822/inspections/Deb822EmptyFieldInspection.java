@@ -2,21 +2,20 @@ package com.github.nthykier.debpkg.deb822.inspections;
 
 import com.github.nthykier.debpkg.Deb822Bundle;
 import com.github.nthykier.debpkg.deb822.Deb822LanguageSupport;
-import com.github.nthykier.debpkg.deb822.field.Deb822KnownField;
-import com.github.nthykier.debpkg.deb822.field.KnownFieldTable;
-import com.github.nthykier.debpkg.deb822.psi.*;
+import com.github.nthykier.debpkg.deb822.psi.Deb822FieldValuePair;
+import com.github.nthykier.debpkg.deb822.psi.Deb822File;
+import com.github.nthykier.debpkg.deb822.psi.Deb822HangingContValue;
+import com.github.nthykier.debpkg.deb822.psi.Deb822Visitor;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
-import com.github.nthykier.debpkg.util.StringUtil;
 import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiErrorElement;
+import com.intellij.psi.PsiWhiteSpace;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Deb822EmptyFieldInspection extends LocalInspectionTool {
 
@@ -36,7 +35,19 @@ public class Deb822EmptyFieldInspection extends LocalInspectionTool {
     }
 
     private void checkParagraph(ProblemsHolder holder, @NotNull Deb822FieldValuePair field, boolean supportsEmptyFields) {
-        if (field.getValueParts() == null) {
+        if (field.getValueParts() != null) {
+            return;
+        }
+
+        // A missing ValueParts can mean many things - including parse errors
+        PsiElement lastChild = field.getLastChild();
+        if (lastChild instanceof PsiErrorElement) {
+            return;
+        }
+        while (lastChild instanceof PsiWhiteSpace || lastChild instanceof Deb822HangingContValue) {
+            lastChild = lastChild.getPrevSibling();
+        }
+        if (lastChild.getTextLength() == 1 && lastChild.getText().equals(":")) {
             holder.registerProblem(field,
                     supportsEmptyFields
                             ? Deb822Bundle.message("deb822.files.inspection.eb822-empty-field-inspection-weak.description")

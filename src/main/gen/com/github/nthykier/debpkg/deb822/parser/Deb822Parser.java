@@ -240,31 +240,46 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // field SEPARATOR ignorable_value_noise? value_parts?
+  // field SEPARATOR value_parts 
+  //                  | field SEPARATOR ignorable_value_noise?
   public static boolean field_value_pair(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "field_value_pair")) return false;
-    boolean r, p;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, FIELD_VALUE_PAIR, "<field value pair>");
+    r = field_value_pair_0(b, l + 1);
+    if (!r) r = field_value_pair_1(b, l + 1);
+    exit_section_(b, l, m, r, false, Deb822Parser::recover_property);
+    return r;
+  }
+
+  // field SEPARATOR value_parts
+  private static boolean field_value_pair_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "field_value_pair_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
     r = field(b, l + 1);
     r = r && consumeToken(b, SEPARATOR);
-    p = r; // pin = 2
-    r = r && report_error_(b, field_value_pair_2(b, l + 1));
-    r = p && field_value_pair_3(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, Deb822Parser::recover_property);
-    return r || p;
+    r = r && value_parts(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // field SEPARATOR ignorable_value_noise?
+  private static boolean field_value_pair_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "field_value_pair_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = field(b, l + 1);
+    r = r && consumeToken(b, SEPARATOR);
+    r = r && field_value_pair_1_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   // ignorable_value_noise?
-  private static boolean field_value_pair_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "field_value_pair_2")) return false;
+  private static boolean field_value_pair_1_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "field_value_pair_1_2")) return false;
     ignorable_value_noise(b, l + 1);
-    return true;
-  }
-
-  // value_parts?
-  private static boolean field_value_pair_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "field_value_pair_3")) return false;
-    value_parts(b, l + 1);
     return true;
   }
 
@@ -476,8 +491,8 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (value|substvar|COMMA) (ignorable_value_noise|value|substvar|COMMA)*
-  //               | build_profile_group+ ignorable_value_noise?
+  // ignorable_value_noise? (value|substvar|COMMA) (ignorable_value_noise|value|substvar|COMMA)*
+  //               | ignorable_value_noise? build_profile_group+ ignorable_value_noise?
   public static boolean value_parts(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "value_parts")) return false;
     boolean r;
@@ -488,20 +503,28 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (value|substvar|COMMA) (ignorable_value_noise|value|substvar|COMMA)*
+  // ignorable_value_noise? (value|substvar|COMMA) (ignorable_value_noise|value|substvar|COMMA)*
   private static boolean value_parts_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "value_parts_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = value_parts_0_0(b, l + 1);
     r = r && value_parts_0_1(b, l + 1);
+    r = r && value_parts_0_2(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // value|substvar|COMMA
+  // ignorable_value_noise?
   private static boolean value_parts_0_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "value_parts_0_0")) return false;
+    ignorable_value_noise(b, l + 1);
+    return true;
+  }
+
+  // value|substvar|COMMA
+  private static boolean value_parts_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "value_parts_0_1")) return false;
     boolean r;
     r = value(b, l + 1);
     if (!r) r = substvar(b, l + 1);
@@ -510,19 +533,19 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
   }
 
   // (ignorable_value_noise|value|substvar|COMMA)*
-  private static boolean value_parts_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "value_parts_0_1")) return false;
+  private static boolean value_parts_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "value_parts_0_2")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!value_parts_0_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "value_parts_0_1", c)) break;
+      if (!value_parts_0_2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "value_parts_0_2", c)) break;
     }
     return true;
   }
 
   // ignorable_value_noise|value|substvar|COMMA
-  private static boolean value_parts_0_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "value_parts_0_1_0")) return false;
+  private static boolean value_parts_0_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "value_parts_0_2_0")) return false;
     boolean r;
     r = ignorable_value_noise(b, l + 1);
     if (!r) r = value(b, l + 1);
@@ -531,35 +554,43 @@ public class Deb822Parser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // build_profile_group+ ignorable_value_noise?
+  // ignorable_value_noise? build_profile_group+ ignorable_value_noise?
   private static boolean value_parts_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "value_parts_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = value_parts_1_0(b, l + 1);
     r = r && value_parts_1_1(b, l + 1);
+    r = r && value_parts_1_2(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // build_profile_group+
+  // ignorable_value_noise?
   private static boolean value_parts_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "value_parts_1_0")) return false;
+    ignorable_value_noise(b, l + 1);
+    return true;
+  }
+
+  // build_profile_group+
+  private static boolean value_parts_1_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "value_parts_1_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = build_profile_group(b, l + 1);
     while (r) {
       int c = current_position_(b);
       if (!build_profile_group(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "value_parts_1_0", c)) break;
+      if (!empty_element_parsed_guard_(b, "value_parts_1_1", c)) break;
     }
     exit_section_(b, m, null, r);
     return r;
   }
 
   // ignorable_value_noise?
-  private static boolean value_parts_1_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "value_parts_1_1")) return false;
+  private static boolean value_parts_1_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "value_parts_1_2")) return false;
     ignorable_value_noise(b, l + 1);
     return true;
   }
