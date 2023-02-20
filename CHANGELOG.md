@@ -23,6 +23,7 @@
   depending on the file (via an inspection).
 - Compile the plugin with Java 11.
 - Internal/Chore: Update build time dependency on `gradle-intellij-plugin`.
+- Internal/Chore: Update the CI dependency on `gradle/wrapper-validation-action`.
 
 ### Removed
 - Remove support for IDEA 2020.2.4.
