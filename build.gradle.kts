@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("org.yaml:snakeyaml:1.33")
+    implementation("org.yaml:snakeyaml:2.0")
     implementation("org.apache.commons:commons-text:1.10.0")
 
     compileOnly("org.projectlombok:lombok:1.18.24")
