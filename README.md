@@ -77,6 +77,18 @@ Plus the features listed for Generic deb822 files.
 
 Notably missing features for `debian/copyright`.  The License fields are *not* validated.
 
+### Apt sources (deb822-based) files
+
+* Basic syntax highlighting with syntactical validation plus highlight of known field values.
+* Basic (incomplete) validation of field values.
+* Completion of field names and known values for fields.
+* Documentation for fields, known values in fields ("mouse-over")
+* Folding of long field values (also includes comments).
+* Detect misspellings of known fields such as `Type` being a typo of `Types`.
+* Detect non-canonical variants of fields (`types` -> `Types`).
+
+Plus the features listed for Generic deb822 files.
+
 ### Generic deb822 files (*.deb822, *.dsc, *_\*\_\*.buildinfo, *\_\*\_\*.changes)
 
  * Basic syntax highlighting.

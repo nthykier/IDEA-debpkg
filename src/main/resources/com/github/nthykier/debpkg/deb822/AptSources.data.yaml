@@ -1,0 +1,233 @@
+fields:
+  - canonicalName: Types
+    description: |
+      <p>This field determines whether APT will fetch binary or source packages
+      from the URIs.  The most common is to fetch binary packages via the 
+      <code>deb</code> keyword</p>
+
+      <p>Test names are separated by comma and/or whitespace and should
+      contain only characters which are legal in package names. It is
+      permitted, but not encouraged, to use upper-case characters as well.</p>
+    valueType: SPACE_SEPARATED_VALUE_LIST
+    keywordList:
+      - value: "deb"
+        description: |
+          <p>APT will fetch Debian binary packages from the URIs (installable via <code>apt install X</code>)</p>
+      - value: "deb-src"
+        description: |
+          <p>APT will fetch Debian source packages from the URIs. These are not installable but can downloaded via <code>apt source X</code></p>
+
+  - canonicalName: URIs
+    description: |
+      <p>The URIs that API should fetch from.  A general Debian mirror could be
+      <code>https://deb.debian.org/debian</code>.</p>
+    valueType: FREE_TEXT_VALUE
+
+  - canonicalName: Suites
+    description: |
+      <p>Which suites to fetch from the URIs. The suite names must be delimited by spaces.
+      Example: <code>stable stable-security</code></p>
+    valueType: SPACE_SEPARATED_VALUE_LIST
+
+  - canonicalName: Components
+    description: |
+      <p>Declares which components that APT should fetch. Typically it would be at least 
+      <code>main</code>. However, third-party repositories can use different conventions.</p>
+    valueType: SPACE_SEPARATED_VALUE_LIST
+    keywordList:
+      - value: "main"
+        description: |
+          <p>The main component is typically the default component in Debian and all Debian-based distributions. It typically contains open source software.</p>
+      - value: "contrib"
+        description: |
+          <p>The contrib component is common in Debian and all Debian-based distributions. The packages are typically open source but requires non-free software or third-party services.</p>
+      - value: "non-free-firmware"
+        description: |
+          <p>The non-free-firmware component is common in Debian and many Debian-based distributions. It contains non-free packages related to hardware support.  The non-free-firmware was added in 2023 (Debian bullseye).</p>
+      - value: "non-free"
+        description: |
+          <p>The non-free component is common in Debian and many Debian-based distributions. It contains non-free packages.</p>
+      - value: "restricted"
+        description: |
+          <p>The restricted component is specific to Ubuntu based distributions. The packages in this repo is generally not open source.</p>
+      - "..."
+
+  - canonicalName: Architectures
+    description: |
+      <p>Declares which for architectures APT should fetch packages. By default, APT will fetch
+      for all architectures that the system is configured to install.</p>
+    valueType: SPACE_SEPARATED_VALUE_LIST
+
+  - canonicalName: Languages
+    description: |
+      <p>When APT is fetching translations for package descriptions, this field can be used to determine which
+      languages to fetch for the selected URIs.</p>
+    valueType: SPACE_SEPARATED_VALUE_LIST
+
+  - canonicalName: Targets
+    description: |
+      <p>Determine which indices or data files that APT will download from these URIs. This can be useful to select
+      a subset of the default indices that APT normally download (e.g., because the URIs do not provide them).</p>
+    valueType: SPACE_SEPARATED_VALUE_LIST
+    keywordList:
+      - value: "Packages"
+        description: |
+          <p>The name for the indices containing binary packages. Without these, you will generally not be able to install binary packages from this mirror.</p>
+      - value: "Sources"
+        description: |
+          <p>The name for the indices containing source packages. Without these, you will generally not be able to download source packages from this mirror.</p>
+      - value: "Translations"
+        description: |
+          <p>The name for the indices containing package translations. Without these, you will generally not receive translated package descriptions.</p>
+      - value: "Contents"
+        description: |
+          <p>The name for the indices containing file names contained inside packages. Without these, apt-file (and similar tools) cannot match which packages contains what files.</p>
+      - "..."
+
+  - canonicalName: PDiffs
+    description: |
+      <p>Choose whether PDiffs (delta) updates for indices should be used when the URIs announce support them.
+      Typically, the delta updates significantly reduces the download bandwidth required to sync with the mirror.
+      However, PDiffs require CPU to apply the delta. Depending on the situation PDiffs may be faster or slower
+      than downloading the full index.</p>
+    valueType: SINGLE_KEYWORD
+    keywordList:
+      - value: "yes"
+        description: |
+          <p>Use PDiff based delta updates to indices <em>if</em> for the URIs that announce they provide them.</p>
+      - value: "no"
+        description: |
+          <p>Always disable PDiff based delta updates to indices.</p>
+
+
+  - canonicalName: By-Hash
+    description: |
+      <p>Choose whether to use By-Hash or filename based downloading for indices fetched via the URIs.</p>
+      <p>By-Hash is a newer method where APT will use a checksum for determining where the indices are. This has
+      the advantage that the user will never see "hashsum mismatch" errors if the mirror is being updated while
+      apt is downloading. However, for this to work, the servers must provide the indices by their checksum.
+      Accordingly, not all URIs support this feature.</p>
+      <p>The fallback is downloading indices by their file name. While this is supported by any mirror that APT
+      supports, this method can cause "hashsum mismatch" errors if the mirror is being updated by APT is fetching
+      an update. This causes an annoying error that may require the user to retry the <code>apt update</code>.</p>
+    valueType: SINGLE_KEYWORD
+    keywordList:
+      - value: "yes"
+        description: |
+          <p>Use By-Hash based downloading when URIs claim to support it but fallback to filename based downloading if
+          the URIs do not announce By-Hash based downloads.</p>
+      - value: "no"
+        description: |
+          <p>Never use By-Hash based downloading even if the URIs claim to support it. Should only be used if URIs 
+          incorrectly announce support for it but fail to support it properly.</p>
+      - value: "force"
+        description: |
+          <p>Always use By-Hash based downloading even if the URIs do not announce support for it. As implied, this 
+          may not work.</p>
+
+  - canonicalName: Allow-Insecure
+    description: |
+      <b>This field is not recommended as it can disable security features in APT.</b>
+      <p>Please see the <code>apt-secure(8)</code> manpage for the details of the security affected by this field.</p>
+    valueType: SINGLE_KEYWORD
+    defaultValue: "no"
+    warnIfDefault: true
+    keywordList:
+      - value: "yes"
+        description: |
+          <p>Allow the insecure feature with all the risks in entails.</p>
+      - value: "no"
+        description: |
+          <p>Provide security checks.</p>
+
+  - canonicalName: Allow-Weak
+    description: |
+      <b>This field is not recommended as it can disable security features in APT.</b>
+      <p>Please see the <code>apt-secure(8)</code> manpage for the details of the security affected by this field.</p>
+    valueType: SINGLE_KEYWORD
+    defaultValue: "no"
+    warnIfDefault: true
+    keywordList:
+      - value: "yes"
+        description: |
+          <p>Allow the insecure feature with all the risks in entails.</p>
+      - value: "no"
+        description: |
+          <p>Provide security checks.</p>
+
+  - canonicalName: Trusted
+    description: |
+      <b>This field is not recommended as it can disable security features in APT.</b>
+      <p>Please see the <code>apt-secure(8)</code> manpage for the details of the security affected by this field.</p>
+    valueType: SINGLE_KEYWORD
+    defaultValue: "no"
+    warnIfDefault: true
+    keywordList:
+      - value: "yes"
+        description: |
+          <p>Allow the insecure feature with all the risks in entails.</p>
+      - value: "no"
+        description: |
+          <p>Provide security checks.</p>
+
+  - canonicalName: Check-Valid-Until
+    description: |
+      <p>Whether to detect replay attacks / freeze attack for repositories that provides the <code>Valid-Until</code>
+      field. The <code>Valid-Until</code> field signals by when the distributor expected a new version of the metadata
+      to be released.</p>
+      <p>Note this option can be overruled by <code>Date-Check</code></p>
+    valueType: SINGLE_KEYWORD
+    keywordList:
+      - value: "yes"
+        description: |
+          <p>Enforce <code>Valid-Until</code> to detect potential freeze attacks.</p>
+      - value: "no"
+        description: |
+          <p>Ignore the <code>Valid-Until</code> field in the URIs. Useful for archived repositories.</p>
+
+  - canonicalName: Signed-By
+    description: |
+      <p>Restrict which keys APT should trust for this repositories rather than all known trusted keys.</p>
+    valueType: FREE_TEXT_VALUE
+
+  - canonicalName: InRelease-Path
+    description: |
+      <p>The <code>InRelease-Path</code> field determines the path to the InRelease file, relative to the normal
+      position of an InRelease file. By default, this option is unset and APT will try to fetch an InRelease or,
+      if that fails, a Release file and its associated Release.gpg file. By setting this option, the specified
+      path will be tried instead of the InRelease file, and the fallback to Release files will be disabled.</p>
+    valueType: FREE_TEXT_VALUE
+
+  - canonicalName: Date-Check
+    description: |
+      <p>Whether APT can rely on the machine's time and can be used to disable time related checks of the InRelease
+      or Release file. This covers the InRelease/Release file having timestamps in the future as well as 
+      checks related to <code>Valid-Until</code>.</p>
+    valueType: SINGLE_KEYWORD
+    keywordList:
+      - value: "yes"
+        description: |
+          <p>Enable date/time based verification and security features.</p>
+      - value: "no"
+        description: |
+          <p>Disable checks that rely on time with all the risks that entails.</p>
+
+  - canonicalName: Date-Max-Future
+    description: |
+      <p>Determine how far into the future the Release/InRelease time may claim to be with <code>Date-Check</code>
+      enabled before APT will consider the update to be invalid.</p>
+    valueType: FREE_TEXT_VALUE
+
+  - canonicalName: Valid-Until-Min
+    description: |
+      <p>Provide a minimum duration for the <code>Valid-Until</code> field from the URIs. This means the user
+      will not see errors about the mirror being stale unless at least this amount of time has passed (or the
+      mirrors own value, whichever is longer)</p>
+    valueType: FREE_TEXT_VALUE
+
+  - canonicalName: Valid-Until-Max
+    description: |
+      <p>Provide a maximum duration for the <code>Valid-Until</code> field from the URIs, which makes APT consider 
+      the mirror as  stale if it is not updated frequent enough. Settings this field also causes APT to act
+      like the URIs have the <code>Valid-Until</code> even if they do not.</p>
+    valueType: FREE_TEXT_VALUE

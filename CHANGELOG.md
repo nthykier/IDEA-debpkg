@@ -11,6 +11,7 @@
 ## [Unreleased]
 ### Added
 - Add support for IDEA 2023.1
+- Add support for apt deb822-based sources files.
 
 ### Fixed
 - Avoid assertion error on creating a new (blank) `debian/control` and the first field typed is *not* `Source:`.  (Closes: #107)
