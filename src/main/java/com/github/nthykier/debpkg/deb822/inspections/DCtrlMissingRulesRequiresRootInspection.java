@@ -35,7 +35,12 @@ public class DCtrlMissingRulesRequiresRootInspection extends AbstractDctrlInspec
     private void checkSourceParagraph(@NotNull final ProblemsHolder holder, @NotNull Deb822Paragraph paragraph) {
         Deb822FieldValuePair src = paragraph.getFieldValuePair("source");
         Deb822FieldValuePair rrr = paragraph.getFieldValuePair("rules-requires-root");
-        assert src != null; /* It cannot be a source paragraph without this field */
+        if (src == null) {
+            /* Ignore if the first paragraph does not have a source field. As wrong as that is,
+             * it is for another check to handle that.  We should just gracefully back out here.
+             */
+            return;
+        }
         if (rrr == null) {
             String[] placeRelativeTo = new String[] {
                     "Standards-Version",

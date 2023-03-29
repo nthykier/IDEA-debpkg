@@ -12,6 +12,9 @@
 ### Added
 - Add support for IDEA 2023.1
 
+### Fixed
+- Avoid assertion error on creating a new (blank) `debian/control` and the first field typed is *not* `Source:`.  (Closes: #107)
+
 ### Changed
 - Avoid parse errors on empty fields as some deb822 files allow them.  It will trigger a warning or an error
   depending on the file (via an inspection).
