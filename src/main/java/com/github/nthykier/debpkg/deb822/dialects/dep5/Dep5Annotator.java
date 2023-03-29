@@ -10,6 +10,8 @@ import com.github.nthykier.debpkg.deb822.psi.impl.Deb822PsiImplUtil;
 import com.github.nthykier.debpkg.util.ASTNodeStringConverter;
 import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.github.nthykier.debpkg.util.TriConsumer;
+import com.intellij.codeInspection.InspectionManager;
+import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.lang.ASTNode;
@@ -228,19 +230,26 @@ public class Dep5Annotator implements Annotator {
                     builder.insert(offset, "/*");
                 }
             };
-            AnnotatorUtil.createAnnotationWithQuickFixWithoutTypeSafety(
-                    holder,
-                    HighlightSeverity.WARNING,
-                    AnnotatorUtil.tweakFieldWithValueReplacementFix(
-                            Deb822Bundle.message("deb822.files.quickfix.fields.paths-in-files-field-must-match-files.name"),
-                            contextReplacer
-                    ),
-                    "paths-in-files-field-must-match-files",
-                    affectedField,
-                    fullRange,
-                    ProblemHighlightType.WARNING,
-                    fullPath
+            LocalQuickFix quickFix = AnnotatorUtil.tweakFieldWithValueReplacementFix(
+                    Deb822Bundle.message("deb822.files.quickfix.fields.paths-in-files-field-must-match-files.name"),
+                    contextReplacer
             );
+            InspectionManager inspectionManager = InspectionManager.getInstance(affectedField.getProject());
+            ProblemDescriptor problemDescriptor = inspectionManager.createProblemDescriptor(
+                    affectedField,
+                    Deb822Bundle.message("deb822.files.quickfix.fields.paths-in-files-field-must-match-files.description"),
+                    quickFix,
+                    ProblemHighlightType.WARNING,
+                    true
+            );
+            holder.newAnnotation(
+                    HighlightSeverity.WARNING,
+                    Deb822Bundle.message("deb822.files.annotator.fields.paths-in-files-field-must-match-files", fullPath)
+            )
+                    .range(fullRange)
+                    .newLocalQuickFix(quickFix, problemDescriptor)
+                    .registerFix()
+                    .create();
         } else if (currentDir == null) {
             /* If we do _not_ have a complete match, then highlight the path */
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION)

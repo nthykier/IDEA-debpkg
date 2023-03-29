@@ -70,32 +70,6 @@ public class AnnotatorUtil {
                 .create();
     }
 
-    public static void createAnnotationWithQuickFixWithoutTypeSafety(
-            @NotNull AnnotationHolder annoHolder,
-            @NotNull HighlightSeverity severity,
-            @NotNull LocalQuickFix quickFix,
-            @NotNull String baseName,
-            @NotNull PsiElement elementToFix,
-            @Nullable TextRange affectedRange,
-            @NotNull ProblemHighlightType highlightType,
-            Object... params
-    ) {
-        InspectionManager inspectionManager = InspectionManager.getInstance(elementToFix.getProject());
-        TextRange range = affectedRange == null ? elementToFix.getTextRange() : affectedRange;
-        ProblemDescriptor problemDescriptor = inspectionManager.createProblemDescriptor(
-                elementToFix,
-                range,
-                Deb822Bundle.message("deb822.files.quickfix.fields."  + baseName +".description"),
-                highlightType,
-                true,
-                quickFix
-        );
-        annoHolder.newAnnotation(severity, getAnnotationText(baseName, params))
-                .range(range)
-                .newLocalQuickFix(quickFix, problemDescriptor).registerFix()
-                .create();
-    }
-
     public static void createAnnotationWithQuickFixForBrokenContinuationLine(
             @NotNull AnnotationHolder annoHolder,
             @NotNull Deb822HangingContValue elementToFix) {
