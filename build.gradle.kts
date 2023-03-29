@@ -22,11 +22,11 @@ dependencies {
     implementation("org.yaml:snakeyaml:1.33")
     implementation("org.apache.commons:commons-text:1.10.0")
 
-    compileOnly("org.projectlombok:lombok:1.18.24")
-    annotationProcessor("org.projectlombok:lombok:1.18.24")
+    compileOnly("org.projectlombok:lombok:1.18.26")
+    annotationProcessor("org.projectlombok:lombok:1.18.26")
 
-    testCompileOnly("org.projectlombok:lombok:1.18.24")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
+    testCompileOnly("org.projectlombok:lombok:1.18.26")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.26")
 }
 
 // Configure gradle-intellij-plugin plugin.
@@ -51,7 +51,7 @@ changelog {
 sourceSets["main"].java.srcDir("src/main/gen")
 
 java {
-    var v = JavaVersion.toVersion(properties("javaVersion"));
+    val v = JavaVersion.toVersion(properties("javaVersion"));
     sourceCompatibility = v
     targetCompatibility = v
 }
