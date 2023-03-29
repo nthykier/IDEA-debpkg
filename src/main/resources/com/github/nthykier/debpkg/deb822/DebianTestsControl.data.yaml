@@ -54,6 +54,37 @@ fields:
              <p>When this restriction is present the test will usually be skipped
              unless the testbed's virtualisation arrangements are sufficiently
              powerful, or alternatively if the user explicitly requests.</p>
+      - value: "needs-sudo"
+        description: |
+          <p>The test script needs to be run as a non-root user who is a member of
+          the <b>sudo</b> group, and has the ability to elevate privileges to root
+          on-demand.</p>
+
+          <p>This is useful for testing user components which should not normally
+          be run as root, in test scenarios that require configuring a system
+          service to support the test. For example, gvfs has a test-case which
+          uses sudo for privileged configuration of a Samba server, so that
+          the unprivileged gvfs service under test can communicate with that server.</p>
+
+          <p>While running a test with this restriction, <b>sudo(8)</b> will be
+          installed and configured to allow members of the <b>sudo</b> group to run
+          any command without password authentication.</p>
+
+          <p>Because the test user is a member of the <b>sudo</b> group, they will
+          also gain the ability to take any other privileged actions that are
+          controlled by membership in that group. In particular, several packages
+          install <b>polkit(8)</b> policies allowing members of group <b>sudo</b> to
+          take administrative actions with or without authentication.</p>
+
+          <p>If the test requires access to additional privileged actions, it may
+          use its access to <b>sudo(8)</b> to install additional configuration
+          files, for example configuring <b>polkit(8)</b> or <b>doas.conf(5)</b>
+          to allow running <b>pkexec(1)</b> or <b>doas(1)</b> without authentication.</p>
+
+          <p>Commands run via <b>sudo(8)</b> or another privilege-elevation tool could
+          be run with either "global root" or root in a container, depending
+          on the presence or absence of the <b>isolation-machine</b> restriction,
+          in the same way described for <b>needs-root</b>.</p>
       - value: "needs-root"
         description: |
           <p>The test script must be run as root.</p>
