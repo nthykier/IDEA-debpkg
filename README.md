@@ -142,7 +142,7 @@ the relevant editor actions.
 
 - Using IDE built-in plugin system:
   
-  <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "debpkg"</kbd> >
+  <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "Debian Packaging Support"</kbd> >
   <kbd>Install Plugin</kbd>
   
 - Manually:
