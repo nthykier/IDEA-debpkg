@@ -19,10 +19,11 @@
 ### Changed
 - Avoid parse errors on empty fields as some deb822 files allow them.  It will trigger a warning or an error
   depending on the file (via an inspection).
+- Compile the plugin with Java 11.
 - Internal/Chore: Update build time dependency on `gradle-intellij-plugin`.
 
 ### Removed
-- Support for IDEA 2020.2.4.
+- Remove support for IDEA 2020.2.4.
 
 ## [0.0.18]
 ### Added

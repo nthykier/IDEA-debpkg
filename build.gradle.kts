@@ -50,6 +50,12 @@ changelog {
 // Include the generated files in the source set
 sourceSets["main"].java.srcDir("src/main/gen")
 
+java {
+    var v = JavaVersion.toVersion(properties("javaVersion"));
+    sourceCompatibility = v
+    targetCompatibility = v
+}
+
 tasks {
     wrapper {
         gradleVersion = properties("gradleVersion")

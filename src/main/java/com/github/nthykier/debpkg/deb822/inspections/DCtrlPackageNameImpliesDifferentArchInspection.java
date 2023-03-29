@@ -72,8 +72,7 @@ public class DCtrlPackageNameImpliesDifferentArchInspection extends AbstractDctr
 
 
         public static Heuristic of(String classification, Pattern pattern) {
-            // Java 11 - simplify to the built-in asMatchPredicate()
-            return of(classification, (s) -> pattern.matcher(s).matches());
+            return of(classification, pattern.asMatchPredicate());
         }
     }
 }

@@ -10,7 +10,6 @@ import com.github.nthykier.debpkg.util.AnnotatorUtil;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.psi.PsiElementVisitor;
 import lombok.Data;
@@ -163,8 +162,7 @@ public class DCtrlPackageNameImpliesDifferentSectionInspection extends AbstractD
 
 
         public static Heuristic of(String section, Pattern pattern) {
-            // Java 11 - simplify to the built-in asMatchPredicate()
-            return of(section, (s) -> pattern.matcher(s).matches());
+            return of(section, pattern.asMatchPredicate());
         }
     }
 

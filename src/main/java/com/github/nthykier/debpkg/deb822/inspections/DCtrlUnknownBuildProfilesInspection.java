@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 
 public class DCtrlUnknownBuildProfilesInspection extends AbstractDctrlInspection {
 
-    // Set.of in Java 11.
     private static final Set<String> KNOWN_PROFILES = Deb822DataSets.getDataSet("build-profiles");
 
 

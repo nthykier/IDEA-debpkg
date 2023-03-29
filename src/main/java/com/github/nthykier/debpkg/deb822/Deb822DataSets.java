@@ -32,7 +32,7 @@ public class Deb822DataSets {
             } catch (IOException e) {
                 throw new IllegalArgumentException("Could not read dataset " + name, e);
             }
-            return Collections.unmodifiableSet(dataset);
+            return Set.copyOf(dataset);
         }
         return virtualDataSet.get();
     }
@@ -56,12 +56,10 @@ public class Deb822DataSets {
                 combined.add(prefix + section);
             }
         }
-        return Collections.unmodifiableSet(combined);
+        return Set.copyOf(combined);
     }
 
     static {
-        virtualDataLists = Collections.unmodifiableMap(new HashMap<String, Supplier<Set<String>>>(){{
-            put("virtual/archive-sections-with-components", Deb822DataSets::virtualArchiveSectionsWithComponents);
-        }});
+        virtualDataLists = Map.of("virtual/archive-sections-with-components", Deb822DataSets::virtualArchiveSectionsWithComponents);
     }
 }
