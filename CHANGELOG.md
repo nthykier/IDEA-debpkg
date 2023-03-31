@@ -9,6 +9,8 @@
 # debpkg Changelog
 
 ## [Unreleased]
+### Removed
+- Remove support for IDEA 2021.1. It was not supported by 0.0.19, but the bound was incorrect at time of release.
 
 ## [0.0.19]
 ### Added
