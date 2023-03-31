@@ -23,6 +23,7 @@
 - Avoid parse errors on empty fields as some deb822 files allow them.  It will trigger a warning or an error
   depending on the file (via an inspection).
 - Compile the plugin with Java 11.
+- Migrate away from deprecated `FilenameIndex.getFilesByName` method for making file names in `d/changelog` references to the file.
 - Internal/Choce: Update dependency on `snakeyaml`.
 - Internal/Chore: Update build time dependency on `gradle-intellij-plugin` and `lombok`.
 - Internal/Chore: Update the CI dependency on `gradle/wrapper-validation-action`.

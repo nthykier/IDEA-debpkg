@@ -3,6 +3,7 @@ package com.github.nthykier.debpkg.dch.psi.impl;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.FakePsiElement;
 import com.intellij.psi.search.FilenameIndex;
@@ -12,7 +13,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public class DchFileReference extends PsiPolyVariantReferenceBase<PsiElement> {
@@ -45,19 +49,25 @@ public class DchFileReference extends PsiPolyVariantReferenceBase<PsiElement> {
     @Override
     public @NotNull ResolveResult @NotNull [] multiResolve(boolean incompleteCode) {
         Project project = this.myElement.getProject();
-        PsiFile[] results = FilenameIndex.getFilesByName(project, basename, GlobalSearchScope.allScope(project));
-        Function<PsiFileSystemItem, PsiElement> wrapper;
-        if (results.length == 0) {
+        Collection<VirtualFile> results = FilenameIndex.getVirtualFilesByName(basename, GlobalSearchScope.allScope(project));
+        if (results.isEmpty()) {
             return ResolveResult.EMPTY_ARRAY;
         }
+        PsiManager psiManager = PsiManager.getInstance(project);
+        Function<VirtualFile, PsiFileSystemItem> resolvePsi = (f) -> f.isDirectory() ? psiManager.findDirectory(f) : psiManager.findFile(f);
         /* Wrap the PsiFileSystemItem to neuter rename/refactor support.  We do not want to update every link in the
          * changelog as it would carelessly end up rewriting the history.
          */
-        wrapper = (PsiFileSystemItem f) -> new PathReference(this.myElement, this.getRangeInElement(), f);
-        if (dirParts != null) {
-            return Arrays.stream(results).filter(this::checkMatch).map(wrapper).map(PsiElementResolveResult::new).toArray(ResolveResult[]::new);
-        }
-        return Arrays.stream(results).map(wrapper).map(PsiElementResolveResult::new).toArray(ResolveResult[]::new);
+        Function<PsiFileSystemItem, PsiElementResolveResult> wrapper = (psi) -> new PsiElementResolveResult(new PathReference(this.myElement, this.getRangeInElement(), psi));
+        Predicate<PsiFileSystemItem> matching = dirParts != null
+                ? (psi -> psi != null && this.checkMatch(psi))
+                : Objects::nonNull;
+        return results.stream()
+                .filter(VirtualFile::isValid)
+                .map(resolvePsi)
+                .filter(matching)
+                .map(wrapper)
+                .toArray(ResolveResult[]::new);
     }
 
     @Override
