@@ -9,6 +9,8 @@
 # debpkg Changelog
 
 ## [Unreleased]
+
+## [0.0.19]
 ### Added
 - Add support for IDEA 2023.1
 - Add support for apt deb822-based sources files.
