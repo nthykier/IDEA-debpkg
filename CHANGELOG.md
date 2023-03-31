@@ -29,6 +29,7 @@
 
 ### Removed
 - Remove support for IDEA 2020.2.4.
+- Remove upper bound on IDEA supported version.
 
 ## [0.0.18]
 ### Added
