@@ -139,7 +139,8 @@ jobs:
         run: |
           CHANGELOG=$(cat << 'EOM'
           ${{ needs.build.outputs.changelog }}"
-          EOM)
+          EOM
+          )
           CHANGELOG="$(echo "$CHANGELOG" | base64 --decode)"
           gh release create v${{ needs.build.outputs.version }} \
             --draft \
