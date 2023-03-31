@@ -1,0 +1,44 @@
+// Copyright 2000-2020 JetBrains s.r.o. and other contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+{
+  parserClass="com.github.nthykier.debpkg.aptlist.parser.AptListParser"
+  parserUtilClass="com.github.nthykier.debpkg.aptlist.parser.AptListParserUtil"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="AptList"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.github.nthykier.debpkg.aptlist.psi"
+  psiImplPackage="com.github.nthykier.debpkg.aptlist.psi.impl"
+
+  elementTypeHolderClass="com.github.nthykier.debpkg.aptlist.psi.AptListTypes"
+  elementTypeClass="com.github.nthykier.debpkg.aptlist.psi.AptListElementType"
+  tokenTypeClass="com.github.nthykier.debpkg.aptlist.psi.AptListTokenType"
+
+
+  tokens = [
+      NEWLINE_TOKEN='\n'
+      EQUALS_TOKEN='='
+      COMMA_TOKEN=','
+      BRACKET_OPEN='['
+      BRACKET_CLOSE=']'
+      COMMENT="^[#][^\n]+\n"
+  ]
+}
+
+aptListFile ::= aptSourcesLine*
+
+aptSourcesLine ::= type uri option_list? suite component+ ('\n'|<<eof>>)
+
+type ::= TYPE_TOKEN
+uri ::= URI_TOKEN
+suite ::= NAME_TOKEN
+component ::= NAME_TOKEN
+option ::= option_key '=' option_values
+option_key ::= OPTION_KEY_TOKEN
+private option_values ::= option_value (',' option_value)* ','? {
+    recoverWhile=recoverLine
+}
+option_value ::= OPTION_VALUE_TOKEN
+private option_list ::= '[' option+ ']'
+
+private recoverLine ::= !('\n'|<<eof>>)

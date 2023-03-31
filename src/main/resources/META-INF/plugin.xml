@@ -28,6 +28,9 @@
         <fileType name="apt.sources" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectAptSourcesFileType"
                   fieldName="INSTANCE" language="DebianAptSources" />
 
+        <fileType name="apt.sources.list" implementationClass="com.github.nthykier.debpkg.aptlist.AptListFileType"
+                  fieldName="INSTANCE" language="DebianAptSourcesList" />
+
         <!-- There is no requirement for debian/copyright to be a deb822 file, so we use a filetype detector for that -->
         <fileType name="Debian deb822 copyright File" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianCopyrightFileType"
                   fieldName="INSTANCE"  language="DebianCopyright" extensions="" />
@@ -45,7 +48,9 @@
         <lang.parserDefinition language="DebianTestsControl" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianTestsControlParserDefinition" />
         <lang.parserDefinition language="DebianCopyright" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectDebianCopyrightParserDefinition" />
         <lang.parserDefinition language="DebianAptSources" implementationClass="com.github.nthykier.debpkg.deb822.dialects.Deb822DialectAptSourcesParserDefinition" />
+        <!--lang.parserDefinition language="DebianAptSourcesList" implementationClass="com.github.nthykier.debpkg.aptlist.AptListParserDefinition" /-->
         <lang.syntaxHighlighterFactory language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822SyntaxHighlighterFactory" />
+        <lang.syntaxHighlighterFactory language="DebianAptSourcesList" implementationClass="com.github.nthykier.debpkg.aptlist.AptListSyntaxHighlighterFactory" />
         <lang.commenter language="Deb822" implementationClass="com.github.nthykier.debpkg.deb822.Deb822Commenter"/>
         <lang.documentationProvider language="Deb822"
                                     implementationClass="com.github.nthykier.debpkg.Deb822DocumentationProvider" />

@@ -104,6 +104,11 @@ Plus the features listed for Generic deb822 files.
  * Quick fix for some syntactical issues with continuation lines.
  * URLs in field values are linkified.
 
+### Apt Sources .list file
+
+ * Auto-detection of the file (any `.list` except `index.list`, which is a common name for JAR index files.)
+ * Basic syntax highlighting of context. No semantic validation though.
+
 <!--
 
 Commented out because this code/feature is not enabled.
