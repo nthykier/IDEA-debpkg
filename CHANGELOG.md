@@ -18,6 +18,7 @@
 ### Fixed
 - Avoid assertion error on creating a new (blank) `debian/control` and the first field typed is *not* `Source:`.  (Closes: #107)
 - Avoid assertion error in DEP-5 copyright files when directory is specified rather than a file in `Files:`. (Closes: #109)
+- Avoid a deprecation warning with IDEA 2023.1 related to FoldingDescriptor.EMPTY
 
 ### Changed
 - Avoid parse errors on empty fields as some deb822 files allow them.  It will trigger a warning or an error

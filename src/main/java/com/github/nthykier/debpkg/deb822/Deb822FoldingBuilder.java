@@ -22,6 +22,8 @@ import java.util.*;
 
 public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware {
 
+    private static final FoldingDescriptor[] EMPTY_ARRAY = new FoldingDescriptor[0];
+
     @NotNull
     @Override
     public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
@@ -108,7 +110,7 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
                     foldedByDefault
             ));
         }
-        return descriptors.toArray(FoldingDescriptor.EMPTY);
+        return descriptors.toArray(EMPTY_ARRAY);
     }
 
     @Nullable
