@@ -138,7 +138,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           CHANGELOG=$(cat << 'EOM'
-          ${{ needs.build.outputs.changelog }}"
+          ${{ needs.build.outputs.changelog }}
           EOM
           )
           CHANGELOG="$(echo "$CHANGELOG" | base64 --decode)"
