@@ -9,6 +9,8 @@
 # debpkg Changelog
 
 ## [Unreleased]
+
+## [0.0.20]
 ### Added
 - Add support for IDEA 2023.1
 - Add support for apt deb822-based sources files.
@@ -35,7 +37,6 @@
 ## [0.0.19]
 ### Retracted
 - This release was retracted, see 0.0.20 instead.
-
 
 ## [0.0.18]
 ### Added
