@@ -29,7 +29,7 @@
 - Internal/Chore: Update the CI dependency on `gradle/wrapper-validation-action`.
 
 ### Removed
-- Remove support for IDEA 2020.2.4.
+- Remove support for IDEA 2020.2.4 and 2020.3.2.
 - Remove upper bound on IDEA supported version.
 
 ## [0.0.18]
