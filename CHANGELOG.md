@@ -9,10 +9,6 @@
 # debpkg Changelog
 
 ## [Unreleased]
-### Removed
-- Remove support for IDEA 2021.1. It was not supported by 0.0.19, but the bound was incorrect at time of release.
-
-## [0.0.19]
 ### Added
 - Add support for IDEA 2023.1
 - Add support for apt deb822-based sources files.
@@ -34,8 +30,12 @@
 - Internal/Chore: Update the CI dependency on `gradle/wrapper-validation-action`.
 
 ### Removed
-- Remove support for IDEA 2020.2.4 and 2020.3.2.
-- Remove upper bound on IDEA supported version.
+- Remove support for IDEA 2020.2.4, 2020.3.2, and 2021.1.
+
+## [0.0.19]
+### Retracted
+- This release was retracted, see 0.0.20 instead.
+
 
 ## [0.0.18]
 ### Added
