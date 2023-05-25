@@ -22,11 +22,11 @@ dependencies {
     implementation("org.yaml:snakeyaml:2.0")
     implementation("org.apache.commons:commons-text:1.10.0")
 
-    compileOnly("org.projectlombok:lombok:1.18.26")
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
+    compileOnly("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
 
-    testCompileOnly("org.projectlombok:lombok:1.18.26")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.26")
+    testCompileOnly("org.projectlombok:lombok:1.18.28")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.28")
 }
 
 // Configure gradle-intellij-plugin plugin.
