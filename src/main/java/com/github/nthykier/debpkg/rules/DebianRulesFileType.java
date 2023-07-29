@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-import static com.github.nthykier.debpkg.DebpkgIcons.FILE_ICON;
+import static com.github.nthykier.debpkg.DebpkgIcons.DEFAULT_FILE_ICON;
 
 public class DebianRulesFileType extends LanguageFileType implements FileTypeIdentifiableByVirtualFile {
 
@@ -44,7 +44,7 @@ public class DebianRulesFileType extends LanguageFileType implements FileTypeIde
 
     @Override
     public @Nullable Icon getIcon() {
-        return FILE_ICON;
+        return DEFAULT_FILE_ICON;
     }
 
     @Override

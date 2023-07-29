@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.util.regex.Pattern;
 
-import static com.github.nthykier.debpkg.DebpkgIcons.FILE_ICON;
+import static com.github.nthykier.debpkg.DebpkgIcons.DEFAULT_FILE_ICON;
 
 public class Deb822DialectBuildinfoFileType extends LanguageFileType implements FileTypeIdentifiableByVirtualFile {
 
@@ -48,7 +48,7 @@ public class Deb822DialectBuildinfoFileType extends LanguageFileType implements 
 
     @Override
     public @Nullable Icon getIcon() {
-        return FILE_ICON;
+        return DEFAULT_FILE_ICON;
     }
 
     @Override

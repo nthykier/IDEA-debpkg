@@ -102,7 +102,7 @@ public class Dependency2ParagraphPsiReference extends PsiReferenceBase.Poly<DepL
                     }
                     relation = determineNonVirtualRelation(dependency, dependencyLanguage, isOwningArchAll, isProviderArchAll);
                     result.add(LookupElementBuilder
-                            .create(p, relation).withIcon(DebpkgIcons.FILE_ICON)
+                            .create(p, relation).withIcon(DebpkgIcons.DEFAULT_FILE_ICON)
                             .withTypeText("Binary Package"));
                     Deb822FieldValuePair provides = p.getFieldValuePair("Provides");
                     if (provides == null) {
@@ -129,7 +129,7 @@ public class Dependency2ParagraphPsiReference extends PsiReferenceBase.Poly<DepL
                             continue;
                         }
                         result.add(LookupElementBuilder
-                                .create(depRelation).withIcon(DebpkgIcons.FILE_ICON)
+                                .create(depRelation).withIcon(DebpkgIcons.DEFAULT_FILE_ICON)
                                 .withTypeText("Provided by " + providingPackage));
                     }
                 }

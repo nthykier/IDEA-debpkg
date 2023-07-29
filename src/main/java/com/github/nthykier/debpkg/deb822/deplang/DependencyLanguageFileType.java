@@ -39,7 +39,7 @@ public class DependencyLanguageFileType extends LanguageFileType {
 
     @Override
     public @Nullable Icon getIcon() {
-        return DebpkgIcons.FILE_ICON;
+        return DebpkgIcons.DEFAULT_FILE_ICON;
     }
 
     @Override

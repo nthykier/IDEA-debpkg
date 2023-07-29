@@ -1,18 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80">
-
-  <style>
-    .white { fill: #fefefe; }
-    /* The red color in the Debian logo */
-    .debred { fill: #ce0058 }
-  </style>
-
   <g transform="translate(12 12)">
     <rect width="56" height="56" fill="#000"/>
   </g>
   <g font-size="10">
-    <text class="debred" x="15" y="27">Debian</text>
-    <text class="white" x="15" y="43">Packaging</text>
-    <text class="white" x="15" y="60">Support</text>
+    <text fill="#ce0058" x="15" y="27">Debian</text>
+    <text fill="#fefefe" x="15" y="43">Packaging</text>
+    <text fill="#fefefe" x="15" y="60">Support</text>
   </g>
 
 </svg>

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Icon;
 
-import static com.github.nthykier.debpkg.DebpkgIcons.FILE_ICON;
+import static com.github.nthykier.debpkg.DebpkgIcons.DEFAULT_FILE_ICON;
 
 public class Deb822FileType extends LanguageFileType {
 
@@ -40,7 +40,7 @@ public class Deb822FileType extends LanguageFileType {
 
     @Override
     public @Nullable Icon getIcon() {
-        return FILE_ICON;
+        return DEFAULT_FILE_ICON;
     }
 
 }

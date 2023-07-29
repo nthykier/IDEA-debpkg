@@ -9,6 +9,14 @@
 # debpkg Changelog
 
 ## [Unreleased]
+### Added
+- Separate file icons for `debian/changelog`, `debian/tests/control` and `debian/copyright`.
+
+### Changed
+- New default icon. The IntelliJ 2023.2 update rendered the old one differently, so it had to be changed any way.
+- Tweaked the plugin icon to avoid the IntelliJ 2023.2 render change.
+- Internal/Chore: Update build time dependency on `gradle`, `org.jetbrains.changelog` and `lombok`.
+- Internal/Chore: Update the CI dependency on `gradle/wrapper-validation-action`.
 
 ## [0.0.20]
 ### Added
