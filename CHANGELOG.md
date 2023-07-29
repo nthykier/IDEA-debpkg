@@ -10,6 +10,7 @@
 
 ## [Unreleased]
 ### Added
+- Add support for IDEA 2023.2
 - Separate file icons for `debian/changelog`, `debian/tests/control` and `debian/copyright`.
 
 ### Changed
