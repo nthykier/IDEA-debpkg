@@ -8,7 +8,10 @@
 
 # debpkg Changelog
 
-## [Unreleased]
+## Unreleased
+
+## 0.0.21 - 2023-07-29
+
 ### Added
 - Add support for IDEA 2023.2
 - Separate file icons for `debian/changelog`, `debian/tests/control` and `debian/copyright`.
@@ -19,7 +22,8 @@
 - Internal/Chore: Update build time dependency on `gradle`, `org.jetbrains.changelog` and `lombok`.
 - Internal/Chore: Update the CI dependency on `gradle/wrapper-validation-action`.
 
-## [0.0.20]
+## 0.0.20
+
 ### Added
 - Add support for IDEA 2023.1
 - Add support for apt deb822-based sources files.
@@ -43,11 +47,13 @@
 ### Removed
 - Remove support for IDEA 2020.2.4, 2020.3.2, and 2021.1.
 
-## [0.0.19]
+## 0.0.19
+
 ### Retracted
 - This release was retracted, see 0.0.20 instead.
 
-## [0.0.18]
+## 0.0.18
+
 ### Added
 - Recognise `debian/tests/control` automatically as a deb822 file
 - Recognise the standard fields and most common values for `debian/control/tests`.
@@ -66,13 +72,15 @@
 - Internal/Chore: Update build time dependency on `gradle-intellij-plugin`.
 - Internal/Chore: Update the CI dependency on `actions/cache`, `actions/setup-java`, and `gradle/wrapper-validation-action`.
 
-## [0.0.17]
+## 0.0.17
+
 ### Changed
 - Bump the compat range for IDE to support 2022.2 at the cost of 2020.1
 - Internal/Chore: Update build time dependency on `gradle-intellij-plugin`.
 - Internal/Chore: Update the CI dependency on `actions/setup-java` and `actions/cache`.
 
-## [0.0.16]
+## 0.0.16
+
 ### Added
 - Add inspection for possibly incorrect architecture field value based on package name.
 - Add `DM-Upload-Allowed` as known field and an inspection suggesting removing it as it is obsolete.
@@ -94,7 +102,8 @@
 - Internal/Chore: Rewrite how problem descriptors are managed internally.
 - Internal: Optimize the deb822 lexer by removing some redundant states.
 
-## [0.0.15]
+## 0.0.15
+
 ### Added
 - Structure view for changelog files to provide an overview of the versions.
 
@@ -103,7 +112,8 @@
 - Internal/Chore: Update build time dependency on `gradle-intellij-plugin`.
 - Internal/Chore: Update the CI dependency on `actions/checkout`, `actions/cache`, `actions/setup-java`, and `actions/upload-artifact`.
 
-## [0.0.14]
+## 0.0.14
+
 ### Added
 - Brace matching support inside the dependency language.
 - Add refactor support to rename binary packages.  It will attempt to rename relevant files in debian as
@@ -127,7 +137,8 @@
   make sense to use refactoring.
 - Provider better quick-nav text for dummy references (i.e., references only present for providing documentation).
 
-## [0.0.13]
+## 0.0.13
+
 ### Added
 - Proper display names for the file formats, which are used in IDEA's `Override File Type` feature.
 
@@ -147,19 +158,22 @@
 - Internal/Chore: Bump build-time dependencies on `org.jetbrains.intellij` and `org.jetbrains.changelog`.
 - Bump the compat range for IDE to support 2021.3
 
-## [0.0.12]
+## 0.0.12
+
 ### Changed
 - Bump snakeyaml dependency to 1.29
 - Bump CI dependencies (actions/{cache,checkout,create-release,upload-release-asset, upload-artifact}, gradle/wrapper-validation-action)
 - Bump the compat range for the IDE to support 2021.2, no code changes required.
 
-## [0.0.11]
+## 0.0.11
+
 ### Changed
 - Bump the compat range for the IDE to support 2021.1, no code changes required.
 - Bump snakeyaml dependency to 1.28
 - Bump lombok dependency to 1.18.20
 
-## [0.0.9]
+## 0.0.9
+
 ### Added
 - Add an inspection for duplicating the field value of the `Source` paragraph
   in a `Package` paragraph of `debian/control`.
@@ -201,7 +215,8 @@
 - The `debian/control` annotator was neutered due to a regression that is now
   fixed.
 
-## [0.0.8]
+## 0.0.8
+
 ### Added
 - The `debian/control` support now includes a find usage contributor for files
   and paths.  This enables the safe delete will pick up if you delete a file
@@ -226,7 +241,8 @@
   `debian/copyright`.  Now refactoring will correctly preserve the directory
   separators.
 
-## [0.0.7]
+## 0.0.7
+
 ### Added
 - More packaging terms to the built-in dictionary.
 - Custom exclusion rules for the `debian/changelog` Spellchecker.  It will
@@ -244,7 +260,8 @@
 ### Fixed
 - Fixed compatibility with IDEA 2020.1.4.
 
-## [0.0.6]
+## 0.0.6
+
 ### Added
 - Recognition of `.buildinfo` and `.changes` file.  To avoid false-positives, debpkg will only auto-detect the format
   when the basename appear to follow the `PACKAGE_VERSION_ARCH.EXTENSION` pattern.
@@ -263,7 +280,8 @@
   falls back to using the name for guessing whether the field should be spellchecked.  Notably `Comment`,
   `Description` and `Disclaimer` will have spellchecking enabled in generic deb822 files.
 
-## [0.0.5]
+## 0.0.5
+
 ### Added
 - Automatically recognise `.dsc` files as a generic deb822 file.
 
@@ -274,7 +292,8 @@
 - Provide a better hover text for unrecognised deb822 fields instead of just dumping an internal name in front of it.
 - Avoid false errors on non-native versions in changelog files.
 
-## [0.0.4]
+## 0.0.4
+
 ### Added
 - Add check for version operator being supported in the current dependency field.  Provides only supports `=`.
 - Add check for use of build profiles restrictions in dependency fields that do not support it.
@@ -295,7 +314,8 @@
 - Fix unhandled exception in annotation of dependency fields with invalid package names (etc.).
 - Fix missing error when a package name contained a trailing colon in a dependency field.  This is invalid, but the annotator silently accepted it as valid.
 
-## [0.0.3]
+## 0.0.3
+
 ### Added
 - Add check to highlight if fields are placed in the wrong paragraph in `debian/control` files. (Closes: #1)
 - Add check to ensure that mandatory `Source` and `Package` fields are present in debian/control.
@@ -313,12 +333,14 @@
 ### Fixed
 - Fix misplaced `Package`/`Source` field warning not coping with moving paragraphs around.
 
-## [0.0.2]
+## 0.0.2
+
 ### Added
 - Add new icons instead of using the default icon from the template.
 - Check for misplaced `Package` and `Source` fields.
 
-## [0.0.1]
+## 0.0.1
+
 ### Initial version
 - Syntax highlighting of `debian/changelog` and `*.dch` files
 - Syntax highlighting of `debian/control` and `*.deb822` files
