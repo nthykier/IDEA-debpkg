@@ -1,3 +1,4 @@
+import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 
 plugins {
@@ -51,7 +52,7 @@ changelog {
 sourceSets["main"].java.srcDir("src/main/gen")
 
 java {
-    val v = JavaVersion.toVersion(properties("javaVersion"));
+    val v = JavaVersion.toVersion(properties("javaVersion"))
     sourceCompatibility = v
     targetCompatibility = v
 }
@@ -73,7 +74,8 @@ tasks {
     }
 
     patchPluginXml {
-        version.set(properties("pluginVersion"))
+        val pluginVersion = properties("pluginVersion")
+        version.set(pluginVersion)
         sinceBuild.set(properties("pluginSinceBuild"))
         untilBuild.set(properties("pluginUntilBuild"))
 
@@ -90,11 +92,15 @@ tasks {
             }.joinToString("\n").run { markdownToHTML(this) }
         )
 
-        // Get the latest available change notes from the changelog file
+        val changelog = project.changelog // local variable for configuration cache compatibility
+
         changeNotes.set(provider {
-            changelog.run {
-                getOrNull(properties("pluginVersion")) ?: getLatest()
-            }.toHTML()
+            changelog.renderItem(
+                (changelog.getOrNull(pluginVersion) ?: changelog.getUnreleased())
+                    .withHeader(false)
+                    .withEmptySections(false),
+                Changelog.OutputType.HTML
+            )
         })
     }
 
