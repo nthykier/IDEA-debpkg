@@ -61,10 +61,10 @@ fields:
           <p>The package is essential and uninstalling it will completely and utterly break the system beyond repair.</p>
       - value: "no"
         description: |
-          <p>The package is a regular package.  This is the default and recommeded.</p>
+          <p>The package is a regular package.  This is the default and recommended.</p>
 
           <p>Note that declaring a package to be "Essential: no" is the same as not having the field except omitting
-          the field wastes fewer bytes on everyones harddisk.</p>
+          the field wastes fewer bytes on everyone's hard disk.</p>
 
   - canonicalName: XB-Important
     valueType: SINGLE_KEYWORD
@@ -84,10 +84,10 @@ fields:
           <p>The package is protected and attempts to uninstall it will cause strong warnings to the user that they might be breaking the system.</p>
       - value: "no"
         description: |
-          <p>The package is a regular package.  This is the default and recommeded.</p>
+          <p>The package is a regular package.  This is the default and recommended.</p>
 
           <p>Note that declaring a package to be "XB-Important: no" is the same as not having the field except omitting
-          the field wastes fewer bytes on everyones harddisk.</p>
+          the field wastes fewer bytes on everyone's hard-disk.</p>
 
   - canonicalName: Protected
     valueType: SINGLE_KEYWORD
@@ -97,7 +97,7 @@ fields:
 
       <p>Whether packages the package should be considered Protected by dpkg and APT.</p>
 
-      <p>If a package is proteted, then both dpkg and APT will provide very strong warings to the user when they attempt to unstall the package.</p>
+      <p>If a package is protested, then both dpkg and APT will provide very strong warnings to the user when they attempt to uninstall the package.</p>
 
       <p>This field is useful for the small subset of packages that are not essential but if installed tends to be very important for the system to function.  Examples include this is useful for packages such as init systems and boot loaders, where uninstalling it might break the system.  On the other hand, you can have "systems" (e.g. containers or chroots) that do not need a boot loader nor an init system, so they are not <em>Essential</em>.</p>
     warnIfDefault: true
@@ -109,10 +109,10 @@ fields:
           <p>The package is protected and attempts to uninstall it will cause strong warnings to the user that they might be breaking the system.</p>
       - value: "no"
         description: |
-          <p>The package is a regular package.  This is the default and recommeded.</p>
+          <p>The package is a regular package.  This is the default and recommended.</p>
 
           <p>Note that declaring a package to be "Protected: no" is the same as not having the field except omitting
-          the field wastes fewer bytes on everyones harddisk.</p>
+          the field wastes fewer bytes on everyone's hard-disk.</p>
 
   - canonicalName: Standards-Version
     onlyInParagraphType: "Source"
@@ -123,7 +123,7 @@ fields:
       <pre>Standards-Version: 4.5.2</pre>
 
       <p>Note that the last version part (the <em>.X</em> in 4.5.2<em>.X</em>) is typically omitted as it
-      is used solely for editioral changes to the policy (e.g. typo fixes).</p>
+      is used solely for editorial changes to the policy (e.g. typo fixes).</p>
     valueType: SINGLE_TRIVIAL_VALUE
     valueValidation: /^\d+[.]\d+[.]\d+(?:[.]\d+)$/
     supportsSubstvars: false
@@ -144,7 +144,7 @@ fields:
   - canonicalName: Vcs-Browser
     onlyInParagraphType: "Source"
     description: |
-      <p>URL to the Version control system repo used for the packaging. The URL should be useable with a browser without requiring any login.</p>
+      <p>URL to the Version control system repo used for the packaging. The URL should be usable with a browser without requiring any login.</p>
 
       <p>This should be used together with one of the other <b>Vcs-*</b> fields.</p>
     # Technically wrong, but existing validation rules are not sufficient.
@@ -154,7 +154,7 @@ fields:
   - canonicalName: Vcs-Git
     onlyInParagraphType: "Source"
     description: |
-      <p>URL to the git repo used for the packaging. The URL should be useable with "git clone" without requiring any login.</p>
+      <p>URL to the git repo used for the packaging. The URL should be usable with "git clone" without requiring any login.</p>
 
       <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
@@ -164,7 +164,7 @@ fields:
   - canonicalName: Vcs-Svn
     onlyInParagraphType: "Source"
     description: |
-      <p>URL to the Subversion (SVN) repo used for the packaging. The URL should be useable with "svn checkout" without requiring any login.</p>
+      <p>URL to the Subversion (SVN) repo used for the packaging. The URL should be usable with "svn checkout" without requiring any login.</p>
 
       <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
@@ -174,7 +174,7 @@ fields:
   - canonicalName: Vcs-Arch
     onlyInParagraphType: "Source"
     description: |
-      <p>URL to the Arch VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
+      <p>URL to the Arch VCS repo used for the packaging. The URL should be usable for getting a copy of the sources without requiring any login.</p>
 
       <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
@@ -184,7 +184,7 @@ fields:
   - canonicalName: Vcs-Bzr
     onlyInParagraphType: "Source"
     description: |
-      <p>URL to the Bzr VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
+      <p>URL to the Bzr VCS repo used for the packaging. The URL should be usable for getting a copy of the sources without requiring any login.</p>
 
       <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
@@ -194,7 +194,7 @@ fields:
   - canonicalName: Vcs-Cvs
     onlyInParagraphType: "Source"
     description: |
-      <p>URL to the CVS VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
+      <p>URL to the CVS VCS repo used for the packaging. The URL should be usable for getting a copy of the sources without requiring any login.</p>
 
       <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
@@ -204,7 +204,7 @@ fields:
   - canonicalName: Vcs-Darcs
     onlyInParagraphType: "Source"
     description: |
-      <p>URL to the Darcs VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
+      <p>URL to the Darcs VCS repo used for the packaging. The URL should be usable for getting a copy of the sources without requiring any login.</p>
 
       <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
@@ -214,7 +214,7 @@ fields:
   - canonicalName: Vcs-Hg
     onlyInParagraphType: "Source"
     description: |
-      <p>URL to the Mercurial (hg) VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
+      <p>URL to the Mercurial (hg) VCS repo used for the packaging. The URL should be usable for getting a copy of the sources without requiring any login.</p>
 
       <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
@@ -224,7 +224,7 @@ fields:
   - canonicalName: Vcs-Mtn
     onlyInParagraphType: "Source"
     description: |
-      <p>URL to the Monotone (Mtn) VCS repo used for the packaging. The URL should be useable for getting a copy of the sources without requiring any login.</p>
+      <p>URL to the Monotone (Mtn) VCS repo used for the packaging. The URL should be usable for getting a copy of the sources without requiring any login.</p>
 
       <p>This should be used together with the <b>Vcs-Browser</b> field provided there is a web UI for the repo.</p>
     # Technically wrong, but existing validation rules are not sufficient.
@@ -335,7 +335,7 @@ fields:
       </em></p>
 
       <p>This field is like <b>Depends</b>, except that is also forces dpkg to complete installation of the packages
-      named before even startning the installation of the package which declares the pre-dependency.</p>
+      named before even starting the installation of the package which declares the pre-dependency.</p>
 
       <em>Example:</em>
       <pre>Pre-Depends: ${misc:Pre-Depends}</pre>
@@ -365,7 +365,7 @@ fields:
       <p>This field declares an absolute dependency.  A package will not be configured unless all of the packages
       listed in its <b>Depends</b> field have been correctly configured (unless there is a circular dependency)./<p>
 
-      <p>This field should be used if the depended-on package is required for the dpeending papkage to provide a
+      <p>This field should be used if the depended-on package is required for the depending package to provide a
       <em>significant amount of functionality</em> or when it is used in the <b>postinst</b> or <b>prerm</b>
       scripts.</p>
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
@@ -427,11 +427,11 @@ fields:
       </pre>
 
 
-      <p>If the provides relation is versioned, it must use a "strictly equals" version.  If it does not a version,
-      then it <em>cannot</em> be used to satisfy a dependency with a version restriction.  Consider the following
-      example:</p>
+      <p>If the provides relation is versioned, it must use a "strictly equals" version.  If it does not declare
+      a version, then it <em>cannot</em> be used to satisfy a dependency with a version restriction.  Consider
+      the following example:</p>
 
-      <em>Archive scenario:</em>  (This is <em>not</em> a valid debian/control file, despite the resemblence)
+      <em>Archive scenario:</em>  (This is <em>not</em> a valid debian/control file, despite the resemblance)
       <pre>
       Package foo
       Depends: bar (&gt;= 1.0)
@@ -480,7 +480,7 @@ fields:
       <p>This package cannot be installed together with the packages listed in the Breaks field.</p>
 
       <p>This is often use to declare versioned issues such as "This package does not work with foo if it is version 1.0 or less".
-      In comparsion, <b>Conflicts</b> is generally used to declare that "This package does not work at all as long as foo is installed".</p>
+      In comparison, <b>Conflicts</b> is generally used to declare that "This package does not work at all as long as foo is installed".</p>
 
       <em>Example:</em>
       <pre>Breaks: bar (<= 1.0~)</pre>
@@ -491,7 +491,7 @@ fields:
         <tr><td>I moved files from <b>foo</b> to <b>bar</b> in version X</td><td>Add <b>Breaks: foo (&lt;&lt; X~)</b> + <b>Replaces: foo (&lt;&lt; X~)</b> to <b>bar</b></td></tr>
         <tr><td>Upgrading bar while <b>foo</b> is version X or less causes problems <b>foo</b> or <b>bar</b> to break</td><td>Add <b>Breaks: foo (&lt;&lt; X~)</b> to <b>bar</b></td></tr>
         <tr><td>The <b>foo</b> and <b>bar</b> packages provide the same functionality (interface) but different implementations and there can be at most one of them.</td></td>See section 7.6.2 "Replacing whole packages, forcing their removal" in the Debian Policy Manual.</td></tr>
-        <tr><td>The <b>foo</b> and <b>bar</b> packages are unrelated but happen to provide the same binrary.</td><td>Attempt to resolve the name conflict by renaming either (or both) sides.</td>/<tr>
+        <tr><td>The <b>foo</b> and <b>bar</b> packages are unrelated but happen to provide the same binary.</td><td>Attempt to resolve the name conflict by renaming either (or both) sides.</td>/<tr>
       </table>
 
       <p>Note the use of <em>~</em> in version numbers are generally used to ensure this works correctly in case of a backports (in the Debian archive), where the package is rebuilt with the "~bpo" suffix in its version.</p>
@@ -526,7 +526,7 @@ fields:
     onlyInParagraphType: "Package"
     description: |
       <p><b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
-         adviced to leave it at its default until you have a working basic package or lots of time to understand
+         advised to leave it at its default until you have a working basic package or lots of time to understand
          this topic.</em></p>
 
       <p>Declare that the package will only built when the given build-profiles are satisfied.</p>
@@ -552,7 +552,7 @@ fields:
   - canonicalName: Uploaders
     onlyInParagraphType: "Source"
     description: |
-      <p>Comma separated list of uploaders associcated with the package.</p>
+      <p>Comma separated list of uploaders associated with the package.</p>
       <em>Example</em>:
       <pre>Uploaders:
          John Doe &lt;john@doe.org&gt;,
@@ -596,7 +596,7 @@ fields:
     onlyInParagraphType: "Package"
     description: |
       <p><b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
-         adviced to leave it at its default until you have a working basic package or lots of time to understand
+         advised to leave it at its default until you have a working basic package or lots of time to understand
          this topic.</em></p>
 
       <p>Declare the Multi-Arch interface of the package.</p>
@@ -633,8 +633,8 @@ fields:
         </li>
         <li><b>foreign</b> - The package can be installed for at most one architecture at the time.  However, it can
             satisfy relations for packages regardless of their architecture.  This is often useful for packages
-            solely providingly data or binaries that have "Multi-Arch neutral interfaces". Sadly, describing
-            a "Multi-Arch neutral interface" is hard and often only done by Multi-Arch experns on a case-by-case
+            solely providing data or binaries that have "Multi-Arch neutral interfaces". Sadly, describing
+            a "Multi-Arch neutral interface" is hard and often only done by Multi-Arch experts on a case-by-case
             basis.  Some programs are have "Multi-Arch dependent interfaces" and are not safe to declare as
             "Multi-Arch: foreign".
             The name "foreign" refers to the fact that the package can satisfy relations for native <em>and foreign</em>
@@ -652,8 +652,8 @@ fields:
             can satisfy Multi-Arch foreign and Multi-Arch same relations at the same.  This is useful for
             implementations of scripting languages (e.g. Perl or Python).  Here the interpreter contextually need
             to satisfy some relations as "Multi-Arch: foreign" and others as "Multi-Arch: same" (or "Multi-Arch: no").
-            Typically, native extentions or plugins will need a "Multi-Arch: same"-relation as they only work with
-            the interpreter compiled for the same machine architecture as themselves whereas scripts are usally less
+            Typically, native extensions or plugins will need a "Multi-Arch: same"-relation as they only work with
+            the interpreter compiled for the same machine architecture as themselves whereas scripts are usually less
             picky and can rely on the "Multi-Arch: foreign" relation.  Packages wanting to rely on the
             "Multi-Arch: foreign" interface must explicitly declare this adding a ":any" suffix to the package name
             in the dependency relation (e.g. "Depends: python3:any").  However, the ":any" suffix cannot be used
@@ -681,7 +681,7 @@ fields:
         description: |
           <p>The package can be installed for at most one architecture at the time.  However, it can
           satisfy relations for packages regardless of their architecture.  This is often useful for packages
-          solely providingly data or binaries that have "Multi-Arch neutral interfaces".</p>
+          solely providing data or binaries that have "Multi-Arch neutral interfaces".</p>
 
           <p>Sadly, describing a "Multi-Arch neutral interface" is hard and often only done by Multi-Arch experts
           on a case-by-case basis.  Some programs and scripts have "Multi-Arch dependent interfaces" and are not
@@ -708,8 +708,8 @@ fields:
           implementations of scripting languages (e.g. Perl or Python).  Here the interpreter contextually need
           to satisfy some relations as "Multi-Arch: foreign" and others as "Multi-Arch: same" (or "Multi-Arch: no").</p>
 
-          <p>Typically, native extentions or plugins will need a "Multi-Arch: same"-relation as they only work with
-          the interpreter compiled for the same machine architecture as themselves whereas scripts are usally less
+          <p>Typically, native extensions or plugins will need a "Multi-Arch: same"-relation as they only work with
+          the interpreter compiled for the same machine architecture as themselves whereas scripts are usually less
           picky and can rely on the "Multi-Arch: foreign" relation.  Packages wanting to rely on the
           "Multi-Arch: foreign" interface must explicitly declare this adding a ":any" suffix to the package name
           in the dependency relation (e.g. "Depends: python3:any").  However, the ":any" suffix cannot be used
@@ -734,7 +734,7 @@ fields:
           <p>Applicable if dpkg <em>needs</em> this package to function and it is not a library.</p>
       - value: "important"
         description: |
-          <p>The <em>important<em> packages are a bare minumum of commonly-expected and necessary tools.</p>
+          <p>The <em>important<em> packages are a bare minimum of commonly-expected and necessary tools.</p>
 
           <p>Applicable if 99% of all users in the distribution needs this package and it is not a library.</p>
 
@@ -816,7 +816,7 @@ fields:
     keywordList:
       - value: "all"
         description: |
-          <p>The package is an architecture independent package.  This is typically fitting for packages containing only scripts, data or documentatition.</p>
+          <p>The package is an architecture independent package.  This is typically fitting for packages containing only scripts, data or documentation.</p>
 
           <p>This name <b>all</b> refers to the fact that the package can be used for <em>all</em> architectures at the same.  Though note that it is still subject to the rules of the <b>Multi-Arch</b> field.</p>
         isExclusive: true
@@ -866,7 +866,7 @@ fields:
     description: |
       <p>A human-readable description of the package.  This field consists of two related but distinct parts.</p>
 
-      <p>The first line immedately after the field is called the <em>Synopsis</em> and is a short "noun-phrase" intended to provide a one-line summary of the package.</p>
+      <p>The first line immediately after the field is called the <em>Synopsis</em> and is a short "noun-phrase" intended to provide a one-line summary of the package.</p>
       <p>The lines after the <em>Synopsis</em> is known as the <em>Extended Description</em> and is intended as a longer summary of the package.</p>
 
       <em>Example:</em>
@@ -889,7 +889,7 @@ fields:
       </pre>
 
       <p>The <em>Synopsis</em> is usually displayed in cases where there is limited space such as when reviewing the search results from "apt search foo".  It is often a good idea to imagine that the <em>Synopsis</em> part is inserted into a sentence like "The package provides &ltSynopsis-goes-here&gt;"</p>.
-      <p>The <em>Extended Description</em> is a standalone description that should describe what the packaeg does and how it relates to the rest of the system (in terms of, for example, which subsystem it is which part of).</p>
+      <p>The <em>Extended Description</em> is a standalone description that should describe what the package does and how it relates to the rest of the system (in terms of, for example, which subsystem it is which part of).</p>
       <p>Please see <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#description">https://www.debian.org/doc/debian-policy/ch-controlfields.html#description</a> for more details about the description field and suggestions for how to write it.</a>
     valueType: FREE_TEXT_VALUE
     foldedByDefault: true
@@ -900,7 +900,7 @@ substvars:
   - name: "${Arch}"
     description: |
       <p>The current host architecture (i.e. the architecture the package is being built for).  Defaults to
-      <b>DEB_HOST_ARCH</b> (but can differ with <b>X-DH-BUild-For-Type</b>).</p>
+      <b>DEB_HOST_ARCH</b> (but can differ with <b>X-DH-Build-For-Type</b>).</p>
 
   - name: "${source:Version}"
     description: |
@@ -932,7 +932,7 @@ substvars:
   - name: "${}"
     value: "$"
     description: |
-      <p>Not a true substitution value but will be replaced by a literal $ sign after all substituions have been made.</p>
+      <p>Not a true substitution value but will be replaced by a literal $ sign after all substitutions have been made.</p>
 
   - pattern: "${shlibs:<FIELD_NAME>}"
     fieldNames: ["Pre-Depends", "Depends", "Recommends", "Suggests"]
@@ -987,7 +987,7 @@ substvars:
     fieldFrom: SOURCE_PARAGRAPH
     fieldName: Description
     description: |
-      <p>Expands to the <em>Extendend-Description</em> part of the <em>Description</em> field from the <em>Source</em> paragraph (if present).</p>
+      <p>Expands to the <em>Extended-Description</em> part of the <em>Description</em> field from the <em>Source</em> paragraph (if present).</p>
 
       <p>This can be useful for having a standard extended description that can be reused in all binary packages (followed by a unique bit).</p>
 

@@ -125,5 +125,5 @@ fields:
       - "License"
       - "Header"
     foldedByDefault: true
-    # Copy-waste of legal text and you are not allowed to change the terms.  Not much we can do here.
+    # Copy-waste of legal text, and you are not allowed to change the terms.  Not much we can do here.
     spellcheckValue: false

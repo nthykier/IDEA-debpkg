@@ -351,7 +351,7 @@ fields:
     keywordList:
       - value: "all"
         description: |
-          <p>The package is an architecture independent package.  This is typically fitting for packages containing only scripts, data or documentatition.</p>
+          <p>The package is an architecture independent package.  This is typically fitting for packages containing only scripts, data or documentation.</p>
 
           <p>This name <b>all</b> refers to the fact that the package can be used for <em>all</em> architectures at the same.  Though note that it is still subject to the rules of the <b>Multi-Arch</b> field.</p>
         isExclusive: true

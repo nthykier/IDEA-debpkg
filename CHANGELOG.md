@@ -10,6 +10,15 @@
 
 ## Unreleased
 
+### Fixed
+
+- Apply spell-checker and improved the wording of the online documentation provided by the plugin. (Closes: #134)
+
+### Changed
+
+- Internal/Chore: Update dependency on `org.jetbrains.changelog`, `org.jetbrains.intellij`, `commons-text`,
+  `lombok`, and `snakeyaml`.
+
 ## 0.0.21 - 2023-07-29
 
 ### Added
