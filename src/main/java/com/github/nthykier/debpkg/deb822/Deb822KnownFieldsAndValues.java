@@ -170,7 +170,7 @@ public class Deb822KnownFieldsAndValues {
                 "supportedVersionOperators",
                 Deb822KnownFieldsAndValues::convertToSet,
                 null);
-        boolean supportsBuildProfileRestriction = getBool(fieldDef, "supportsBuildProfileRestriction", false);
+        Boolean supportsBuildProfileRestriction = getTypedObject(fieldDef, "supportsBuildProfileRestriction", Boolean.class, null);
         switch (valueType) {
             case SINGLE_TRIVIAL_VALUE:
                 if (!keywordInformation.keywordMap.isEmpty()) {
@@ -215,14 +215,14 @@ public class Deb822KnownFieldsAndValues {
             return new Deb822KnownRelationFieldImpl(canonicalName, valueType, fieldValueLanguage,
                     keywordInformation.allKeywordsKnown, keywordInformation.keywordMap, docs,
                     supportsSubstvars, defaultValue, warnIfDefault, supportedParagraphTypes, isFoldedByDefault,
-                    supportedVersionOperators, supportsBuildProfileRestriction
+                    supportedVersionOperators, Objects.requireNonNullElse(supportsBuildProfileRestriction, Boolean.TRUE)
             );
         } else {
             if (supportedVersionOperators != null) {
                 throw new IllegalArgumentException("Field " + canonicalName + " has supportedVersionOperators but is"
                         + " not a language field (valueLanguage)");
             }
-            if (supportsBuildProfileRestriction) {
+            if (supportsBuildProfileRestriction == Boolean.TRUE) {
                 throw new IllegalArgumentException("Field " + canonicalName + " has supportsBuildProfileRestriction but is"
                         + " not a language field (valueLanguage)");
             }

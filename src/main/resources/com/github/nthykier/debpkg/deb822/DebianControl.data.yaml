@@ -258,7 +258,6 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_DEPENDENCY
     supportsSubstvars: false
-    supportsBuildProfileRestriction: true
 
   - canonicalName: "Build-Depends-Arch"
     onlyInParagraphType: "Source"
@@ -271,7 +270,6 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_DEPENDENCY
     supportsSubstvars: false
-    supportsBuildProfileRestriction: true
 
   - canonicalName: "Build-Depends-Indep"
     onlyInParagraphType: "Source"
@@ -284,7 +282,6 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_DEPENDENCY
     supportsSubstvars: false
-    supportsBuildProfileRestriction: true
 
   - canonicalName: "Build-Conflicts"
     onlyInParagraphType: "Source"
@@ -297,7 +294,6 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_NEGATIVE_DEPENDENCY
     supportsSubstvars: false
-    supportsBuildProfileRestriction: true
 
   - canonicalName: "Build-Conflicts-Arch"
     onlyInParagraphType: "Source"
@@ -310,7 +306,6 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_NEGATIVE_DEPENDENCY
     supportsSubstvars: false
-    supportsBuildProfileRestriction: true
 
   - canonicalName: "Build-Conflicts-Indep"
     onlyInParagraphType: "Source"
@@ -323,7 +318,6 @@ fields:
     valueType: COMMA_SEPARATED_VALUE_LIST_TRAILING_COMMA_OK
     valueLanguage: DEPENDENCY_LANGUAGE_SOURCE_NEGATIVE_DEPENDENCY
     supportsSubstvars: false
-    supportsBuildProfileRestriction: true
 
   - canonicalName: "Pre-Depends"
     onlyInParagraphType: "Package"

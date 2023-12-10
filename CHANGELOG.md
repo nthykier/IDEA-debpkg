@@ -13,6 +13,7 @@
 ### Fixed
 
 - Apply spell-checker and improved the wording of the online documentation provided by the plugin. (Closes: #134)
+- Allow build-profiles in all relationship files by default. (Closes: #133)
 
 ### Changed
 
