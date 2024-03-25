@@ -76,7 +76,7 @@ tasks {
         val pluginVersion = properties("pluginVersion")
         version.set(pluginVersion)
         sinceBuild.set(properties("pluginSinceBuild"))
-        untilBuild.set(properties("pluginUntilBuild"))
+        untilBuild.set("")
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
         pluginDescription.set(
