@@ -34,7 +34,6 @@ dependencies {
 intellij {
     pluginName.set(properties("pluginName"))
     version.set(properties("platformVersion"))
-    type.set(properties("platformType"))
     downloadSources.set(properties("platformDownloadSources").toBoolean())
     updateSinceUntilBuild.set(true)
     /* When we are ready to work with makefile support
