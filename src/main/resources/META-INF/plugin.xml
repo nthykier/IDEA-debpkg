@@ -2,6 +2,7 @@
     <id>com.github.nthykier.debpkg</id>
     <name>Debian Packaging Support</name>
     <vendor>nthykier</vendor>
+    <category>Build Tools</category>
 
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
