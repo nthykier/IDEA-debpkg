@@ -18,6 +18,11 @@
 
 - Several typos in hover docs
 
+### Changed
+
+- Internal/Chore: Update dependency on `org.jetbrains.intellij` and `org.projectlombok:lombok`
+- Internal/Chore: Update build tool dependency on several github actions
+
 ## 0.0.22 - 2023-12-10
 
 ### Added
