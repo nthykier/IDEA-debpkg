@@ -15,6 +15,12 @@ fun properties(key: String) = project.findProperty(key).toString()
 group = properties("pluginGroup")
 version = properties("pluginVersion")
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
 // Configure project's dependencies
 repositories {
     mavenCentral()
