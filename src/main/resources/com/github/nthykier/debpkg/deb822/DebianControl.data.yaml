@@ -322,7 +322,7 @@ fields:
   - canonicalName: "Pre-Depends"
     onlyInParagraphType: "Package"
     description: |
-      <p><b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
+      <p><b>Advanced field</b>.  <em>This field covers an advanced topic.  If you are new to packaging, you are
       probably not looking for this field (except to set a <b>${misc:Pre-Depends}</b> relation.  Incorrect use
       of this field can cause issues - among other causing issues during upgrades that users cannot work around
       without passing --force-* options to dpkg.
@@ -519,7 +519,7 @@ fields:
   - canonicalName: "Build-Profiles"
     onlyInParagraphType: "Package"
     description: |
-      <p><b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
+      <p><b>Advanced field</b>.  <em>This field covers an advanced topic.  If you are new to packaging, you are
          advised to leave it at its default until you have a working basic package or lots of time to understand
          this topic.</em></p>
 
@@ -589,7 +589,7 @@ fields:
   - canonicalName: Multi-Arch
     onlyInParagraphType: "Package"
     description: |
-      <p><b>Advanced field</b>.  <em>This field is covers an advanced topic.  If you are new to packaging, you are
+      <p><b>Advanced field</b>.  <em>This field covers an advanced topic.  If you are new to packaging, you are
          advised to leave it at its default until you have a working basic package or lots of time to understand
          this topic.</em></p>
 
@@ -853,7 +853,7 @@ fields:
           <p>The package should be compiled for <b>DEB_HOST_ARCH</b> (the default).</p>
       - value: "target"
         description: |
-          <p>The package should be compiled for <b>DEB_HOST_TARGET</b>.</p>
+          <p>The package should be compiled for <b>DEB_TARGET_ARCH</b>.</p>
     supportsSubstvars: false
 
   - canonicalName: Description
