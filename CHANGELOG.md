@@ -20,6 +20,8 @@
 
 ### Changed
 
+- Remove upper bound supported IDEA version. Thanks to Sergey Ponomarev for the patch.  
+- Changed category to "Build Tools". Thanks to Sergey Ponomarev for the suggestion.
 - Internal/Chore: Update dependency on `org.jetbrains.intellij` and `org.projectlombok:lombok`
 - Internal/Chore: Update build tool dependency on several github actions
 
