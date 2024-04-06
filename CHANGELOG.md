@@ -10,6 +10,10 @@
 
 ## Unreleased
 
+### Added
+
+- Add `non-free-firmware` as a known component
+
 ## 0.0.22 - 2023-12-10
 
 ### Added
