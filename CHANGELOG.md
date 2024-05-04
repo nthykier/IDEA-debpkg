@@ -15,6 +15,7 @@
 - When hoisting a single line value into a visual single line, only fold the whitespace + newline rather than the entire
   value. This means that the value will still be rendered in its proper syntax coloring rather than in the "folded"
   coloring. (Closes: #159)
+- Use of `foo` in the changelog now disables spellchecking for that range.
 
 ### Changed
 

@@ -33,8 +33,10 @@ public class DchSpellcheckingStrategy extends SpellcheckingStrategy {
                    + " | [/](?: s?bin|boot|dev|etc|home|lib(?:x?32|64)?|mnt|opt|proc|root|run|srv|sys|tmp|usr|var) (?:/\\S++)?"
                       /* paths relative to home or the debian directory */
                    + " | (?:\\s|[\"(]) (?:[$]HOME|~|d(?:ebian)?) / (?:\\S++)?"
-                      /* Classic reference a la " * foo.c: Fixed stuff" or "   - foo.txt: Fixed stuff" */
+                      /* Classic reference à la " * foo.c: Fixed stuff" or "   - foo.txt: Fixed stuff" */
                    + " | ^ \\s*[*+-] \\s? [^\\s:]++:"
+                      /* `foo` */
+                   + " | `[^`]*`"
             , Pattern.COMMENTS | Pattern.MULTILINE
     );
 
