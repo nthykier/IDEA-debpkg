@@ -16,6 +16,10 @@
   value. This means that the value will still be rendered in its proper syntax coloring rather than in the "folded"
   coloring. (Closes: #159)
 
+### Changed
+
+- Internal/Chore: Replace some compat code now that we no longer support IDEA 2020.1.
+
 ## 0.0.23 - 2024-04-06
 
 ### Added

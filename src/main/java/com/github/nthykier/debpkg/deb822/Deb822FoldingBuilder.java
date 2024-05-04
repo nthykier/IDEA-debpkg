@@ -158,11 +158,8 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
 
     private static void processComments(PsiElement root, List<FoldingDescriptor> descriptors) {
         List<PsiComment> comments = new ArrayList<>();
-        // Use (root, PsiComment.class, ...) when 201 compat can be dropped.
-        PsiTreeUtil.processElements(root, e -> {
-            if (e instanceof PsiComment) {
-                comments.add((PsiComment)e);
-            }
+        PsiTreeUtil.processElements(root, PsiComment.class, e -> {
+            comments.add(e);
             return true;
         });
         PsiComment currentStart = null;
