@@ -24,6 +24,7 @@
   spelling issues and fewer false positives for names in changelogs (like "Thanks to John Doe for ..." lines).
   Note: These files replace the existing wordlist (which was basically a small subset of the `debian-wordlist.dic` one)
 - Internal/Chore: Replace some compat code now that we no longer support IDEA 2020.1.
+- Internal/Chore: Bump dependency on `commons-text` and `gradle/wrapper-validation-action`
 
 ## 0.0.23 - 2024-04-06
 
