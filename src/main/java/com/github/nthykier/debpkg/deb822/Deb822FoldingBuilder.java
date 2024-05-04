@@ -92,9 +92,9 @@ public class Deb822FoldingBuilder extends FoldingBuilderEx implements DumbAware 
             /* Always fold single line fields that with an empty bit */
             if (!foldedByDefault && placeholderText != null && !placeholderText.endsWith(" {...}")) {
                 foldedByDefault = true;
-            }
-
-            if (firstElementAfter != null) {
+                placeholderText = " ";
+                end = valueParts.getValueList().get(0).getNode().getStartOffset();
+            } else if (firstElementAfter != null) {
                 /* -1 for the newline at the end of the previous */
                 end = firstElementAfter.getNode().getStartOffset() - 1;
             } else {
