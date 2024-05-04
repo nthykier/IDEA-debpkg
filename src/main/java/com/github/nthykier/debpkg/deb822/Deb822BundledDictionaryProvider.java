@@ -6,7 +6,9 @@ public class Deb822BundledDictionaryProvider implements BundledDictionaryProvide
     @Override
     public String[] getBundledDictionaries() {
         return new String[]{
-                "debian-packaging-terms.dic"
+                /* These are imported from `debputy` */
+                "debian-wordlist.dic",
+                "logins-and-people.dic"
         };
     }
 }

@@ -19,6 +19,10 @@
 
 ### Changed
 
+- Imported the wordlist of `debian-wordlist.dic` and `logins-and-people.dic` from `debputy`, which had a much longer
+  wordlist for jargon and maintains a list of known Debian contributors. This should lead to fewer jargon related
+  spelling issues and fewer false positives for names in changelogs (like "Thanks to John Doe for ..." lines).
+  Note: These files replace the existing wordlist (which was basically a small subset of the `debian-wordlist.dic` one)
 - Internal/Chore: Replace some compat code now that we no longer support IDEA 2020.1.
 
 ## 0.0.23 - 2024-04-06
