@@ -10,6 +10,10 @@
 
 ## Unreleased
 
+### Added
+
+- Register known YAML-based packaging files as YAML files if the JetBrains YAML plugin is installed
+
 ### Fixed
 
 - When hoisting a single line value into a visual single line, only fold the whitespace + newline rather than the entire
