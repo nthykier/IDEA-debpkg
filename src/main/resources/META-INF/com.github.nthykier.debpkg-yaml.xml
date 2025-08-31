@@ -1,0 +1,20 @@
+<idea-plugin>
+    <id>com.github.nthykier.debpkg-yaml</id>
+    <vendor>nthykier</vendor>
+
+    <!-- Product and plugin compatibility requirements -->
+    <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>org.jetbrains.plugins.yaml</depends>
+    <resource-bundle>messages.DebpkgBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- debian/upstream/metadata -->
+        <fileType name="debian/upstream/metadata" implementationClass="com.github.nthykier.debpkg.yaml.UpstreamMetadataFileType"
+                  fieldName="INSTANCE" language="yaml" extensions="" />
+        <!-- debian/debputy.manifest -->
+        <fileType name="debian/debputy.manifest" implementationClass="com.github.nthykier.debpkg.yaml.DebputyManifestFileType"
+                  fieldName="INSTANCE" language="yaml" fileNames="debputy.manifest" extensions="" />
+    </extensions>
+</idea-plugin>

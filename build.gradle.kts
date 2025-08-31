@@ -42,10 +42,12 @@ intellij {
     version.set(properties("platformVersion"))
     downloadSources.set(properties("platformDownloadSources").toBoolean())
     updateSinceUntilBuild.set(true)
-    /* When we are ready to work with makefile support
     plugins.set(listOf(
-        "name.kropp.intellij.makefile:212.4746.52"
-    ))*/
+        "org.jetbrains.plugins.yaml:212.4746.16",
+        /* When we are ready to work with makefile support
+            "name.kropp.intellij.makefile:212.4746.52".
+        */
+    ))
 }
 
 changelog {

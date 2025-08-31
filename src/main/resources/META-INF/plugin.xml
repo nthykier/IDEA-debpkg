@@ -8,6 +8,7 @@
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
+    <depends optional="true" config-file="com.github.nthykier.debpkg-yaml.xml">org.jetbrains.plugins.yaml</depends>
     <!--depends optional="true" config-file="com.github.nthykier.debpkg-rules.xml.bak">name.kropp.intellij.makefile</depends-->
     <resource-bundle>messages.DebpkgBundle</resource-bundle>
 
