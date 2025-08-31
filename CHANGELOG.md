@@ -10,6 +10,8 @@
 
 ## Unreleased
 
+## 0.0.24 - 2025-08-31
+
 ### Added
 
 - Register known YAML-based packaging files as YAML files if the JetBrains YAML plugin is installed
