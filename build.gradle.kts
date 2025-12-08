@@ -27,7 +27,7 @@ repositories {
 }
 dependencies {
     implementation("org.yaml:snakeyaml:2.3")
-    implementation("org.apache.commons:commons-text:1.14.0")
+    implementation("org.apache.commons:commons-text:1.15.0")
 
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
